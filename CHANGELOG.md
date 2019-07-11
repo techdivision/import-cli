@@ -1,3 +1,13 @@
+# Version 1.0.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add PHPUnit test for application implementation
+
 # Version 1.0.1
 
 ## Bugfixes
