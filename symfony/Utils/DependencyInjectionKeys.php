@@ -80,4 +80,18 @@ class DependencyInjectionKeys extends \TechDivision\Import\App\Utils\DependencyI
      * @var string
      */
     const LIBRARY_LOADER = 'import_cli_simple.library.loader';
+
+    /**
+     * The key for the application name.
+     *
+     * @var string
+     */
+    const APPLICATION_NAME = 'application.name';
+
+    /**
+     * The key for the application version file.
+     *
+     * @var string
+     */
+    const APPLICATION_VERSION_FILE = 'application.version.file';
 }

@@ -20,6 +20,7 @@
 
 namespace TechDivision\Import\Cli;
 
+use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
@@ -46,13 +47,6 @@ class Application extends \Symfony\Component\Console\Application implements Cont
     const REGEX = "/^\-\-\-\n:major:\s(0|[1-9]\d*)\n:minor:\s(0|[1-9]\d*)\n:patch:\s(0|[1-9]\d*)\n:special:\s'([a-zA-z0-9]*\.?(?:0|[1-9]\d*)?)'\n:metadata:\s'((?:0|[1-9]\d*)?(?:\.[a-zA-z0-9\.]*)?)'/";
 
     /**
-     * The application name.
-     *
-     * @var string
-     */
-    protected $name = 'M2IF - Simple Console Tool';
-
-    /**
      * The DI container instance.
      *
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -77,11 +71,17 @@ class Application extends \Symfony\Component\Console\Application implements Cont
         $special = null;
         $metadata = null;
 
+        // load the vendor directory (necessary to locate the base directory)
+        $vendorDir = $container->getParameter(DependencyInjectionKeys::CONFIGURATION_VENDOR_DIR);
+
         // parse the file with the semantic versioning data
-        extract($this->parse(dirname(__DIR__) . DIRECTORY_SEPARATOR . '.semver'));
+        extract($this->parse(dirname($vendorDir) . DIRECTORY_SEPARATOR . $container->getParameter(DependencyInjectionKeys::APPLICATION_VERSION_FILE)));
 
         // invoke the parent constructor
-        parent::__construct($this->name, sprintf('%d.%d.%d', $major, $minor, $patch) . ($special ? sprintf('-%s%s', $special, $metadata) : null));
+        parent::__construct(
+            $container->getParameter(DependencyInjectionKeys::APPLICATION_NAME),
+            sprintf('%d.%d.%d', $major, $minor, $patch) . ($special ? sprintf('-%s%s', $special, $metadata) : null)
+        );
     }
 
     /**

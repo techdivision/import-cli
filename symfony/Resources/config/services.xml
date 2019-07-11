@@ -3,6 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="application.name">M2IF - Console Tool</parameter>
+        <parameter key="application.version.file">.semver</parameter>
+    </parameters>
+
     <services>
 
         <service id="service_container" synthetic="true" />
