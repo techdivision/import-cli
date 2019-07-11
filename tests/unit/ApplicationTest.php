@@ -20,7 +20,6 @@
 
 namespace TechDivision\Import\Cli;
 
-use TechDivision\Import\Cli\Application;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 
 /**
