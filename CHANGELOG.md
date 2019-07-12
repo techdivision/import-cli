@@ -1,3 +1,13 @@
+# Version 1.1.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add constant DependencyInjectionKeys::CONFIGURATION_BASE_DIR
+
 # Version 1.0.2
 
 ## Bugfixes
