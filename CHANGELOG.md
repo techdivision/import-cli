@@ -1,3 +1,13 @@
+# Version 1.1.1
+
+## Bugfixes
+
+* Bugfix invalid DI configuration names
+
+## Features
+
+* None
+
 # Version 1.1.0
 
 ## Bugfixes
