@@ -6,6 +6,52 @@
     <parameters>
         <parameter key="application.name">M2IF - Console Tool</parameter>
         <parameter key="application.version.file">.semver</parameter>
+        <parameter key="application.default.libraries" type="collection">
+            <parameter key="ce" type="collection">
+                <parameter>techdivision/import-app-simple</parameter>
+                <parameter>techdivision/import</parameter>
+                <parameter>techdivision/import-attribute</parameter>
+                <parameter>techdivision/import-attribute-set</parameter>
+                <parameter>techdivision/import-category</parameter>
+                <parameter>techdivision/import-customer</parameter>
+                <parameter>techdivision/import-customer-address</parameter>
+                <parameter>techdivision/import-product</parameter>
+                <parameter>techdivision/import-product-msi</parameter>
+                <parameter>techdivision/import-product-tier-price</parameter>
+                <parameter>techdivision/import-product-url-rewrite</parameter>
+                <parameter>techdivision/import-product-bundle</parameter>
+                <parameter>techdivision/import-product-link</parameter>
+                <parameter>techdivision/import-product-media</parameter>
+                <parameter>techdivision/import-product-variant</parameter>
+                <parameter>techdivision/import-product-grouped</parameter>
+            </parameter>
+            <parameter key="ee" type="collection">
+                <parameter>techdivision/import-app-simple</parameter>
+                <parameter>techdivision/import</parameter>
+                <parameter>techdivision/import-ee</parameter>
+                <parameter>techdivision/import-attribute</parameter>
+                <parameter>techdivision/import-attribute-set</parameter>
+                <parameter>techdivision/import-category</parameter>
+                <parameter>techdivision/import-category-ee</parameter>
+                <parameter>techdivision/import-customer</parameter>
+                <parameter>techdivision/import-customer-address</parameter>
+                <parameter>techdivision/import-product</parameter>
+                <parameter>techdivision/import-product-ee</parameter>
+                <parameter>techdivision/import-product-msi</parameter>
+                <parameter>techdivision/import-product-tier-price</parameter>
+                <parameter>techdivision/import-product-url-rewrite</parameter>
+                <parameter>techdivision/import-product-bundle</parameter>
+                <parameter>techdivision/import-product-bundle-ee</parameter>
+                <parameter>techdivision/import-product-link</parameter>
+                <parameter>techdivision/import-product-link-ee</parameter>
+                <parameter>techdivision/import-product-media</parameter>
+                <parameter>techdivision/import-product-media-ee</parameter>
+                <parameter>techdivision/import-product-variant</parameter>
+                <parameter>techdivision/import-product-variant-ee</parameter>
+                <parameter>techdivision/import-product-grouped</parameter>
+                <parameter>techdivision/import-product-grouped-ee</parameter>
+            </parameter>
+        </parameter>
     </parameters>
 
     <services>

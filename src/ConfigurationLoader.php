@@ -28,6 +28,7 @@ use TechDivision\Import\Cli\Utils\MagentoConfigurationKeys;
 use TechDivision\Import\Configuration\Jms\Configuration\Database;
 use TechDivision\Import\Utils\EntityTypeCodes;
 use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 
 /**
  * The configuration loader implementation.
@@ -57,58 +58,6 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         EntityTypeCodes::EAV_ATTRIBUTE_SET             => 'attributes',
         EntityTypeCodes::CUSTOMER                      => 'customers',
         EntityTypeCodes::CUSTOMER_ADDRESS              => 'customers'
-    );
-
-    /**
-     * The Magento Edition specific default libraries.
-     *
-     * @var array
-     */
-    protected $defaultLibraries = array(
-        'ce' => array(
-            'techdivision/import-app-simple',
-            'techdivision/import',
-            'techdivision/import-attribute',
-            'techdivision/import-attribute-set',
-            'techdivision/import-category',
-            'techdivision/import-customer',
-            'techdivision/import-customer-address',
-            'techdivision/import-product',
-            'techdivision/import-product-msi',
-            'techdivision/import-product-tier-price',
-            'techdivision/import-product-url-rewrite',
-            'techdivision/import-product-bundle',
-            'techdivision/import-product-link',
-            'techdivision/import-product-media',
-            'techdivision/import-product-variant',
-            'techdivision/import-product-grouped'
-        ),
-        'ee' => array(
-            'techdivision/import-app-simple',
-            'techdivision/import',
-            'techdivision/import-ee',
-            'techdivision/import-attribute',
-            'techdivision/import-attribute-set',
-            'techdivision/import-category',
-            'techdivision/import-category-ee',
-            'techdivision/import-customer',
-            'techdivision/import-customer-address',
-            'techdivision/import-product',
-            'techdivision/import-product-msi',
-            'techdivision/import-product-tier-price',
-            'techdivision/import-product-url-rewrite',
-            'techdivision/import-product-ee',
-            'techdivision/import-product-bundle',
-            'techdivision/import-product-bundle-ee',
-            'techdivision/import-product-link',
-            'techdivision/import-product-link-ee',
-            'techdivision/import-product-media',
-            'techdivision/import-product-media-ee',
-            'techdivision/import-product-variant',
-            'techdivision/import-product-variant-ee',
-            'techdivision/import-product-grouped',
-            'techdivision/import-product-grouped-ee'
-        )
     );
 
     /**
@@ -391,9 +340,12 @@ class ConfigurationLoader extends SimpleConfigurationLoader
     protected function getDefaultLibraries($magentoEdition)
     {
 
+        // load the default libraries from the configuration
+        $defaultLibraries = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_DEFAULT_LIBRARIES);
+
         // query whether or not, default libraries for the passed edition are available
-        if (isset($this->defaultLibraries[$edition = strtolower($magentoEdition)])) {
-            return $this->defaultLibraries[$edition];
+        if (isset($defaultLibraries[$edition = strtolower($magentoEdition)])) {
+            return $defaultLibraries[$edition];
         }
 
         // throw an exception, if the passed edition is not supported

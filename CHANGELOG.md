@@ -1,3 +1,13 @@
+# Version 2.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Replace member variable with default library names with value from DI configuration
+
 # Version 1.1.1
 
 ## Bugfixes

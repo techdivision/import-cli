@@ -101,4 +101,11 @@ class DependencyInjectionKeys extends \TechDivision\Import\App\Utils\DependencyI
      * @var string
      */
     const APPLICATION_VERSION_FILE = 'application.version.file';
+
+    /**
+     * The key for the array with the default application libraries.
+     *
+     * @var string
+     */
+    const APPLICATION_DEFAULT_LIBRARIES = 'application.default.libraries';
 }
