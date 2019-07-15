@@ -60,12 +60,12 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $mockContainer->expects($this->any())
                       ->method('getParameter')
                       ->withConsecutive(
-                          array(DependencyInjectionKeys::CONFIGURATION_VENDOR_DIR),
+                          array(DependencyInjectionKeys::CONFIGURATION_BASE_DIR),
                           array(DependencyInjectionKeys::APPLICATION_VERSION_FILE),
                           array(DependencyInjectionKeys::APPLICATION_NAME)
                       )
                       ->willReturnOnConsecutiveCalls(
-                          __DIR__ . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'vendor',
+                          __DIR__ . DIRECTORY_SEPARATOR . '_files',
                           '.semver',
                           'Test Tool'
                       );

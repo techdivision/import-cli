@@ -71,11 +71,11 @@ class Application extends \Symfony\Component\Console\Application implements Cont
         $special = null;
         $metadata = null;
 
-        // load the vendor directory (necessary to locate the base directory)
-        $vendorDir = $container->getParameter(DependencyInjectionKeys::CONFIGURATION_VENDOR_DIR);
+        // load the base directory (necessary to locate the base .semver file)
+        $baseDir = $container->getParameter(DependencyInjectionKeys::CONFIGURATION_BASE_DIR);
 
         // parse the file with the semantic versioning data
-        extract($this->parse(dirname($vendorDir) . DIRECTORY_SEPARATOR . $container->getParameter(DependencyInjectionKeys::APPLICATION_VERSION_FILE)));
+        extract($this->parse($baseDir . DIRECTORY_SEPARATOR . $container->getParameter(DependencyInjectionKeys::APPLICATION_VERSION_FILE)));
 
         // invoke the parent constructor
         parent::__construct(

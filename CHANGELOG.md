@@ -1,3 +1,13 @@
+# Version 3.0.1
+
+## Bugfixes
+
+* Use DependencyInjectionKeys::CONFIGURATION_BASE_DIR to load path for .semver file
+
+## Features
+
+* None
+
 # Version 3.0.0
 
 ## Bugfixes
