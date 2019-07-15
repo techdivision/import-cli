@@ -28,7 +28,6 @@ use TechDivision\Import\Cli\Configuration\LibraryLoader;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 use TechDivision\Import\Cli\Utils\MagentoConfigurationKeys;
 use TechDivision\Import\Utils\CommandNames;
-use TechDivision\Import\Utils\EntityTypeCodes;
 use TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode;
 
 /**
@@ -42,71 +41,6 @@ use TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode;
  */
 class SimpleConfigurationLoader implements ConfigurationLoaderInterface
 {
-
-    /**
-     * The composer name => Magento Edition mappings.
-     *
-     * @var array
-     */
-    protected $editionMappings = array(
-        'magento2ce'                 => 'CE',
-        'project-community-edition'  => 'CE',
-        'magento2ee'                 => 'EE',
-        'project-enterprise-edition' => 'EE'
-    );
-
-    /**
-     * The array with the default entity type => configuration filename mapping.
-     *
-     * @var array
-     */
-    protected $configurationFileMappings = array(
-        EntityTypeCodes::NONE                          => 'techdivision-import',
-        EntityTypeCodes::EAV_ATTRIBUTE                 => 'techdivision-import',
-        EntityTypeCodes::EAV_ATTRIBUTE_SET             => 'techdivision-import',
-        EntityTypeCodes::CATALOG_PRODUCT               => 'techdivision-import',
-        EntityTypeCodes::CATALOG_PRODUCT_PRICE         => 'techdivision-import-price',
-        EntityTypeCodes::CATALOG_PRODUCT_TIER_PRICE    => 'techdivision-import',
-        EntityTypeCodes::CATALOG_PRODUCT_INVENTORY     => 'techdivision-import-inventory',
-        EntityTypeCodes::CATALOG_PRODUCT_INVENTORY_MSI => 'techdivision-import',
-        EntityTypeCodes::CATALOG_CATEGORY              => 'techdivision-import',
-        EntityTypeCodes::CUSTOMER                      => 'techdivision-import',
-        EntityTypeCodes::CUSTOMER_ADDRESS              => 'techdivision-import'
-    );
-
-    /**
-     * The array with the entity type => repository with default configuration file mapping.
-     *
-     * @var array
-     */
-    protected $defaultConfigurations = array(
-        'ce' => array(
-            EntityTypeCodes::NONE                          => 'techdivision/import-product',
-            EntityTypeCodes::EAV_ATTRIBUTE                 => 'techdivision/import-attribute',
-            EntityTypeCodes::EAV_ATTRIBUTE_SET             => 'techdivision/import-attribute-set',
-            EntityTypeCodes::CATALOG_PRODUCT               => 'techdivision/import-product',
-            EntityTypeCodes::CATALOG_PRODUCT_PRICE         => 'techdivision/import-product',
-            EntityTypeCodes::CATALOG_PRODUCT_TIER_PRICE    => 'techdivision/import-product-tier-price',
-            EntityTypeCodes::CATALOG_PRODUCT_INVENTORY     => 'techdivision/import-product',
-            EntityTypeCodes::CATALOG_PRODUCT_INVENTORY_MSI => 'techdivision/import-product-msi',
-            EntityTypeCodes::CATALOG_CATEGORY              => 'techdivision/import-category',
-            EntityTypeCodes::CUSTOMER                      => 'techdivision/import-customer',
-            EntityTypeCodes::CUSTOMER_ADDRESS              => 'techdivision/import-customer-address'
-        ),
-        'ee' => array(
-            EntityTypeCodes::NONE                          => 'techdivision/import-product-ee',
-            EntityTypeCodes::EAV_ATTRIBUTE                 => 'techdivision/import-attribute',
-            EntityTypeCodes::EAV_ATTRIBUTE_SET             => 'techdivision/import-attribute-set',
-            EntityTypeCodes::CATALOG_PRODUCT               => 'techdivision/import-product-ee',
-            EntityTypeCodes::CATALOG_PRODUCT_PRICE         => 'techdivision/import-product-ee',
-            EntityTypeCodes::CATALOG_PRODUCT_TIER_PRICE    => 'techdivision/import-product-tier-price',
-            EntityTypeCodes::CATALOG_PRODUCT_INVENTORY     => 'techdivision/import-product-ee',
-            EntityTypeCodes::CATALOG_PRODUCT_INVENTORY_MSI => 'techdivision/import-product-msi',
-            EntityTypeCodes::CATALOG_CATEGORY              => 'techdivision/import-category-ee',
-            EntityTypeCodes::CUSTOMER                      => 'techdivision/import-customer',
-            EntityTypeCodes::CUSTOMER_ADDRESS              => 'techdivision/import-customer-address'
-        )
-    );
 
     /**
      * The container instance.
@@ -234,25 +168,8 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
                 );
             }
 
-            // load the composer file from the Magento root directory
-            $composer = json_decode(file_get_contents($composerFile = sprintf('%s/composer.json', $installationDir)), true);
-
-            // try to load and explode the Magento Edition identifier from the Composer name
-            $explodedVersion = explode('/', $composer[MagentoConfigurationKeys::COMPOSER_EDITION_NAME_ATTRIBUTE]);
-
-            // try to locate Magento Edition
-            if (!isset($this->editionMappings[$possibleEdition = end($explodedVersion)])) {
-                throw new \Exception(
-                    sprintf(
-                        '"%s" detected in "%s" is not a valid Magento Edition, please set Magento Edition with the "--magento-edition" option',
-                        $possibleEdition,
-                        $composerFile
-                    )
-                );
-            }
-
-            // if Magento Edition/Version are available, load them
-            $magentoEdition = $this->editionMappings[$possibleEdition];
+            // load the Magento Edition from the Composer configuration file
+            $magentoEdition = $this->getEditionMapping($installationDir);
 
             // use the Magento Edition that has been detected by the installation directory
             $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $this->getEntityTypeCode()));
@@ -371,6 +288,41 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     }
 
     /**
+     * Returns the mapped Magento Edition from the passed Magento installation.
+     *
+     * @param string $installationDir The Magento installation directory
+     *
+     * @return string The mapped Magento Edition, either CE or EE
+     * @throws \Exception Is thrown, if the passed installation directory doesn't contain a valid Magento installation
+     */
+    protected function getEditionMapping($installationDir)
+    {
+
+        // load the default edition mappings from the configuration
+        $editionMappings = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_EDITION_MAPPINGS);
+
+        // load the composer file from the Magento root directory
+        $composer = json_decode(file_get_contents($composerFile = sprintf('%s/composer.json', $installationDir)), true);
+
+        // try to load and explode the Magento Edition identifier from the Composer name
+        $explodedVersion = explode('/', $composer[MagentoConfigurationKeys::COMPOSER_EDITION_NAME_ATTRIBUTE]);
+
+        // try to locate Magento Edition
+        if (!isset($editionMappings[$possibleEdition = end($explodedVersion)])) {
+            throw new \Exception(
+                sprintf(
+                    '"%s" detected in "%s" is not a valid Magento Edition, please set Magento Edition with the "--magento-edition" option',
+                    $possibleEdition,
+                    $composerFile
+                )
+            );
+        }
+
+        // if Magento Edition/Version are available, load them
+        return $editionMappings[$possibleEdition];
+    }
+
+    /**
      * Return's the default configuration for the passed Magento Edition and the actual entity type.
      *
      * @param string $magentoEdition The Magento Edition to return the configuration for
@@ -402,9 +354,12 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     protected function getDefaultConfigurationFile($entityTypeCode)
     {
 
+        // load the default configuration file mappings from the configuration
+        $defaultConfigurationFileMappings = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_DEFAULT_CONFIGURATION_FILE_MAPPINGS);
+
         // query whether or not a default configuration file for the passed entity type code exists
-        if (isset($this->configurationFileMappings[$entityTypeCode])) {
-            return $this->configurationFileMappings[$entityTypeCode];
+        if (isset($defaultConfigurationFileMappings[$entityTypeCode])) {
+            return $defaultConfigurationFileMappings[$entityTypeCode];
         }
 
         // throw an exception, if no default configuration file for the passed entity type is available
@@ -429,10 +384,13 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     protected function getDefaultConfigurationLibrary($magentoEdition, $entityTypeCode)
     {
 
+        // load the default configuration file mappings from the configuration
+        $defaultConfigurations = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_DEFAULT_CONFIGURATIONS);
+
         // query whether or not, a default configuration file for the passed entity type is available
-        if (isset($this->defaultConfigurations[$edition = strtolower($magentoEdition)])) {
-            if (isset($this->defaultConfigurations[$edition][$entityTypeCode])) {
-                return $this->defaultConfigurations[$edition][$entityTypeCode];
+        if (isset($defaultConfigurations[$edition = strtolower($magentoEdition)])) {
+            if (isset($defaultConfigurations[$edition][$entityTypeCode])) {
+                return $defaultConfigurations[$edition][$entityTypeCode];
             }
 
             // throw an exception, if the passed entity type is not supported

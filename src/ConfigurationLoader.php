@@ -22,13 +22,12 @@ namespace TechDivision\Import\Cli;
 
 use Psr\Log\LogLevel;
 use Ramsey\Uuid\Uuid;
+use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\Jms\Configuration\Database;
 use TechDivision\Import\Cli\Command\InputArgumentKeys;
 use TechDivision\Import\Cli\Command\InputOptionKeys;
-use TechDivision\Import\Cli\Utils\MagentoConfigurationKeys;
-use TechDivision\Import\Configuration\Jms\Configuration\Database;
-use TechDivision\Import\Utils\EntityTypeCodes;
-use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
+use TechDivision\Import\Cli\Utils\MagentoConfigurationKeys;
 
 /**
  * The configuration loader implementation.
@@ -41,24 +40,6 @@ use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
  */
 class ConfigurationLoader extends SimpleConfigurationLoader
 {
-
-    /**
-     * The array with the default entity type code => import directory mappings.
-     *
-     * @var array
-     */
-    protected $defaultDirectories = array(
-        EntityTypeCodes::CATALOG_PRODUCT               => 'products',
-        EntityTypeCodes::CATALOG_PRODUCT_PRICE         => 'products',
-        EntityTypeCodes::CATALOG_PRODUCT_TIER_PRICE    => 'products',
-        EntityTypeCodes::CATALOG_PRODUCT_INVENTORY     => 'products',
-        EntityTypeCodes::CATALOG_PRODUCT_INVENTORY_MSI => 'products',
-        EntityTypeCodes::CATALOG_CATEGORY              => 'categories',
-        EntityTypeCodes::EAV_ATTRIBUTE                 => 'attributes',
-        EntityTypeCodes::EAV_ATTRIBUTE_SET             => 'attributes',
-        EntityTypeCodes::CUSTOMER                      => 'customers',
-        EntityTypeCodes::CUSTOMER_ADDRESS              => 'customers'
-    );
 
     /**
      * Factory implementation to create a new initialized configuration instance.
@@ -353,31 +334,6 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             sprintf(
                 'Default libraries for Magento \'%s\' not supported (MUST be one of CE or EE)',
                 $magentoEdition
-            )
-        );
-    }
-
-    /**
-     * Return's the entity types specific default import directory.
-     *
-     * @param string $entityTypeCode The entity type code to return the default import directory for
-     *
-     * @return string The default default import directory
-     * @throws \Exception Is thrown, if no default import directory for the passed entity type code is available
-     */
-    protected function getDefaultDirectory($entityTypeCode)
-    {
-
-        // query whether or not, a default configuration file for the passed entity type is available
-        if (isset($this->defaultDirectories[$entityTypeCode])) {
-            return $this->defaultDirectories[$entityTypeCode];
-        }
-
-        // throw an exception, if the passed entity type is not supported
-        throw new \Exception(
-            sprintf(
-                'Entity Type Code \'%s\' not supported (MUST be one of catalog_product or catalog_category)',
-                $entityTypeCode
             )
         );
     }

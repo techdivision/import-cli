@@ -4,8 +4,28 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+    
         <parameter key="application.name">M2IF - Console Tool</parameter>
         <parameter key="application.version.file">.semver</parameter>
+        <parameter key="application.edition.mappings" type="collection">
+            <parameter key="magento2ce" type="constant">TechDivision\Import\Utils\EditionNamesInterface::CE</parameter>
+            <parameter key="magento2ee" type="constant">TechDivision\Import\Utils\EditionNamesInterface::EE</parameter>
+            <parameter key="project-community-edition" type="constant">TechDivision\Import\Utils\EditionNamesInterface::CE</parameter>
+            <parameter key="project-enterprise-edition" type="constant">TechDivision\Import\Utils\EditionNamesInterface::EE</parameter>
+        </parameter>
+        <parameter key="application.default.configuration.file.mappings" type="collection">
+            <parameter key="none">techdivision-import</parameter>
+            <parameter key="eav_attribute">techdivision-import</parameter>
+            <parameter key="eav_attribute_set">techdivision-import</parameter>
+            <parameter key="catalog_product">techdivision-import</parameter>
+            <parameter key="catalog_product_price">techdivision-import-price</parameter>
+            <parameter key="catalog_product_tier_price">techdivision-import</parameter>
+            <parameter key="catalog_product_inventory">techdivision-import-inventory</parameter>
+            <parameter key="catalog_product_inventory_msi">techdivision-import</parameter>
+            <parameter key="catalog_category">techdivision-import</parameter>
+            <parameter key="customer">techdivision-import</parameter>
+            <parameter key="customer_address">techdivision-import</parameter>
+        </parameter>
         <parameter key="application.default.libraries" type="collection">
             <parameter key="ce" type="collection">
                 <parameter>techdivision/import-app-simple</parameter>
@@ -50,6 +70,34 @@
                 <parameter>techdivision/import-product-variant-ee</parameter>
                 <parameter>techdivision/import-product-grouped</parameter>
                 <parameter>techdivision/import-product-grouped-ee</parameter>
+            </parameter>
+        </parameter>
+        <parameter key="application.default.configurations" type="collection">
+            <parameter key="ce" type="collection">
+                <parameter key="none">techdivision/import-product</parameter>
+                <parameter key="eav_attribute">techdivision/import-attribute</parameter>
+                <parameter key="eav_attribute_set">techdivision/import-attribute-set</parameter>
+                <parameter key="catalog_product">techdivision/import-product</parameter>
+                <parameter key="catalog_product_price">techdivision/import-product</parameter>
+                <parameter key="catalog_product_tier_price">techdivision/import-product-tier-price</parameter>
+                <parameter key="catalog_product_inventory">techdivision/import-product</parameter>
+                <parameter key="catalog_product_inventory_msi">techdivision/import-product-msi</parameter>
+                <parameter key="catalog_category">techdivision/import-category</parameter>
+                <parameter key="customer">techdivision/import-customer</parameter>
+                <parameter key="customer_address">techdivision/import-customer-address</parameter>
+            </parameter>
+            <parameter key="ee" type="collection">
+                <parameter key="none">techdivision/import-product-ee</parameter>
+                <parameter key="eav_attribute">techdivision/import-attribute</parameter>
+                <parameter key="eav_attribute_set">techdivision/import-attribute-set</parameter>
+                <parameter key="catalog_product">techdivision/import-product-ee</parameter>
+                <parameter key="catalog_product_price">techdivision/import-product-ee</parameter>
+                <parameter key="catalog_product_tier_price">techdivision/import-product-tier-price</parameter>
+                <parameter key="catalog_product_inventory">techdivision/import-product-ee</parameter>
+                <parameter key="catalog_product_inventory_msi">techdivision/import-product-msi</parameter>
+                <parameter key="catalog_category">techdivision/import-category-ee</parameter>
+                <parameter key="customer">techdivision/import-customer</parameter>
+                <parameter key="customer_address">techdivision/import-customer-address</parameter>
             </parameter>
         </parameter>
     </parameters>

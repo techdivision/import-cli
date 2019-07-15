@@ -1,3 +1,14 @@
+# Version 3.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add new DI configuration keys
+* Make default configuration file and default configuration file mappings configurable via Symfony DI
+
 # Version 2.0.0
 
 ## Bugfixes

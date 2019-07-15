@@ -103,9 +103,30 @@ class DependencyInjectionKeys extends \TechDivision\Import\App\Utils\DependencyI
     const APPLICATION_VERSION_FILE = 'application.version.file';
 
     /**
+     * The key for the application Magento 2 Edition mappings.
+     *
+     * @var string
+     */
+    const APPLICATION_EDITION_MAPPINGS = 'application.edition.mappings';
+
+    /**
      * The key for the array with the default application libraries.
      *
      * @var string
      */
     const APPLICATION_DEFAULT_LIBRARIES = 'application.default.libraries';
+
+    /**
+     * The key for the array with the default configurations.
+     *
+     * @var string
+     */
+    const APPLICATION_DEFAULT_CONFIGURATIONS = 'application.default.configurations';
+
+    /**
+     * The key for the array with the default configuration file mappings.
+     *
+     * @var string
+     */
+    const APPLICATION_DEFAULT_CONFIGURATION_FILE_MAPPINGS = 'application.default.configuration.file.mappings';
 }
