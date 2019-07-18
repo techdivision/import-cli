@@ -39,14 +39,42 @@ class LoggerFactory implements LoggerFactoryInterface
 {
 
     /**
-     * Create's and return's the loggers to use.
+     * The actual configuration instance.
+     *
+     * @var \TechDivision\Import\ConfigurationInterface
+     */
+    protected $configuration;
+
+    /**
+     * Initialize the factory with the actual configuration instance.
      *
      * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration with the data to create the loggers with
+     */
+    public function __construct(ConfigurationInterface $configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * Returns the actual configuration instance.
+     *
+     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
+     */
+    protected function getConfiguration()
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * Create's and return's the loggers to use.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection The array with the initialized loggers
      */
-    public static function createLoggers(ConfigurationInterface $configuration)
+    public function createLoggers()
     {
+
+        // load the configuration instance
+        $configuration = $this->getConfiguration();
 
         // initialize the collection for the loggers
         $loggers = new ArrayCollection();

@@ -43,6 +43,20 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
 {
 
     /**
+     * The key for the Magento Edition in the metadata extracted from the Composer configuration.
+     *
+     * @var string
+     */
+    const EDITION = 'edition';
+
+    /**
+     * The key for the Magento Version in the metadata extracted from the Composer configuration.
+     *
+     * @var string
+     */
+    const VERSION = 'version';
+
+    /**
      * The container instance.
      *
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -151,12 +165,13 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         if ($configuration = $this->input->getOption(InputOptionKeys::CONFIGURATION)) {
             // load the configuration from the file with the given filename
             $instance = $this->createConfiguration($configuration);
-        } elseif ($magentoEdition = $this->input->getOption(InputOptionKeys::MAGENTO_EDITION)) {
+        } elseif ($magentoEdition = $this->input->getOption(InputOptionKeys::MAGENTO_EDITION) && $magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION)) {
             // use the Magento Edition that has been specified as option
-            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $this->getEntityTypeCode()));
+            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
 
-            // override the Magento Edition
+            // override the Magento Edition/Version
             $instance->setMagentoEdition($magentoEdition);
+            $instance->setMagentoVersion($magentoVersion);
         } else {
             // finally, query whether or not the installation directory is a valid Magento root directory
             if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
@@ -169,13 +184,18 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             }
 
             // load the Magento Edition from the Composer configuration file
-            $magentoEdition = $this->getEditionMapping($installationDir);
+            $metadata = $this->getEditionMapping($installationDir);
+
+            // extract edition & version from the metadata
+            $magentoEdition = $metadata[SimpleConfigurationLoader::EDITION];
+            $magentoVersion = $metadata[SimpleConfigurationLoader::VERSION];
 
             // use the Magento Edition that has been detected by the installation directory
-            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $this->getEntityTypeCode()));
+            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
 
-            // override the Magento Edition, if NOT explicitly specified
+            // override the Magento Edition/Version
             $instance->setMagentoEdition($magentoEdition);
+            $instance->setMagentoVersion($magentoVersion);
         }
 
         // query whether or not a system name has been specified as command line option, if yes override the value from the configuration file
@@ -193,9 +213,14 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             $instance->setInstallationDir($this->input->getOption(InputOptionKeys::INSTALLATION_DIR));
         }
 
-        // query whether or not a Magento edition has been specified as command line option, if yes override the value from the configuration file
+        // query whether or not a Magento Edition has been specified as command line option, if yes override the value from the configuration file
         if (($this->input->hasOptionSpecified(InputOptionKeys::MAGENTO_EDITION) && $this->input->getOption(InputOptionKeys::MAGENTO_EDITION)) || $instance->getMagentoEdition() === null) {
             $instance->setMagentoEdition($this->input->getOption(InputOptionKeys::MAGENTO_EDITION));
+        }
+
+        // query whether or not a Magento Version has been specified as command line option, if yes override the value from the configuration file
+        if (($this->input->hasOptionSpecified(InputOptionKeys::MAGENTO_VERSION) && $this->input->getOption(InputOptionKeys::MAGENTO_VERSION)) || $instance->getMagentoVersion() === null) {
+            $instance->setMagentoVersion($this->input->getOption(InputOptionKeys::MAGENTO_VERSION));
         }
 
         // query whether or not a directory for the source files has been specified as command line option, if yes override the value from the configuration file
@@ -292,7 +317,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
      *
      * @param string $installationDir The Magento installation directory
      *
-     * @return string The mapped Magento Edition, either CE or EE
+     * @return array The array with the mapped Magento Edition (either CE or EE) + the Version
      * @throws \Exception Is thrown, if the passed installation directory doesn't contain a valid Magento installation
      */
     protected function getEditionMapping($installationDir)
@@ -305,10 +330,10 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         $composer = json_decode(file_get_contents($composerFile = sprintf('%s/composer.json', $installationDir)), true);
 
         // try to load and explode the Magento Edition identifier from the Composer name
-        $explodedVersion = explode('/', $composer[MagentoConfigurationKeys::COMPOSER_EDITION_NAME_ATTRIBUTE]);
+        $explodedEdition = explode('/', $composer[MagentoConfigurationKeys::COMPOSER_EDITION_NAME_ATTRIBUTE]);
 
-        // try to locate Magento Edition
-        if (!isset($editionMappings[$possibleEdition = end($explodedVersion)])) {
+        // try to load and explode the Magento Edition from the Composer configuration
+        if (!isset($editionMappings[$possibleEdition = end($explodedEdition)])) {
             throw new \Exception(
                 sprintf(
                     '"%s" detected in "%s" is not a valid Magento Edition, please set Magento Edition with the "--magento-edition" option',
@@ -318,29 +343,69 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             );
         }
 
-        // if Magento Edition/Version are available, load them
-        return $editionMappings[$possibleEdition];
+        // try to load and explode the Magento Version from the Composer configuration
+        if (!isset($composer[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE])) {
+            throw new \Exception(
+                sprintf(
+                    'Can\'t detect a version in "%s", please set Magento Version with the "--magento-version" option',
+                    $composerFile
+                )
+            );
+        }
+
+        // return the array with the Magento Version/Edition data
+        return array(
+            SimpleConfigurationLoader::VERSION => $composer[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE],
+            SimpleConfigurationLoader::EDITION => $editionMappings[$possibleEdition]
+        );
     }
 
     /**
-     * Return's the default configuration for the passed Magento Edition and the actual entity type.
+     * Return's the default configuration for the passed Magento Edition/Version and the actual entity type.
      *
      * @param string $magentoEdition The Magento Edition to return the configuration for
+     * @param string $magentoVersion The Magento Version to return the configuration for
      * @param string $entityTypeCode The entity type code to use
      *
      * @return string The path to the default configuration
      */
-    protected function getDefaultConfiguration($magentoEdition, $entityTypeCode)
+    protected function getDefaultConfiguration($magentoEdition, $magentoVersion, $entityTypeCode)
     {
-        return sprintf(
-            '%s/%s/etc/%s.json',
-            $this->getVendorDir(),
-            $this->getDefaultConfigurationLibrary(
-                $magentoEdition,
-                $entityTypeCode
-            ),
-            $this->getDefaultConfigurationFile($entityTypeCode)
-        );
+
+        // load the components the filename has to be concatenated with
+        $vendorDir = $this->getVendorDir();
+        $libraryDir = $this->getDefaultConfigurationLibrary($magentoEdition, $entityTypeCode);
+        $filename = $this->getDefaultConfigurationFile($entityTypeCode);
+
+        // load the directories that equals the versions custom configuration files are available for
+        $versions = glob(sprintf('%s/%s/etc/*', $vendorDir, $libraryDir), GLOB_ONLYDIR);
+
+        // sort the directories descending by their version
+        usort($versions, 'version_compare');
+        krsort($versions);
+
+        // explode the Magento version
+        $explodedMagentoVersion = explode('.', $magentoVersion);
+
+        // initialize the proposed filename with the default file in the library's root directory
+        $proposedfilename = $filename;
+
+        // iterate over the magento versions, try to find the matching configuration file
+        for ($i = sizeof($explodedMagentoVersion); $i > 0; $i--) {
+            foreach ($versions as $version) {
+                // create a version number
+                $level = implode('.', array_slice($explodedMagentoVersion, 0, $i));
+                // try to match the version number against the directory
+                if (version_compare($versionBasname = basename($version), $level, '<=')) {
+                    // we found the apropriate version directory and stop here
+                    $proposedfilename = sprintf('%s/%s', $versionBasname, $filename);
+                    break 2;
+                }
+            }
+        }
+
+        // return the default configuration file
+        return sprintf('%s/%s/etc/%s.json', $vendorDir, $libraryDir, $proposedfilename);
     }
 
     /**

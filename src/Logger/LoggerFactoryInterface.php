@@ -20,8 +20,6 @@
 
 namespace TechDivision\Import\Cli\Logger;
 
-use TechDivision\Import\ConfigurationInterface;
-
 /**
  * The interface for a logger factory implementation.
  *
@@ -37,9 +35,7 @@ interface LoggerFactoryInterface
     /**
      * Create's and return's the loggers to use.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration with the data to create the loggers with
-     *
      * @return \Doctrine\Common\Collections\ArrayCollection The array with the initialized loggers
      */
-    public static function createLoggers(ConfigurationInterface $configuration);
+    public function createLoggers();
 }

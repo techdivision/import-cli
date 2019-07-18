@@ -1,3 +1,13 @@
+# Version 4.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add functionality for version specific configuration and Symfony DI configuration files
+
 # Version 3.0.1
 
 ## Bugfixes

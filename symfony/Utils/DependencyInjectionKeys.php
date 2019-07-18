@@ -53,6 +53,8 @@ class DependencyInjectionKeys extends \TechDivision\Import\App\Utils\DependencyI
      */
     const CONNECTION = 'connection';
 
+    const LOGGERS = 'loggers';
+
     /**
      * The key for the simple configuration instance.
      *

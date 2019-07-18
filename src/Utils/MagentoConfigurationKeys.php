@@ -97,4 +97,11 @@ class MagentoConfigurationKeys
      * @var string
      */
     const COMPOSER_EDITION_NAME_ATTRIBUTE = 'name';
+
+    /**
+     * The attribute with the Magento Edition version in the composer.json file.
+     *
+     * @var string
+     */
+    const COMPOSER_EDITION_VERSION_ATTRIBUTE = 'version';
 }
