@@ -1,3 +1,13 @@
+# Version 4.0.1
+
+## Bugfixes
+
+* Add check if version specific configuration file really exists or not to
+
+## Features
+
+* None
+
 # Version 4.0.0
 
 ## Bugfixes

@@ -396,7 +396,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
                 // create a version number
                 $level = implode('.', array_slice($explodedMagentoVersion, 0, $i));
                 // try to match the version number against the directory
-                if (version_compare($versionBasname = basename($version), $level, '<=')) {
+                if (version_compare($versionBasname = basename($version), $level, '<=') && is_file(sprintf('%s/%s.json', $version, $filename))) {
                     // we found the apropriate version directory and stop here
                     $proposedfilename = sprintf('%s/%s', $versionBasname, $filename);
                     break 2;
