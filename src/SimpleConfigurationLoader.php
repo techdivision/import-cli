@@ -165,7 +165,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         if ($configuration = $this->input->getOption(InputOptionKeys::CONFIGURATION)) {
             // load the configuration from the file with the given filename
             $instance = $this->createConfiguration($configuration);
-        } elseif ($magentoEdition = $this->input->getOption(InputOptionKeys::MAGENTO_EDITION) && $magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION)) {
+        } elseif (($magentoEdition = $this->input->getOption(InputOptionKeys::MAGENTO_EDITION)) && ($magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION))) {
             // use the Magento Edition that has been specified as option
             $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
 

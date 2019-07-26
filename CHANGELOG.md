@@ -1,3 +1,13 @@
+# Version 4.0.2
+
+## Bugfixes
+
+* Fixed invalid comparision for Magento Edition + Version in SimpleConfigurationLoader
+
+## Features
+
+* None
+
 # Version 4.0.1
 
 ## Bugfixes
