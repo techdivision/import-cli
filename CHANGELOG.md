@@ -1,3 +1,13 @@
+# Version 6.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Update to versions of techdivision/import 14.*, techdivision/import-configuration-jms 14.* and techdivision/import-app-simple 15.*
+
 # Version 5.0.0
 
 ## Bugfixes
