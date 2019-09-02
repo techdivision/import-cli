@@ -1,3 +1,13 @@
+# Version 7.0.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Make error message for missing library directory more speakable
+
 # Version 7.0.0
 
 ## Bugfixes
