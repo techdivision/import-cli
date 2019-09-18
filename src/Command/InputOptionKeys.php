@@ -120,13 +120,6 @@ class InputOptionKeys
     const MAGENTO_VERSION = 'magento-version';
 
     /**
-     * The input option key for the source date format to use.
-     *
-     * @var string
-     */
-    const SOURCE_DATE_FORMAT = 'source-date-format';
-
-    /**
      * The input option key for the database ID to use.
      *
      * @var string
