@@ -157,6 +157,12 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             }
         }
 
+        // query whether or not a DB ID has been specified as command line
+        // option, if yes override the value from the configuration file
+        if ($tablePrefix = $this->input->getOption(InputOptionKeys::DB_TABLE_PREFIX)) {
+            $instance->getDatabase()->setTablePrefix($tablePrefix);
+        }
+
         // extend the plugins with the main configuration instance
         /** @var \TechDivision\Import\Cli\Configuration\Subject $subject */
         foreach ($instance->getPlugins() as $plugin) {
@@ -242,15 +248,19 @@ class ConfigurationLoader extends SimpleConfigurationLoader
 
         // query whether or not, the requested connection is available
         if (isset($env[MagentoConfigurationKeys::DB][MagentoConfigurationKeys::CONNECTION][$connectionName])) {
+            // load the databaase connection
+            $db = $env[MagentoConfigurationKeys::DB];
             // load the connection data
-            $connection = $env[MagentoConfigurationKeys::DB][MagentoConfigurationKeys::CONNECTION][$connectionName];
+            $connection = $db[MagentoConfigurationKeys::CONNECTION][$connectionName];
 
             // create and return a new database configuration
             return $this->newDatabaseConfiguration(
                 $this->newDsn($connection[MagentoConfigurationKeys::HOST], $connection[MagentoConfigurationKeys::DBNAME]),
                 $connection[MagentoConfigurationKeys::USERNAME],
                 $connection[MagentoConfigurationKeys::PASSWORD],
-                false
+                false,
+                null,
+                isset($db[MagentoConfigurationKeys::TABLE_PREFIX]) ? $db[MagentoConfigurationKeys::TABLE_PREFIX] : null
             );
         }
 
@@ -262,15 +272,16 @@ class ConfigurationLoader extends SimpleConfigurationLoader
      * Create's and return's a new database configuration instance, initialized with
      * the passed values.
      *
-     * @param string      $dsn      The DSN to use
-     * @param string      $username The username to  use
-     * @param string|null $password The passed to use
-     * @param boolean     $default  TRUE if this should be the default connection
-     * @param string      $id       The ID to use
+     * @param string      $dsn         The DSN to use
+     * @param string      $username    The username to  use
+     * @param string|null $password    The passed to use
+     * @param boolean     $default     TRUE if this should be the default connection
+     * @param string      $id          The ID to use
+     * @param string      $tablePrefix The table prefix to use
      *
      * @return \TechDivision\Import\Configuration\Jms\Configuration\Database The database configuration instance
      */
-    protected function newDatabaseConfiguration($dsn, $username = 'root', $password = null, $default = true, $id = null)
+    protected function newDatabaseConfiguration($dsn, $username = 'root', $password = null, $default = true, $id = null, $tablePrefix = null)
     {
 
         // initialize a new database configuration
@@ -290,6 +301,11 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         // query whether or not a password has been passed
         if ($password) {
             $database->setPassword($password);
+        }
+
+        // query whether or not a table prefix has been passed
+        if ($tablePrefix) {
+            $database->setTablePrefix($tablePrefix);
         }
 
         // return the database configuration

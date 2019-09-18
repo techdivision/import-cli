@@ -155,6 +155,13 @@ class InputOptionKeys
     const DB_PASSWORD = 'db-password';
 
     /**
+     * The input option key for the DB table prefix to use.
+     *
+     * @var string
+     */
+    const DB_TABLE_PREFIX = 'db-table-prefix';
+
+    /**
      * The input option key for the debug mode.
      *
      * @var string

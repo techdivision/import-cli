@@ -309,7 +309,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         }
 
         // throw an exception if not possible
-        throw new \Exception(sprintf('Can\' map command name %s to a entity type', $commandName));
+        throw new \Exception(sprintf('Can\'t map command name %s to a entity type', $commandName));
     }
 
     /**

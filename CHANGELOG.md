@@ -1,3 +1,14 @@
+# Version 8.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add techdivision/import-cli-simple#216
+* Update to versions of techdivision/import 15.*, techdivision/import-configuration-jms 15.* and techdivision/import-app-simple 16.*
+
 # Version 7.0.1
 
 ## Bugfixes

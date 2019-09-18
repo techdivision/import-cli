@@ -104,4 +104,11 @@ class MagentoConfigurationKeys
      * @var string
      */
     const COMPOSER_EDITION_VERSION_ATTRIBUTE = 'version';
+
+    /**
+     * The key for the DB table prefix in the app/etc/env.php file.
+     *
+     * @var string
+     */
+    const TABLE_PREFIX = 'table_prefix';
 }
