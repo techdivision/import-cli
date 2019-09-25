@@ -44,6 +44,8 @@
                 <parameter>techdivision/import-product-media</parameter>
                 <parameter>techdivision/import-product-variant</parameter>
                 <parameter>techdivision/import-product-grouped</parameter>
+                <parameter>techdivision/import-converter</parameter>
+                <parameter>techdivision/import-converter-product-category</parameter>
             </parameter>
             <parameter key="ee" type="collection">
                 <parameter>techdivision/import-app-simple</parameter>
@@ -70,6 +72,9 @@
                 <parameter>techdivision/import-product-variant-ee</parameter>
                 <parameter>techdivision/import-product-grouped</parameter>
                 <parameter>techdivision/import-product-grouped-ee</parameter>
+                <parameter>techdivision/import-converter</parameter>
+                <parameter>techdivision/import-converter-ee</parameter>
+                <parameter>techdivision/import-converter-product-category</parameter>
             </parameter>
         </parameter>
         <parameter key="application.default.configurations" type="collection">
