@@ -216,4 +216,18 @@ class InputOptionKeys
      * @var string
      */
     const CACHE_ENABLED = 'cache-enabled';
+
+    /**
+     * The input option key for the flag to move files or or not.
+     *
+     * @var string
+     */
+    const MOVE_FILES = 'move-files';
+
+    /**
+     * The input option key for the move files prefix.
+     *
+     * @var string
+     */
+    const MOVE_FILES_PREFIX = 'move-files-prefix';
 }

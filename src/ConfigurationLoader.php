@@ -59,10 +59,13 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         // set the serial that has been specified as command line option (or the default value)
         $instance->setSerial($this->input->getOption(InputOptionKeys::SERIAL));
 
-        // query whether or not an operation name has been specified as command line
+        // query whether or not operation names has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($operationName = $this->input->getArgument(InputArgumentKeys::OPERATION_NAME)) {
-            $instance->setOperationName($operationName);
+        if ($operationNames = $this->input->getArgument(InputArgumentKeys::OPERATION_NAMES)) {
+            // append the names of the operations we want to execute to the configuration
+            foreach ($operationNames as $operationName) {
+                $instance->addOperationName($operationName);
+            }
         }
 
         // query whether or not a Magento version has been specified as command line
@@ -89,6 +92,12 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             $instance->setLogLevel($logLevel);
         }
 
+        // query whether or not a prefix for the move files subject has been specified as command line
+        // option, if yes override the value from the configuration file
+        if ($moveFilesPrefix = $this->input->getOption(InputOptionKeys::MOVE_FILES_PREFIX)) {
+            $instance->setMoveFilesPrefix($moveFilesPrefix);
+        }
+
         // query whether or not the debug mode has been specified as command line
         // option, if yes override the value from the configuration file
         if ($this->input->hasOptionSpecified(InputOptionKeys::ARCHIVE_ARTEFACTS)) {
@@ -111,6 +120,12 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         // option, if yes override the value from the configuration file
         if ($this->input->hasOptionSpecified(InputOptionKeys::CACHE_ENABLED)) {
             $instance->setCacheEnabled($instance->mapBoolean($this->input->getOption(InputOptionKeys::CACHE_ENABLED)));
+        }
+
+        // query whether or not the move files flag has been specified as command line
+        // option, if yes override the value from the configuration file
+        if ($this->input->hasOptionSpecified(InputOptionKeys::MOVE_FILES)) {
+            $instance->setMoveFiles($instance->mapBoolean($this->input->getOption(InputOptionKeys::MOVE_FILES)));
         }
 
         // query whether or not we've an valid Magento root directory specified

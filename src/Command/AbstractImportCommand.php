@@ -52,7 +52,7 @@ abstract class AbstractImportCommand extends Command
     {
 
         // configure the command
-        $this->addArgument(InputArgumentKeys::OPERATION_NAME, InputArgument::OPTIONAL, 'The operation that has to be used for the import, one of "add-update", "replace" or "delete"', OperationKeys::ADD_UPDATE)
+        $this->addArgument(InputArgumentKeys::OPERATION_NAMES, InputArgument::IS_ARRAY|InputArgument::OPTIONAL, 'The operation(s) that has to be used for the import, one of "add-update", "replace", "delete" or "convert" or a combination of them', array(OperationKeys::ADD_UPDATE))
              ->addOption(InputOptionKeys::SERIAL, null, InputOption::VALUE_REQUIRED, 'The unique identifier of this import process', Uuid::uuid4()->__toString())
              ->addOption(InputOptionKeys::INSTALLATION_DIR, null, InputOption::VALUE_REQUIRED, 'The Magento installation directory to which the files has to be imported', getcwd())
              ->addOption(InputOptionKeys::SYSTEM_NAME, null, InputOption::VALUE_REQUIRED, 'Specify the system name to use', gethostname())
@@ -74,7 +74,9 @@ abstract class AbstractImportCommand extends Command
              ->addOption(InputOptionKeys::DEBUG_MODE, null, InputOption::VALUE_REQUIRED, 'Whether or not debug mode should be used')
              ->addOption(InputOptionKeys::SINGLE_TRANSACTION, null, InputOption::VALUE_REQUIRED, 'Whether or not the import should be wrapped within a single transaction')
              ->addOption(InputOptionKeys::PARAMS, null, InputOption::VALUE_REQUIRED, 'Additional options passed as a string (MUST have the same format as the used configuration file has)')
-             ->addOption(InputOptionKeys::PARAMS_FILE, null, InputOption::VALUE_REQUIRED, 'Additional options passed as pathname');
+             ->addOption(InputOptionKeys::PARAMS_FILE, null, InputOption::VALUE_REQUIRED, 'Additional options passed as pathname')
+             ->addOption(InputOptionKeys::MOVE_FILES, null, InputOption::VALUE_REQUIRED, 'Whether or not move the files from the source to the target directory')
+             ->addOption(InputOptionKeys::MOVE_FILES_PREFIX, null, InputOption::VALUE_REQUIRED, 'Prefix of the files to move (defaults to the prefix of the first of the first plugin subject)');
     }
 
     /**

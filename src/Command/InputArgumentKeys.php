@@ -71,9 +71,9 @@ class InputArgumentKeys
     const OPERATION_NAME_ARG_DELETE = 'delete';
 
     /**
-     * The input argument key for the operation name to use.
+     * The input argument key for the operation names to use.
      *
      * @var string
      */
-    const OPERATION_NAME = 'operation-name';
+    const OPERATION_NAMES = 'operation-names';
 }
