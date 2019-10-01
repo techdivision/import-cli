@@ -1,4 +1,4 @@
-# Version 8.0.0
+# Version 7.0.2
 
 ## Bugfixes
 
@@ -6,8 +6,7 @@
 
 ## Features
 
-* Add techdivision/import-cli-simple#216
-* Update to versions of techdivision/import 15.*, techdivision/import-configuration-jms 15.* and techdivision/import-app-simple 16.*
+* Fixed issue with InvalidArgumentException - The "magento-version" option does not exist - when invoking simple commands like import:create:ok-file
 
 # Version 7.0.1
 

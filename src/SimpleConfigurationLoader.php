@@ -177,7 +177,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
                 throw new \Exception(
                     sprintf(
-                        'Directory "%s" specified with option "--installation-dir" is not a valid Magento root directory',
+                        'Directory "%s" is not a valid Magento root directory, please use option "--installation-dir" to specify it',
                         $installationDir
                     )
                 );
@@ -475,5 +475,29 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
                 $magentoEdition
             )
         );
+    }
+
+    /**
+     * Query whether or not, the passed directory is a Magento root directory.
+     *
+     * @param string $dir The directory to query
+     *
+     * @return boolean TRUE if the directory is a Magento root directory, else FALSE
+     */
+    protected function isMagentoRootDir($dir)
+    {
+        return is_file($this->getMagentoEnv($dir));
+    }
+
+    /**
+     * Return's the path to the Magento file with the environment configuration.
+     *
+     * @param string $dir The path to the Magento root directory
+     *
+     * @return string The path to the Magento file with the environment configuration
+     */
+    protected function getMagentoEnv($dir)
+    {
+        return sprintf('%s/app/etc/env.php', $dir);
     }
 }
