@@ -75,6 +75,7 @@ abstract class AbstractImportCommand extends Command
              ->addOption(InputOptionKeys::SINGLE_TRANSACTION, null, InputOption::VALUE_REQUIRED, 'Whether or not the import should be wrapped within a single transaction')
              ->addOption(InputOptionKeys::PARAMS, null, InputOption::VALUE_REQUIRED, 'Additional options passed as a string (MUST have the same format as the used configuration file has)')
              ->addOption(InputOptionKeys::PARAMS_FILE, null, InputOption::VALUE_REQUIRED, 'Additional options passed as pathname')
+             ->addOption(InputOptionKeys::COMPILE, null, InputOption::VALUE_REQUIRED, 'Whether or not the configuration files have to loaded, merged and compiled')
              ->addOption(InputOptionKeys::MOVE_FILES, null, InputOption::VALUE_REQUIRED, 'Whether or not move the files from the source to the target directory')
              ->addOption(InputOptionKeys::MOVE_FILES_PREFIX, null, InputOption::VALUE_REQUIRED, 'Prefix of the files to move (defaults to the prefix of the first of the first plugin subject)');
     }

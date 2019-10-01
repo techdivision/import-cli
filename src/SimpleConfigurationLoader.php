@@ -133,70 +133,16 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
      * values found in the configuration file.
      *
      * @return \TechDivision\Import\ConfigurationInterface The configuration instance
-     * @throws \Exception Is thrown, if the specified configuration file doesn't exist or the mandatory arguments/options to run the requested operation are not available
      */
     public function load()
     {
 
-        // load the actual vendor directory and entity type code
-        $vendorDir = $this->getVendorDir();
+        // initially try to create the configuration instance
+        // $instance = $this->createInstance();
+        $instance = $this->createInstanceFromDirectories();
 
-        // the path of the JMS serializer directory, relative to the vendor directory
-        $jmsDir = DIRECTORY_SEPARATOR . 'jms' . DIRECTORY_SEPARATOR . 'serializer' . DIRECTORY_SEPARATOR . 'src';
-
-        // try to find the path to the JMS Serializer annotations
-        if (!file_exists($annotationDir = $vendorDir . DIRECTORY_SEPARATOR . $jmsDir)) {
-            // stop processing, if the JMS annotations can't be found
-            throw new \Exception(
-                sprintf(
-                    'The jms/serializer libarary can not be found in one of "%s"',
-                    implode(', ', $vendorDir)
-                )
-            );
-        }
-
-        // register the autoloader for the JMS serializer annotations
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation',
-            $annotationDir
-        );
-
-        // query whether or not, a configuration file has been specified
-        if ($configuration = $this->input->getOption(InputOptionKeys::CONFIGURATION)) {
-            // load the configuration from the file with the given filename
-            $instance = $this->createConfiguration($configuration);
-        } elseif (($magentoEdition = $this->input->getOption(InputOptionKeys::MAGENTO_EDITION)) && ($magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION))) {
-            // use the Magento Edition that has been specified as option
-            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
-
-            // override the Magento Edition/Version
-            $instance->setMagentoEdition($magentoEdition);
-            $instance->setMagentoVersion($magentoVersion);
-        } else {
-            // finally, query whether or not the installation directory is a valid Magento root directory
-            if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
-                throw new \Exception(
-                    sprintf(
-                        'Directory "%s" specified with option "--installation-dir" is not a valid Magento root directory',
-                        $installationDir
-                    )
-                );
-            }
-
-            // load the Magento Edition from the Composer configuration file
-            $metadata = $this->getEditionMapping($installationDir);
-
-            // extract edition & version from the metadata
-            $magentoEdition = $metadata[SimpleConfigurationLoader::EDITION];
-            $magentoVersion = $metadata[SimpleConfigurationLoader::VERSION];
-
-            // use the Magento Edition that has been detected by the installation directory
-            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
-
-            // override the Magento Edition/Version
-            $instance->setMagentoEdition($magentoEdition);
-            $instance->setMagentoVersion($magentoVersion);
-        }
+        // we have to set the entity type code at least
+        $instance->setEntityTypeCode($this->getEntityTypeCode());
 
         // query whether or not a system name has been specified as command line option, if yes override the value from the configuration file
         if (($this->input->hasOptionSpecified(InputOptionKeys::SYSTEM_NAME) && $this->input->getOption(InputOptionKeys::SYSTEM_NAME)) || $instance->getSystemName() === null) {
@@ -229,6 +175,118 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         }
 
         // return the initialized configuration instance
+        return $instance;
+    }
+
+    protected function createInstanceFromDirectories()
+    {
+
+        // load the actual vendor directory and entity type code
+        $vendorDir = $this->getVendorDir();
+
+        // the path of the JMS serializer directory, relative to the vendor directory
+        $jmsDir = DIRECTORY_SEPARATOR . 'jms' . DIRECTORY_SEPARATOR . 'serializer' . DIRECTORY_SEPARATOR . 'src';
+
+        // try to find the path to the JMS Serializer annotations
+        if (!file_exists($annotationDir = $vendorDir . DIRECTORY_SEPARATOR . $jmsDir)) {
+            // stop processing, if the JMS annotations can't be found
+            throw new \Exception(
+                sprintf(
+                    'The jms/serializer libarary can not be found in one of "%s"',
+                    implode(', ', $vendorDir)
+                    )
+                );
+        }
+
+        // register the autoloader for the JMS serializer annotations
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+            'JMS\Serializer\Annotation',
+            $annotationDir
+        );
+
+        // load the actual vendor directory and entity type code
+        $directories = array(
+            implode(DIRECTORY_SEPARATOR, array($vendorDir, 'techdivision', 'import-configuration-jms', 'etc')),
+            implode(DIRECTORY_SEPARATOR, array(getcwd(), 'etc'))
+        );
+
+        return $this->configurationFactory->factoryFromDirectories($directories);
+    }
+
+    /**
+     * This method create the configuration instance from the configuration file
+     * defined by the commandline args and options.
+     *
+     * @return \TechDivision\Import\ConfigurationInterface The configuration instance loaded from the configuration file
+     * @throws \Exception Is thrown, if the specified configuration file doesn't exist or the mandatory arguments/options to run the requested operation are not available
+     */
+    protected function createInstance()
+    {
+
+        // load the actual vendor directory and entity type code
+        $vendorDir = $this->getVendorDir();
+
+        // the path of the JMS serializer directory, relative to the vendor directory
+        $jmsDir = DIRECTORY_SEPARATOR . 'jms' . DIRECTORY_SEPARATOR . 'serializer' . DIRECTORY_SEPARATOR . 'src';
+
+        // try to find the path to the JMS Serializer annotations
+        if (!file_exists($annotationDir = $vendorDir . DIRECTORY_SEPARATOR . $jmsDir)) {
+            // stop processing, if the JMS annotations can't be found
+            throw new \Exception(
+                sprintf(
+                    'The jms/serializer libarary can not be found in one of "%s"',
+                    implode(', ', $vendorDir)
+                )
+            );
+        }
+
+        // register the autoloader for the JMS serializer annotations
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+            'JMS\Serializer\Annotation',
+            $annotationDir
+        );
+
+        // query whether or not, a configuration file has been specified
+        if ($configuration = $this->input->getOption(InputOptionKeys::CONFIGURATION)) {
+            // load the configuration from the file with the given filename
+            return $this->createConfiguration($configuration);
+        } elseif (($magentoEdition = $this->input->getOption(InputOptionKeys::MAGENTO_EDITION)) && ($magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION))) {
+            // use the Magento Edition that has been specified as option
+            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
+
+            // override the Magento Edition/Version
+            $instance->setMagentoEdition($magentoEdition);
+            $instance->setMagentoVersion($magentoVersion);
+
+            // return the configuration intance
+            return $instance;
+        }
+
+        // finally, query whether or not the installation directory is a valid Magento root directory
+        if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
+            throw new \Exception(
+                sprintf(
+                    'Directory "%s" specified with option "--installation-dir" is not a valid Magento root directory',
+                    $installationDir
+                )
+            );
+        }
+
+        // load the Magento Edition from the Composer configuration file
+        $metadata = $this->getEditionMapping($installationDir);
+
+        // extract edition & version from the metadata
+        $magentoEdition = $metadata[SimpleConfigurationLoader::EDITION];
+        $magentoVersion = $metadata[SimpleConfigurationLoader::VERSION];
+
+        // use the Magento Edition that has been detected by the installation directory
+        $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
+
+        // override the Magento Edition/Version
+        $instance->setMagentoEdition($magentoEdition);
+        $instance->setMagentoVersion($magentoVersion);
+
+        // return the configuration intance
         return $instance;
     }
 

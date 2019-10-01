@@ -68,12 +68,6 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             }
         }
 
-        // query whether or not a Magento version has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION)) {
-            $instance->setMagentoVersion($magentoVersion);
-        }
-
         // query whether or not a directory containing the imported files has been specified as command line
         // option, if yes override the value from the configuration file
         if ($targetDir = $this->input->getOption(InputOptionKeys::TARGET_DIR)) {
@@ -126,6 +120,12 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         // option, if yes override the value from the configuration file
         if ($this->input->hasOptionSpecified(InputOptionKeys::MOVE_FILES)) {
             $instance->setMoveFiles($instance->mapBoolean($this->input->getOption(InputOptionKeys::MOVE_FILES)));
+        }
+
+        // query whether or not the configurationfiles flag has been specified as command line
+        // option, if yes override the value from the configuration file
+        if ($this->input->hasOptionSpecified(InputOptionKeys::COMPILE)) {
+            $instance->setCompile($instance->mapBoolean($this->input->getOption(InputOptionKeys::COMPILE)));
         }
 
         // query whether or not we've an valid Magento root directory specified

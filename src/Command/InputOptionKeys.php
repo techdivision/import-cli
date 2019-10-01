@@ -230,4 +230,11 @@ class InputOptionKeys
      * @var string
      */
     const MOVE_FILES_PREFIX = 'move-files-prefix';
+
+    /**
+     * The input option key for the flag to compile configuration files or or not.
+     *
+     * @var string
+     */
+    const COMPILE = 'compile';
 }

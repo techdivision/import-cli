@@ -105,6 +105,9 @@
                 <parameter key="customer_address">techdivision/import-customer-address</parameter>
             </parameter>
         </parameter>
+        <parameter key="application.default.configuration.parser.mappings" type="collection">
+            <parameter key="json">import_cli.configuration.parser.json</parameter>
+        </parameter>
     </parameters>
 
     <services>
@@ -117,7 +120,14 @@
         <service id="import_cli.utils.command.names" class="TechDivision\Import\Utils\CommandNames"/>
         <service id="import_cli.utils.mappings.command.name.to.entity.type.code" class="TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode"/>
 
-        <service id="import_cli.configuration.factory" class="TechDivision\Import\Configuration\Jms\ConfigurationFactory"/>
+        <service id="import_cli.configuration.parser.json" class="TechDivision\Import\Configuration\Jms\Parsers\JsonParser"/>
+        <service id="import_cli.configuration.parser.factory" class="TechDivision\Import\Configuration\Jms\ConfigurationParserFactory">
+            <argument type="service" id="service_container"/>
+            <argument>%application.default.configuration.parser.mappings%</argument>
+        </service>
+        <service id="import_cli.configuration.factory" class="TechDivision\Import\Configuration\Jms\ConfigurationFactory">
+            <argument type="service" id="import_cli.configuration.parser.factory"/>
+        </service>
 
         <service id="import_cli.command.import.products" class="TechDivision\Import\Cli\Command\ImportProductsCommand"/>
         <service id="import_cli.command.import.products.price" class="TechDivision\Import\Cli\Command\ImportProductsPriceCommand"/>
