@@ -8,9 +8,9 @@
         "symfony/config": "~2.8|~3.0|~4.0",
         "symfony/console": "~2.3,!=2.7.0|~4.0",
         "symfony/dependency-injection": "~2.3,!=2.7.0|~4.0",
-        "techdivision/import": "15.x-dev as 15.0.0",
-        "techdivision/import-app-simple": "16.x-dev as 16.0.0",
-        "techdivision/import-configuration-jms": "15.x-dev as 15.0.0"
+        "techdivision/import": "14.*",
+        "techdivision/import-app-simple": "15.*",
+        "techdivision/import-configuration-jms": "14.*"
     },
     "require-dev": {
         "doctrine/dbal": "2.5.*",

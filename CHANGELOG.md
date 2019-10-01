@@ -11,6 +11,26 @@
 * Add techdivision/import-configuration-jms#25
 * Update to versions of techdivision/import 15.*, techdivision/import-configuration-jms 15.* and techdivision/import-app-simple 16.*
 
+# Version 7.0.3
+
+## Bugfixes
+
+* Fixed invalid composer dependencies
+
+## Features
+
+* None
+
+# Version 7.0.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Fixed issue with InvalidArgumentException - The "magento-version" option does not exist - when invoking simple commands like import:create:ok-file
+
 # Version 7.0.1
 
 ## Bugfixes

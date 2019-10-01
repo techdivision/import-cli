@@ -257,37 +257,31 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             // override the Magento Edition/Version
             $instance->setMagentoEdition($magentoEdition);
             $instance->setMagentoVersion($magentoVersion);
+        } else {
+            // finally, query whether or not the installation directory is a valid Magento root directory
+            if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
+                throw new \Exception(
+                    sprintf(
+                        'Directory "%s" is not a valid Magento root directory, please use option "--installation-dir" to specify it',
+                        $installationDir
+                    )
+                );
+            }
 
-            // return the configuration intance
-            return $instance;
+            // load the Magento Edition from the Composer configuration file
+            $metadata = $this->getEditionMapping($installationDir);
+
+            // extract edition & version from the metadata
+            $magentoEdition = $metadata[SimpleConfigurationLoader::EDITION];
+            $magentoVersion = $metadata[SimpleConfigurationLoader::VERSION];
+
+            // use the Magento Edition that has been detected by the installation directory
+            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
+
+            // override the Magento Edition/Version
+            $instance->setMagentoEdition($magentoEdition);
+            $instance->setMagentoVersion($magentoVersion);
         }
-
-        // finally, query whether or not the installation directory is a valid Magento root directory
-        if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
-            throw new \Exception(
-                sprintf(
-                    'Directory "%s" specified with option "--installation-dir" is not a valid Magento root directory',
-                    $installationDir
-                )
-            );
-        }
-
-        // load the Magento Edition from the Composer configuration file
-        $metadata = $this->getEditionMapping($installationDir);
-
-        // extract edition & version from the metadata
-        $magentoEdition = $metadata[SimpleConfigurationLoader::EDITION];
-        $magentoVersion = $metadata[SimpleConfigurationLoader::VERSION];
-
-        // use the Magento Edition that has been detected by the installation directory
-        $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
-
-        // override the Magento Edition/Version
-        $instance->setMagentoEdition($magentoEdition);
-        $instance->setMagentoVersion($magentoVersion);
-
-        // return the configuration intance
-        return $instance;
     }
 
     /**
@@ -533,5 +527,29 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
                 $magentoEdition
             )
         );
+    }
+
+    /**
+     * Query whether or not, the passed directory is a Magento root directory.
+     *
+     * @param string $dir The directory to query
+     *
+     * @return boolean TRUE if the directory is a Magento root directory, else FALSE
+     */
+    protected function isMagentoRootDir($dir)
+    {
+        return is_file($this->getMagentoEnv($dir));
+    }
+
+    /**
+     * Return's the path to the Magento file with the environment configuration.
+     *
+     * @param string $dir The path to the Magento root directory
+     *
+     * @return string The path to the Magento file with the environment configuration
+     */
+    protected function getMagentoEnv($dir)
+    {
+        return sprintf('%s/app/etc/env.php', $dir);
     }
 }
