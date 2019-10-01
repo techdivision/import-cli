@@ -1,3 +1,13 @@
+# Version 7.0.3
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Fixed invalid composer dependencies
+
 # Version 7.0.2
 
 ## Bugfixes
