@@ -176,13 +176,6 @@ class InputOptionKeys
     const PID_FILENAME = 'pid-filename';
 
     /**
-     * The input option key for the entity type code to use.
-     *
-     * @var string
-     */
-    const ENTITY_TYPE_CODE = 'entity-type-code';
-
-    /**
      * The input option key for the destination pathname to use.
      *
      * @var string
@@ -237,4 +230,11 @@ class InputOptionKeys
      * @var string
      */
     const COMPILE = 'compile';
+
+    /**
+     * The input option key for the custom configuration directory.
+     *
+     * @var string
+     */
+    const CUSTOM_CONFIGURATION_DIR = 'custom-configuration-dir';
 }

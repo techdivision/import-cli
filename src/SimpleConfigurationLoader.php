@@ -138,8 +138,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     {
 
         // initially try to create the configuration instance
-        // $instance = $this->createInstance();
-        $instance = $this->createInstanceFromDirectories();
+        $instance = $this->createInstance();
 
         // we have to set the entity type code at least
         $instance->setEntityTypeCode($this->getEntityTypeCode());
@@ -176,41 +175,6 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
 
         // return the initialized configuration instance
         return $instance;
-    }
-
-    protected function createInstanceFromDirectories()
-    {
-
-        // load the actual vendor directory and entity type code
-        $vendorDir = $this->getVendorDir();
-
-        // the path of the JMS serializer directory, relative to the vendor directory
-        $jmsDir = DIRECTORY_SEPARATOR . 'jms' . DIRECTORY_SEPARATOR . 'serializer' . DIRECTORY_SEPARATOR . 'src';
-
-        // try to find the path to the JMS Serializer annotations
-        if (!file_exists($annotationDir = $vendorDir . DIRECTORY_SEPARATOR . $jmsDir)) {
-            // stop processing, if the JMS annotations can't be found
-            throw new \Exception(
-                sprintf(
-                    'The jms/serializer libarary can not be found in one of "%s"',
-                    implode(', ', $vendorDir)
-                    )
-                );
-        }
-
-        // register the autoloader for the JMS serializer annotations
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation',
-            $annotationDir
-        );
-
-        // load the actual vendor directory and entity type code
-        $directories = array(
-            implode(DIRECTORY_SEPARATOR, array($vendorDir, 'techdivision', 'import-configuration-jms', 'etc')),
-            implode(DIRECTORY_SEPARATOR, array(getcwd(), 'etc'))
-        );
-
-        return $this->configurationFactory->factoryFromDirectories($directories);
     }
 
     /**
@@ -252,47 +216,53 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             return $this->createConfiguration($configuration);
         } elseif (($magentoEdition = $this->input->getOption(InputOptionKeys::MAGENTO_EDITION)) && ($magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION))) {
             // use the Magento Edition that has been specified as option
-            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
+            $instance = $this->createConfiguration();
 
             // override the Magento Edition/Version
             $instance->setMagentoEdition($magentoEdition);
             $instance->setMagentoVersion($magentoVersion);
-        } else {
-            // finally, query whether or not the installation directory is a valid Magento root directory
-            if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
-                throw new \Exception(
-                    sprintf(
-                        'Directory "%s" is not a valid Magento root directory, please use option "--installation-dir" to specify it',
-                        $installationDir
-                    )
-                );
-            }
 
-            // load the Magento Edition from the Composer configuration file
-            $metadata = $this->getEditionMapping($installationDir);
-
-            // extract edition & version from the metadata
-            $magentoEdition = $metadata[SimpleConfigurationLoader::EDITION];
-            $magentoVersion = $metadata[SimpleConfigurationLoader::VERSION];
-
-            // use the Magento Edition that has been detected by the installation directory
-            $instance = $this->createConfiguration($this->getDefaultConfiguration($magentoEdition, $magentoVersion, $this->getEntityTypeCode()));
-
-            // override the Magento Edition/Version
-            $instance->setMagentoEdition($magentoEdition);
-            $instance->setMagentoVersion($magentoVersion);
+            // return the instance
+            return $instance;
         }
+
+        // finally, query whether or not the installation directory is a valid Magento root directory
+        if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
+            throw new \Exception(
+                sprintf(
+                    'Directory "%s" is not a valid Magento root directory, please use option "--installation-dir" to specify it',
+                    $installationDir
+                )
+            );
+        }
+
+        // use the Magento Edition that has been detected by the installation directory
+        $instance = $this->createConfiguration();
+
+        // load the Magento Edition from the Composer configuration file
+        $metadata = $this->getEditionMapping($installationDir);
+
+        // extract edition & version from the metadata
+        $magentoEdition = $metadata[SimpleConfigurationLoader::EDITION];
+        $magentoVersion = $metadata[SimpleConfigurationLoader::VERSION];
+
+        // override the Magento Edition/Version
+        $instance->setMagentoEdition($magentoEdition);
+        $instance->setMagentoVersion($magentoVersion);
+
+        // return the instance
+        return $instance;
     }
 
     /**
      * Create and return a new configuration instance from the passed configuration filename
      * after merging additional specified params from the commandline.
      *
-     * @param string $filename The configuration filename to use
+     * @param string|null $filename The configuration filename to use
      *
      * @return \TechDivision\Import\ConfigurationInterface The configuration instance
      */
-    protected function createConfiguration($filename)
+    protected function createConfiguration($filename = null)
     {
 
         // initialize the params specified with the --params parameter
@@ -311,8 +281,62 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             $paramsFile = $this->input->getOption(InputOptionKeys::PARAMS_FILE);
         }
 
-        // create the configuration and return it
-        return $this->configurationFactory->factory($filename, pathinfo($filename, PATHINFO_EXTENSION), $params, $paramsFile);
+        // if a filename has been passed, try to load the configuration from the file
+        if (is_file($filename)) {
+            return $this->configurationFactory->factory($filename, pathinfo($filename, PATHINFO_EXTENSION), $params, $paramsFile);
+        }
+
+        // initialize the array for the directories
+        $directories = array();
+
+        // set the default file format
+        $format = 'json';
+
+        // load the actual vendor directory and entity type code
+        $vendorDir = $this->getVendorDir();
+
+        // load the default configuration directory from the DI configuration
+        $defaultConfigurationDirectory = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_DEFAULT_CONFIGURATION_DIR);
+
+        // load the directories that has to be parsed for configuration files1
+        foreach ($this->getDefaultLibraries() as $defaultLibrary) {
+            // initialize the directory name
+            $directory = implode(
+                DIRECTORY_SEPARATOR,
+                array_merge(
+                    array($vendorDir),
+                    explode('/', $defaultLibrary),
+                    explode('/', $defaultConfigurationDirectory)
+                )
+            );
+
+            // query whether or not the directory is available1
+            if (is_dir($directory)) {
+                $directories[] = $directory;
+            }
+        }
+
+        // initialize the default custom configuration directory
+        $customConfigurationDirectory = implode(
+            DIRECTORY_SEPARATOR,
+            array_merge(
+                array(getcwd()),
+                explode('/', $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_CUSTOM_CONFIGURATION_DIR))
+            )
+        );
+
+        // query whether or not a custom configuration directory has been speified, if yes override the default one
+        if ($this->input->hasOptionSpecified(InputOptionKeys::CUSTOM_CONFIGURATION_DIR) && $this->input->getOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR)) {
+            $customConfigurationDirectory = $this->input->getOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR);
+        }
+
+        // specify the default directory for custom configuration files
+        if (is_dir($customConfigurationDirectory)) {
+            $directories[] = $customConfigurationDirectory;
+        }
+
+        // load and return the configuration from the files found in the passed directories
+        return $this->configurationFactory->factoryFromDirectories($directories, $format, $params, $paramsFile);
     }
 
     /**
@@ -412,121 +436,34 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         );
     }
 
+
     /**
-     * Return's the default configuration for the passed Magento Edition/Version and the actual entity type.
+     * Return's the application's default libraries.
      *
-     * @param string $magentoEdition The Magento Edition to return the configuration for
-     * @param string $magentoVersion The Magento Version to return the configuration for
-     * @param string $entityTypeCode The entity type code to use
-     *
-     * @return string The path to the default configuration
+     * @return array The default libraries
      */
-    protected function getDefaultConfiguration($magentoEdition, $magentoVersion, $entityTypeCode)
+    protected function getDefaultLibraries()
     {
 
-        // load the components the filename has to be concatenated with
-        $vendorDir = $this->getVendorDir();
-        $libraryDir = $this->getDefaultConfigurationLibrary($magentoEdition, $entityTypeCode);
-        $filename = $this->getDefaultConfigurationFile($entityTypeCode);
+        // load the default libraries from the configuration
+        $defaultLibraries = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_DEFAULT_LIBRARIES);
 
-        // load the directories that equals the versions custom configuration files are available for
-        $versions = glob(sprintf('%s/%s/etc/*', $vendorDir, $libraryDir), GLOB_ONLYDIR);
+        // initialize the array for the libraries
+        $libraries = array();
 
-        // sort the directories descending by their version
-        usort($versions, 'version_compare');
-        krsort($versions);
-
-        // explode the Magento version
-        $explodedMagentoVersion = explode('.', $magentoVersion);
-
-        // initialize the proposed filename with the default file in the library's root directory
-        $proposedfilename = $filename;
-
-        // iterate over the magento versions, try to find the matching configuration file
-        for ($i = sizeof($explodedMagentoVersion); $i > 0; $i--) {
-            foreach ($versions as $version) {
-                // create a version number
-                $level = implode('.', array_slice($explodedMagentoVersion, 0, $i));
-                // try to match the version number against the directory
-                if (version_compare($versionBasname = basename($version), $level, '<=') && is_file(sprintf('%s/%s.json', $version, $filename))) {
-                    // we found the apropriate version directory and stop here
-                    $proposedfilename = sprintf('%s/%s', $versionBasname, $filename);
-                    break 2;
+        // append each library only ONCE
+        foreach ($defaultLibraries as $libraries) {
+            foreach ($libraries as $library) {
+                if (in_array($library, $libraries)) {
+                    continue;
                 }
+                // append the library
+                $libraries[] = $library;
             }
         }
 
-        // return the default configuration file
-        return sprintf('%s/%s/etc/%s.json', $vendorDir, $libraryDir, $proposedfilename);
-    }
-
-    /**
-     * Return's the name of the default configuration file.
-     *
-     * @param string $entityTypeCode The entity type code to return the default configuration file for
-     *
-     * @return string The name of the entity type's default configuration file
-     * @throws \Exception
-     */
-    protected function getDefaultConfigurationFile($entityTypeCode)
-    {
-
-        // load the default configuration file mappings from the configuration
-        $defaultConfigurationFileMappings = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_DEFAULT_CONFIGURATION_FILE_MAPPINGS);
-
-        // query whether or not a default configuration file for the passed entity type code exists
-        if (isset($defaultConfigurationFileMappings[$entityTypeCode])) {
-            return $defaultConfigurationFileMappings[$entityTypeCode];
-        }
-
-        // throw an exception, if no default configuration file for the passed entity type is available
-        throw new \Exception(
-            sprintf(
-                'Can\'t find a default configuration file for entity Type Code \'%s\' (MUST be one of catalog_product, catalog_product_price, catalog_product_inventory, catalog_category or eav_attribute)',
-                $entityTypeCode
-            )
-        );
-    }
-
-    /**
-     * Return's the Magento Edition and entity type's specific default library that contains
-     * the configuration file.
-     *
-     * @param string $magentoEdition The Magento Edition to return the default library for
-     * @param string $entityTypeCode The entity type code to return the default library file for
-     *
-     * @return string The name of the library that contains the default configuration file for the passed Magento Edition and entity type code
-     * @throws \Exception Is thrown, if no default configuration for the passed entity type code is available
-     */
-    protected function getDefaultConfigurationLibrary($magentoEdition, $entityTypeCode)
-    {
-
-        // load the default configuration file mappings from the configuration
-        $defaultConfigurations = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_DEFAULT_CONFIGURATIONS);
-
-        // query whether or not, a default configuration file for the passed entity type is available
-        if (isset($defaultConfigurations[$edition = strtolower($magentoEdition)])) {
-            if (isset($defaultConfigurations[$edition][$entityTypeCode])) {
-                return $defaultConfigurations[$edition][$entityTypeCode];
-            }
-
-            // throw an exception, if the passed entity type is not supported
-            throw new \Exception(
-                sprintf(
-                    'Entity Type Code \'%s\' not supported by entity type code \'%s\' (MUST be one of catalog_product, catalog_category or eav_attribute)',
-                    $edition,
-                    $entityTypeCode
-                )
-            );
-        }
-
-        // throw an exception, if the passed edition is not supported
-        throw new \Exception(
-            sprintf(
-                'Default configuration for Magento \'%s\' not supported (MUST be one of CE or EE)',
-                $magentoEdition
-            )
-        );
+        // return the array with the libraries
+        return $libraries;
     }
 
     /**

@@ -50,25 +50,11 @@ class InputArgumentKeys
     }
 
     /**
-     * Key for operation name 'add-update'.
+     * The input argument key for the shortcut to execute.
      *
      * @var string
      */
-    const OPERATION_NAME_ARG_ADD_UPDATE = 'add-update';
-
-    /**
-     * Key for operation name 'replace'.
-     *
-     * @var string
-     */
-    const OPERATION_NAME_ARG_REPLACE = 'replace';
-
-    /**
-     * Key for operation name 'delete'.
-     *
-     * @var string
-     */
-    const OPERATION_NAME_ARG_DELETE = 'delete';
+    const SHORTCUT = 'shortcut';
 
     /**
      * The input argument key for the operation names to use.

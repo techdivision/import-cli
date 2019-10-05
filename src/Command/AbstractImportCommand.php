@@ -25,8 +25,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use TechDivision\Import\Utils\OperationKeys;
 use TechDivision\Import\Configuration\Jms\Configuration;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 
@@ -52,8 +50,7 @@ abstract class AbstractImportCommand extends Command
     {
 
         // configure the command
-        $this->addArgument(InputArgumentKeys::OPERATION_NAMES, InputArgument::IS_ARRAY|InputArgument::OPTIONAL, 'The operation(s) that has to be used for the import, one of "add-update", "replace", "delete" or "convert" or a combination of them', array(OperationKeys::ADD_UPDATE))
-             ->addOption(InputOptionKeys::SERIAL, null, InputOption::VALUE_REQUIRED, 'The unique identifier of this import process', Uuid::uuid4()->__toString())
+        $this->addOption(InputOptionKeys::SERIAL, null, InputOption::VALUE_REQUIRED, 'The unique identifier of this import process', Uuid::uuid4()->__toString())
              ->addOption(InputOptionKeys::INSTALLATION_DIR, null, InputOption::VALUE_REQUIRED, 'The Magento installation directory to which the files has to be imported', getcwd())
              ->addOption(InputOptionKeys::SYSTEM_NAME, null, InputOption::VALUE_REQUIRED, 'Specify the system name to use', gethostname())
              ->addOption(InputOptionKeys::PID_FILENAME, null, InputOption::VALUE_REQUIRED, 'The explicit PID filename to use', sprintf('%s/%s', sys_get_temp_dir(), Configuration::PID_FILENAME))
@@ -61,6 +58,8 @@ abstract class AbstractImportCommand extends Command
              ->addOption(InputOptionKeys::MAGENTO_EDITION, null, InputOption::VALUE_REQUIRED, 'The Magento edition to be used, either one of "CE" or "EE" (will be autodetected if possible and not specified)')
              ->addOption(InputOptionKeys::MAGENTO_VERSION, null, InputOption::VALUE_REQUIRED, 'The Magento version to be used, e. g. "2.1.2"')
              ->addOption(InputOptionKeys::CONFIGURATION, null, InputOption::VALUE_REQUIRED, 'Specify the pathname to the configuration file to use')
+             ->addOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR, null, InputOption::VALUE_REQUIRED, 'The path to the custom configuration directory')
+             ->addOption(InputOptionKeys::COMPILE, null, InputOption::VALUE_REQUIRED, 'Whether or not the configuration files have to loaded, merged and compiled')
              ->addOption(InputOptionKeys::SOURCE_DIR, null, InputOption::VALUE_REQUIRED, 'The directory that has to be watched for new files')
              ->addOption(InputOptionKeys::TARGET_DIR, null, InputOption::VALUE_REQUIRED, 'The target directory with the files that has been imported')
              ->addOption(InputOptionKeys::ARCHIVE_DIR, null, InputOption::VALUE_REQUIRED, 'The directory the imported files will be archived in')
@@ -75,7 +74,6 @@ abstract class AbstractImportCommand extends Command
              ->addOption(InputOptionKeys::SINGLE_TRANSACTION, null, InputOption::VALUE_REQUIRED, 'Whether or not the import should be wrapped within a single transaction')
              ->addOption(InputOptionKeys::PARAMS, null, InputOption::VALUE_REQUIRED, 'Additional options passed as a string (MUST have the same format as the used configuration file has)')
              ->addOption(InputOptionKeys::PARAMS_FILE, null, InputOption::VALUE_REQUIRED, 'Additional options passed as pathname')
-             ->addOption(InputOptionKeys::COMPILE, null, InputOption::VALUE_REQUIRED, 'Whether or not the configuration files have to loaded, merged and compiled')
              ->addOption(InputOptionKeys::MOVE_FILES, null, InputOption::VALUE_REQUIRED, 'Whether or not move the files from the source to the target directory')
              ->addOption(InputOptionKeys::MOVE_FILES_PREFIX, null, InputOption::VALUE_REQUIRED, 'Prefix of the files to move (defaults to the prefix of the first of the first plugin subject)');
     }

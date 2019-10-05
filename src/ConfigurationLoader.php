@@ -56,17 +56,25 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         // load the configuration instance
         $instance = parent::load();
 
-        // set the serial that has been specified as command line option (or the default value)
-        $instance->setSerial($this->input->getOption(InputOptionKeys::SERIAL));
+        // query whether or not a shortcut has been specified as command line
+        // option, if yes override the value from the configuration file
+        if ($this->input->hasArgument(InputArgumentKeys::SHORTCUT)) {
+            $instance->setShortcut($this->input->getArgument(InputArgumentKeys::SHORTCUT));
+        }
 
         // query whether or not operation names has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($operationNames = $this->input->getArgument(InputArgumentKeys::OPERATION_NAMES)) {
+        if ($this->input->hasArgument(InputArgumentKeys::OPERATION_NAMES)) {
+            // load the operation names from the commandline
+            $operationNames = $this->input->getArgument(InputArgumentKeys::OPERATION_NAMES);
             // append the names of the operations we want to execute to the configuration
             foreach ($operationNames as $operationName) {
                 $instance->addOperationName($operationName);
             }
         }
+
+        // set the serial that has been specified as command line option (or the default value)
+        $instance->setSerial($this->input->getOption(InputOptionKeys::SERIAL));
 
         // query whether or not a directory containing the imported files has been specified as command line
         // option, if yes override the value from the configuration file
@@ -172,23 +180,6 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             $instance->getDatabase()->setTablePrefix($tablePrefix);
         }
 
-        // extend the plugins with the main configuration instance
-        /** @var \TechDivision\Import\Cli\Configuration\Subject $subject */
-        foreach ($instance->getPlugins() as $plugin) {
-            // set the configuration instance on the plugin
-            $plugin->setConfiguration($instance);
-
-            // query whether or not the plugin has subjects configured
-            if ($subjects = $plugin->getSubjects()) {
-                // extend the plugin's subjects with the main configuration instance
-                /** @var \TechDivision\Import\Cli\Configuration\Subject $subject */
-                foreach ($subjects as $subject) {
-                    // set the configuration instance on the subject
-                    $subject->setConfiguration($instance);
-                }
-            }
-        }
-
         // query whether or not the debug mode is enabled and log level
         // has NOT been overwritten with a commandline option
         if ($instance->isDebugMode() && !$this->input->getOption(InputOptionKeys::LOG_LEVEL)) {
@@ -199,7 +190,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         // prepend the array with the Magento Edition specific core libraries
         $instance->setExtensionLibraries(
             array_merge(
-                $this->getDefaultLibraries($instance->getMagentoEdition()),
+                $this->getDefaultLibrariesByMagentoEdition($instance->getMagentoEdition()),
                 $instance->getExtensionLibraries()
             )
         );
@@ -319,7 +310,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
      * @return array The Magento Edition specific default libraries
      * @throws \Exception Is thrown, if the passed Magento Edition is NOT supported
      */
-    protected function getDefaultLibraries($magentoEdition)
+    protected function getDefaultLibrariesByMagentoEdition($magentoEdition)
     {
 
         // load the default libraries from the configuration

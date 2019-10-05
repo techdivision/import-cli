@@ -31,7 +31,7 @@ use TechDivision\Import\Utils\CommandNames;
  * @link      https://github.com/techdivision/import-cli-simple
  * @link      http://www.techdivision.com
  */
-class ImportCategoriesCommand extends AbstractImportCommand
+class ImportCategoriesCommand extends AbstractShortcutAwareImportCommand
 {
 
     /**

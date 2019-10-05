@@ -53,6 +53,11 @@ class DependencyInjectionKeys extends \TechDivision\Import\App\Utils\DependencyI
      */
     const CONNECTION = 'connection';
 
+    /**
+     * The key for the loggers.
+     *
+     * @var string
+     */
     const LOGGERS = 'loggers';
 
     /**
@@ -119,16 +124,16 @@ class DependencyInjectionKeys extends \TechDivision\Import\App\Utils\DependencyI
     const APPLICATION_DEFAULT_LIBRARIES = 'application.default.libraries';
 
     /**
-     * The key for the array with the default configurations.
+     * The key for the DI parameter that contains the default configuration directory.
      *
      * @var string
      */
-    const APPLICATION_DEFAULT_CONFIGURATIONS = 'application.default.configurations';
+    const APPLICATION_DEFAULT_CONFIGURATION_DIR = 'application.default.configuration.dir';
 
     /**
-     * The key for the array with the default configuration file mappings.
+     * The key for the DI parameter that contains the custom configuration directory.
      *
      * @var string
      */
-    const APPLICATION_DEFAULT_CONFIGURATION_FILE_MAPPINGS = 'application.default.configuration.file.mappings';
+    const APPLICATION_CUSTOM_CONFIGURATION_DIR = 'application.custom.configuration.dir';
 }

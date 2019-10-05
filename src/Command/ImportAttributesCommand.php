@@ -21,7 +21,6 @@
 namespace TechDivision\Import\Cli\Command;
 
 use TechDivision\Import\Utils\CommandNames;
-
 /**
  * The import command implementation.
  *
@@ -31,7 +30,7 @@ use TechDivision\Import\Utils\CommandNames;
  * @link      https://github.com/techdivision/import-cli-simple
  * @link      http://www.techdivision.com
  */
-class ImportAttributesCommand extends AbstractImportCommand
+class ImportAttributesCommand extends AbstractShortcutAwareImportCommand
 {
 
     /**
