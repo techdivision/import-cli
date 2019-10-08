@@ -58,7 +58,6 @@ abstract class AbstractSimpleImportCommand extends Command
              ->addOption(InputOptionKeys::MAGENTO_EDITION, null, InputOption::VALUE_REQUIRED, 'The Magento edition to be used, either one of "CE" or "EE"', 'CE')
              ->addOption(InputOptionKeys::CONFIGURATION, null, InputOption::VALUE_REQUIRED, 'Specify the pathname to the configuration file to use')
              ->addOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR, null, InputOption::VALUE_REQUIRED, 'The path to the custom configuration directory')
-             ->addOption(InputOptionKeys::COMPILE, null, InputOption::VALUE_REQUIRED, 'Whether or not the configuration files have to loaded, merged and compiled')
              ->addOption(InputOptionKeys::LOG_LEVEL, null, InputOption::VALUE_REQUIRED, 'The log level to use');
     }
 

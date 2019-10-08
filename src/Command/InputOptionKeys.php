@@ -211,25 +211,11 @@ class InputOptionKeys
     const CACHE_ENABLED = 'cache-enabled';
 
     /**
-     * The input option key for the flag to move files or or not.
-     *
-     * @var string
-     */
-    const MOVE_FILES = 'move-files';
-
-    /**
      * The input option key for the move files prefix.
      *
      * @var string
      */
     const MOVE_FILES_PREFIX = 'move-files-prefix';
-
-    /**
-     * The input option key for the flag to compile configuration files or or not.
-     *
-     * @var string
-     */
-    const COMPILE = 'compile';
 
     /**
      * The input option key for the custom configuration directory.

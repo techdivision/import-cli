@@ -124,18 +124,6 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             $instance->setCacheEnabled($instance->mapBoolean($this->input->getOption(InputOptionKeys::CACHE_ENABLED)));
         }
 
-        // query whether or not the move files flag has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($this->input->hasOptionSpecified(InputOptionKeys::MOVE_FILES)) {
-            $instance->setMoveFiles($instance->mapBoolean($this->input->getOption(InputOptionKeys::MOVE_FILES)));
-        }
-
-        // query whether or not the configurationfiles flag has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($this->input->hasOptionSpecified(InputOptionKeys::COMPILE)) {
-            $instance->setCompile($instance->mapBoolean($this->input->getOption(InputOptionKeys::COMPILE)));
-        }
-
         // query whether or not we've an valid Magento root directory specified
         if ($this->isMagentoRootDir($installationDir = $instance->getInstallationDir())) {
             // if yes, add the database configuration
