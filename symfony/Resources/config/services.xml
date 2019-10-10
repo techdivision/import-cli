@@ -104,6 +104,7 @@
         <service id="import_cli.command.import.create.configuration.file" class="TechDivision\Import\Cli\Command\ImportCreateConfigurationFileCommand"/>
         <service id="import_cli.command.import.products.tier.price" class="TechDivision\Import\Cli\Command\ImportProductsTierPriceCommand"/>
         <service id="import_cli.command.import.products.inventory.msi" class="TechDivision\Import\Cli\Command\ImportProductsInventoryMsiCommand"/>
+        <service id="import_cli.command.import.convert.value" class="TechDivision\Import\Cli\Command\ImportConvertValueCommand"/>
 
         <service id="application" class="TechDivision\Import\Cli\Application">
             <argument type="service" id="service_container"/>
@@ -148,6 +149,9 @@
             </call>
             <call method="add">
                 <argument id="import_cli.command.import.execute" type="service"/>
+            </call>
+            <call method="add">
+                <argument id="import_cli.command.import.convert.value" type="service"/>
             </call>
         </service>
 

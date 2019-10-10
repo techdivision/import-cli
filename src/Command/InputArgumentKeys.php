@@ -62,4 +62,25 @@ class InputArgumentKeys
      * @var string
      */
     const OPERATION_NAMES = 'operation-names';
+
+    /**
+     * The input argument key for the entity type code to use.
+     *
+     * @var string
+     */
+    const ENTITY_TYPE_CODE = 'entity-type-code';
+
+    /**
+     * The input argument key for the column name to use.
+     *
+     * @var string
+     */
+    const COLUMN = 'column';
+
+    /**
+     * The input argument key for the values to use.
+     *
+     * @var string
+     */
+    const VALUES = 'values';
 }
