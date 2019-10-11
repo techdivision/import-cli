@@ -1,3 +1,13 @@
+# Version 7.0.4
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Make composer dependencies compatible with Magento 2.2.x
+
 # Version 7.0.3
 
 ## Bugfixes
