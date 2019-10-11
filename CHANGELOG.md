@@ -11,7 +11,7 @@
 * Add techdivision/import-configuration-jms#25
 * Update to versions of techdivision/import 15.*, techdivision/import-configuration-jms 15.* and techdivision/import-app-simple 16.*
 
-# Version 7.0.5
+# Version 7.0.6
 
 ## Bugfixes
 
