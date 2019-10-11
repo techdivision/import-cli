@@ -11,6 +11,16 @@
 * Add techdivision/import-configuration-jms#25
 * Update to versions of techdivision/import 15.*, techdivision/import-configuration-jms 15.* and techdivision/import-app-simple 16.*
 
+# Version 7.0.5
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Make composer dependencies compatible with Magento 2.2.x
+
 # Version 7.0.3
 
 ## Bugfixes
