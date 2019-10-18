@@ -81,7 +81,10 @@
         <service id="import_cli.utils.command.names" class="TechDivision\Import\Utils\CommandNames"/>
         <service id="import_cli.utils.mappings.command.name.to.entity.type.code" class="TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode"/>
 
-        <service id="import_cli.configuration.parser.json" class="TechDivision\Import\Configuration\Jms\Parsers\JsonParser"/>
+        <service id="import_cli.utils.array" class="TechDivision\Import\Configuration\Jms\Utils\ArrayUtil"/>
+        <service id="import_cli.configuration.parser.json" class="TechDivision\Import\Configuration\Jms\Parsers\JsonParser">
+            <argument type="service" id="import_cli.utils.array"/>
+        </service>
         <service id="import_cli.configuration.parser.factory" class="TechDivision\Import\Configuration\Jms\ConfigurationParserFactory">
             <argument type="service" id="service_container"/>
             <argument>%application.default.configuration.parser.mappings%</argument>
