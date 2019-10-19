@@ -213,7 +213,11 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         // query whether or not, a configuration file has been specified
         if ($configuration = $this->input->getOption(InputOptionKeys::CONFIGURATION)) {
             // load the configuration from the file with the given filename
-            return $this->createConfiguration($configuration);
+            $instance = $this->createConfiguration($configuration);
+            // set the actual command name in the configuration
+            $instance->setCommandName($this->input->getFirstArgument());
+            // return the instance
+            return $instance;
         } elseif (($magentoEdition = $this->input->getOption(InputOptionKeys::MAGENTO_EDITION)) && ($magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION))) {
             // use the Magento Edition that has been specified as option
             $instance = $this->createConfiguration();
@@ -221,6 +225,9 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             // override the Magento Edition/Version
             $instance->setMagentoEdition($magentoEdition);
             $instance->setMagentoVersion($magentoVersion);
+
+            // set the actual command name in the configuration
+            $instance->setCommandName($this->input->getFirstArgument());
 
             // return the instance
             return $instance;
@@ -249,6 +256,9 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         // override the Magento Edition/Version
         $instance->setMagentoEdition($magentoEdition);
         $instance->setMagentoVersion($magentoVersion);
+
+        // set the actual command name in the configuration
+        $instance->setCommandName($this->input->getFirstArgument());
 
         // return the instance
         return $instance;
