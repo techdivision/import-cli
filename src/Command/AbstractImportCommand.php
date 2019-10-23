@@ -103,7 +103,11 @@ abstract class AbstractImportCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        // initialize the configuration instance
         $this->getContainer()->get(DependencyInjectionKeys::CONFIGURATION);
-        $this->getContainer()->get(DependencyInjectionKeys::SIMPLE)->process($input->getOption(InputOptionKeys::SERIAL));
+
+        // execute the appliation instance and return the exit code
+        return $this->getContainer()->get(DependencyInjectionKeys::SIMPLE)->process($input->getOption(InputOptionKeys::SERIAL));
     }
 }

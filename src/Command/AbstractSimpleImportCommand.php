@@ -93,7 +93,7 @@ abstract class AbstractSimpleImportCommand extends Command
         $configuration = $this->getContainer()->get(DependencyInjectionKeys::CONFIGURATION_SIMPLE);
 
         // finally execute the simple command
-        $this->executeSimpleCommand($configuration, $input, $output);
+        return $this->executeSimpleCommand($configuration, $input, $output);
     }
 
     /**
