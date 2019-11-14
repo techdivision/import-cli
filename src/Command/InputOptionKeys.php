@@ -20,6 +20,8 @@
 
 namespace TechDivision\Import\Cli\Command;
 
+use TechDivision\Import\Utils\InputOptionKeysInterface;
+
 /**
  * Utility class containing the available visibility keys.
  *
@@ -29,25 +31,8 @@ namespace TechDivision\Import\Cli\Command;
  * @link      https://github.com/techdivision/import-cli-simple
  * @link      http://www.techdivision.com
  */
-class InputOptionKeys
+class InputOptionKeys extends \ArrayObject implements InputOptionKeysInterface
 {
-
-    /**
-     * This is a utility class, so protect it against direct
-     * instantiation.
-     */
-    private function __construct()
-    {
-    }
-
-    /**
-     * This is a utility class, so protect it against cloning.
-     *
-     * @return void
-     */
-    private function __clone()
-    {
-    }
 
     /**
      * Input key for the --serial option.
@@ -223,4 +208,61 @@ class InputOptionKeys
      * @var string
      */
     const CUSTOM_CONFIGURATION_DIR = 'custom-configuration-dir';
+
+    /**
+     * Construct a new input option instance.
+     *
+     * @param array $inputOptionKeys The array with the additional input option names
+     * @link http://www.php.net/manual/en/arrayobject.construct.php
+     */
+    public function __construct(array $inputOptionKeys = array())
+    {
+
+        // merge the edition names with the passed ones
+        $mergedInputOptionKeys = array_merge(
+            array(
+                InputOptionKeys::SERIAL,
+                InputOptionKeys::SYSTEM_NAME,
+                InputOptionKeys::CONFIGURATION,
+                InputOptionKeys::INSTALLATION_DIR,
+                InputOptionKeys::SOURCE_DIR,
+                InputOptionKeys::TARGET_DIR,
+                InputOptionKeys::ARCHIVE_DIR,
+                InputOptionKeys::ARCHIVE_ARTEFACTS,
+                InputOptionKeys::MAGENTO_EDITION,
+                InputOptionKeys::MAGENTO_VERSION,
+                InputOptionKeys::USE_DB_ID,
+                InputOptionKeys::DB_PDO_DSN,
+                InputOptionKeys::DB_USERNAME,
+                InputOptionKeys::DB_PASSWORD,
+                InputOptionKeys::DB_TABLE_PREFIX,
+                InputOptionKeys::DEBUG_MODE,
+                InputOptionKeys::LOG_LEVEL,
+                InputOptionKeys::PID_FILENAME,
+                InputOptionKeys::DEST,
+                InputOptionKeys::SINGLE_TRANSACTION,
+                InputOptionKeys::PARAMS,
+                InputOptionKeys::PARAMS_FILE,
+                InputOptionKeys::CACHE_ENABLED,
+                InputOptionKeys::MOVE_FILES_PREFIX,
+                InputOptionKeys::CUSTOM_CONFIGURATION_DIR,
+            ),
+            $inputOptionKeys
+        );
+
+        // initialize the parent class with the merged edition names
+        parent::__construct($mergedInputOptionKeys);
+    }
+
+    /**
+     * Query whether or not the passed input option is valid.
+     *
+     * @param string $inputOption The input option to query for
+     *
+     * @return boolean TRUE if the input option is valid, else FALSE
+     */
+    public function isInputOption($inputOption)
+    {
+        return in_array($inputOption, (array) $this);
+    }
 }

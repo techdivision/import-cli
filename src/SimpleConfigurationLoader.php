@@ -29,6 +29,7 @@ use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 use TechDivision\Import\Cli\Utils\MagentoConfigurationKeys;
 use TechDivision\Import\Utils\CommandNames;
 use TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode;
+use TechDivision\Import\ConsoleOptionLoaderInterface;
 
 /**
  * The configuration loader implementation.
@@ -99,6 +100,13 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     protected $commandNameToEntityTypeCode;
 
     /**
+     * The console option loader instance.
+     *
+     * @var \TechDivision\Import\ConsoleOptionLoaderInterface
+     */
+    protected $consoleOptionLoader;
+
+    /**
      * Initializes the configuration loader.
      *
      * @param \Symfony\Component\Console\Input\InputInterface                 $input                        The input instance
@@ -107,6 +115,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
      * @param \TechDivision\Import\ConfigurationFactoryInterface              $configurationFactory         The configuration factory instance
      * @param \TechDivision\Import\Utils\CommandNames                         $commandNames                 The available command names
      * @param \TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode $commandNameToEntityTypeCodes The mapping of the command names to the entity type codes
+     * @param \TechDivision\Import\ConsoleOptionLoaderInterface               $consoleOptionLoader          The console option loader instance
      */
     public function __construct(
         InputInterface $input,
@@ -114,7 +123,8 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         LibraryLoader $libraryLoader,
         ConfigurationFactoryInterface $configurationFactory,
         CommandNames $commandNames,
-        CommandNameToEntityTypeCode $commandNameToEntityTypeCodes
+        CommandNameToEntityTypeCode $commandNameToEntityTypeCodes,
+        ConsoleOptionLoaderInterface $consoleOptionLoader
     ) {
 
         // set the passed instances
@@ -124,6 +134,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         $this->configurationFactory = $configurationFactory;
         $this->commandNames = $commandNames;
         $this->commandNameToEntityTypeCode = $commandNameToEntityTypeCodes;
+        $this->consoleOptionLoader = $consoleOptionLoader;
     }
 
     /**
@@ -143,35 +154,8 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         // we have to set the entity type code at least
         $instance->setEntityTypeCode($this->getEntityTypeCode());
 
-        // query whether or not a system name has been specified as command line option, if yes override the value from the configuration file
-        if (($this->input->hasOptionSpecified(InputOptionKeys::SYSTEM_NAME) && $this->input->getOption(InputOptionKeys::SYSTEM_NAME)) || $instance->getSystemName() === null) {
-            $instance->setSystemName($this->input->getOption(InputOptionKeys::SYSTEM_NAME));
-        }
-
-        // query whether or not a PID filename has been specified as command line option, if yes override the value from the configuration file
-        if (($this->input->hasOptionSpecified(InputOptionKeys::PID_FILENAME) && $this->input->getOption(InputOptionKeys::PID_FILENAME)) || $instance->getPidFilename() === null) {
-            $instance->setPidFilename($this->input->getOption(InputOptionKeys::PID_FILENAME));
-        }
-
-        // query whether or not a Magento installation directory has been specified as command line option, if yes override the value from the configuration file
-        if (($this->input->hasOptionSpecified(InputOptionKeys::INSTALLATION_DIR) && $this->input->getOption(InputOptionKeys::INSTALLATION_DIR)) || $instance->getInstallationDir() === null) {
-            $instance->setInstallationDir($this->input->getOption(InputOptionKeys::INSTALLATION_DIR));
-        }
-
-        // query whether or not a Magento Edition has been specified as command line option, if yes override the value from the configuration file
-        if (($this->input->hasOptionSpecified(InputOptionKeys::MAGENTO_EDITION) && $this->input->getOption(InputOptionKeys::MAGENTO_EDITION)) || $instance->getMagentoEdition() === null) {
-            $instance->setMagentoEdition($this->input->getOption(InputOptionKeys::MAGENTO_EDITION));
-        }
-
-        // query whether or not a Magento Version has been specified as command line option, if yes override the value from the configuration file
-        if (($this->input->hasOptionSpecified(InputOptionKeys::MAGENTO_VERSION) && $this->input->getOption(InputOptionKeys::MAGENTO_VERSION)) || $instance->getMagentoVersion() === null) {
-            $instance->setMagentoVersion($this->input->getOption(InputOptionKeys::MAGENTO_VERSION));
-        }
-
-        // query whether or not a directory for the source files has been specified as command line option, if yes override the value from the configuration file
-        if (($this->input->hasOptionSpecified(InputOptionKeys::SOURCE_DIR) && $this->input->getOption(InputOptionKeys::SOURCE_DIR)) || $instance->getSourceDir() === null) {
-            $instance->setSourceDir($this->input->getOption(InputOptionKeys::SOURCE_DIR));
-        }
+        // load and merge the console options
+        $this->getConsoleOptionLoader()->load($instance);
 
         // return the initialized configuration instance
         return $instance;
@@ -357,6 +341,16 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     protected function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * The console option loader instance.
+     *
+     * @return \TechDivision\Import\ConsoleOptionLoaderInterface The instance
+     */
+    protected function getConsoleOptionLoader()
+    {
+        return $this->consoleOptionLoader;
     }
 
     /**

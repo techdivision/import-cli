@@ -69,6 +69,15 @@
         <parameter key="application.default.configuration.parser.mappings" type="collection">
             <parameter key="json">import_cli.configuration.parser.json</parameter>
         </parameter>
+        <parameter key="application.cli.options.override.if.empty.only" type="collection">
+            <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::SYSTEM_NAME</parameter>
+            <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::PID_FILENAME</parameter>
+            <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::INSTALLATION_DIR</parameter>
+            <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::MAGENTO_EDITION</parameter>
+            <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::MAGENTO_VERSION</parameter>
+            <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::SOURCE_DIR</parameter>
+        </parameter>
+        
     </parameters>
 
     <services>
@@ -81,6 +90,7 @@
         <service id="import_cli.utils.command.names" class="TechDivision\Import\Utils\CommandNames"/>
         <service id="import_cli.utils.mappings.command.name.to.entity.type.code" class="TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode"/>
 
+        <service id="import_cli.input.option.keys" class="TechDivision\Import\Cli\Command\InputOptionKeys"/>
         <service id="import_cli.utils.array" class="TechDivision\Import\Configuration\Jms\Utils\ArrayUtil"/>
         <service id="import_cli.configuration.parser.json" class="TechDivision\Import\Configuration\Jms\Parsers\JsonParser">
             <argument type="service" id="import_cli.utils.array"/>
@@ -91,6 +101,11 @@
         </service>
         <service id="import_cli.configuration.factory" class="TechDivision\Import\Configuration\Jms\ConfigurationFactory">
             <argument type="service" id="import_cli.configuration.parser.factory"/>
+        </service>
+        <service id="import_cli.configuration.console.option.loader" class="TechDivision\Import\Configuration\Jms\ConsoleOptionLoader">
+            <argument type="service" id="input"/>
+            <argument type="service" id="import_cli.input.option.keys"/>
+            <argument>%application.cli.options.override.if.empty.only%</argument>
         </service>
 
         <service id="import_cli.command.import.execute" class="TechDivision\Import\Cli\Command\ImportExecuteCommand"/>
@@ -169,6 +184,7 @@
             <argument type="service" id="import_cli.configuration.factory"/>
             <argument type="service" id="import_cli.utils.command.names"/>
             <argument type="service" id="import_cli.utils.mappings.command.name.to.entity.type.code"/>
+            <argument type="service" id="import_cli.configuration.console.option.loader"/>
         </service>
 
         <service id="import_cli.configuration.loader" class="TechDivision\Import\Cli\ConfigurationLoader">
@@ -178,6 +194,7 @@
             <argument type="service" id="import_cli.configuration.factory"/>
             <argument type="service" id="import_cli.utils.command.names"/>
             <argument type="service" id="import_cli.utils.mappings.command.name.to.entity.type.code"/>
+            <argument type="service" id="import_cli.configuration.console.option.loader"/>
         </service>
 
         <service id="import_cli.application.loader" class="TechDivision\Import\Cli\ApplicationLoader">

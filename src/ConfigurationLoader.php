@@ -73,57 +73,6 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             }
         }
 
-        // set the serial that has been specified as command line option (or the default value)
-        $instance->setSerial($this->input->getOption(InputOptionKeys::SERIAL));
-
-        // query whether or not a directory containing the imported files has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($targetDir = $this->input->getOption(InputOptionKeys::TARGET_DIR)) {
-            $instance->setTargetDir($targetDir);
-        }
-
-        // query whether or not a directory containing the archived imported files has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($archiveDir = $this->input->getOption(InputOptionKeys::ARCHIVE_DIR)) {
-            $instance->setArchiveDir($archiveDir);
-        }
-
-        // query whether or not the log level has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($logLevel = $this->input->getOption(InputOptionKeys::LOG_LEVEL)) {
-            $instance->setLogLevel($logLevel);
-        }
-
-        // query whether or not a prefix for the move files subject has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($moveFilesPrefix = $this->input->getOption(InputOptionKeys::MOVE_FILES_PREFIX)) {
-            $instance->setMoveFilesPrefix($moveFilesPrefix);
-        }
-
-        // query whether or not the debug mode has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($this->input->hasOptionSpecified(InputOptionKeys::ARCHIVE_ARTEFACTS)) {
-            $instance->setArchiveArtefacts($instance->mapBoolean($this->input->getOption(InputOptionKeys::ARCHIVE_ARTEFACTS)));
-        }
-
-        // query whether or not the debug mode has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($this->input->hasOptionSpecified(InputOptionKeys::DEBUG_MODE)) {
-            $instance->setDebugMode($instance->mapBoolean($this->input->getOption(InputOptionKeys::DEBUG_MODE)));
-        }
-
-        // query whether or not the single transaction flag has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($this->input->hasOptionSpecified(InputOptionKeys::SINGLE_TRANSACTION)) {
-            $instance->setSingleTransaction($instance->mapBoolean($this->input->getOption(InputOptionKeys::SINGLE_TRANSACTION)));
-        }
-
-        // query whether or not the cache flag has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($this->input->hasOptionSpecified(InputOptionKeys::CACHE_ENABLED)) {
-            $instance->setCacheEnabled($instance->mapBoolean($this->input->getOption(InputOptionKeys::CACHE_ENABLED)));
-        }
-
         // query whether or not we've an valid Magento root directory specified
         if ($this->isMagentoRootDir($installationDir = $instance->getInstallationDir())) {
             // if yes, add the database configuration
