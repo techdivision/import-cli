@@ -201,7 +201,8 @@
             <argument type="service" id="service_container"/>
         </service>
 
-        <service id="import_cli.factory.logger" class="TechDivision\Import\Cli\Logger\LoggerFactory">
+        <service id="import_cli.factory.logger" class="TechDivision\Import\Loggers\LoggerFactory">
+            <argument type="service" id="service_container"/>
             <argument type="service" id="configuration"/>
         </service>
 
