@@ -116,7 +116,7 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
 
             // throw an execption in all other cases
             default:
-               throw new \Exception(sprintf('Found invalid configuration format "%s"', $format));
+                throw new \Exception(sprintf('Found invalid configuration format "%s"', $format));
         }
 
         // register the visitor in the builder instance

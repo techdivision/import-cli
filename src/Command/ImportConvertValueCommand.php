@@ -86,7 +86,6 @@ class ImportConvertValueCommand extends AbstractSimpleImportCommand
 
         // simulate custom column handling
         switch ($input->getArgument(InputArgumentKeys::COLUMN)) {
-
             case 'categories':
                 // serialize the categories and use the default delimiter
                 $serialize[] = $serializer->serialize($values);
