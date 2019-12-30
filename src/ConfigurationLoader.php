@@ -77,16 +77,6 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         if ($this->isMagentoRootDir($installationDir = $instance->getInstallationDir())) {
             // if yes, add the database configuration
             $instance->addDatabase($this->getMagentoDbConnection($installationDir));
-
-            // add the source directory if NOT specified in the configuration file
-            if (($sourceDir = $instance->getSourceDir()) === null) {
-                $instance->setSourceDir($sourceDir = sprintf('%s/var/importexport', $installationDir));
-            }
-
-            // add the target directory if NOT specified in the configuration file
-            if ($instance->getTargetDir() === null) {
-                $instance->setTargetDir($sourceDir);
-            }
         }
 
         // query whether or not a DB ID has been specified as command line

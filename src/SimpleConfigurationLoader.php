@@ -330,7 +330,22 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         }
 
         // load and return the configuration from the files found in the passed directories
-        return $this->configurationFactory->factoryFromDirectories($directories, $format, $params, $paramsFile);
+        $instance = $this->configurationFactory->factoryFromDirectories($directories, $format, $params, $paramsFile);
+
+        // query whether or not we've an valid Magento root directory specified
+        if ($this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
+            // add the source directory if NOT specified in the configuration file
+            if (($sourceDir = $instance->getSourceDir()) === null) {
+                $instance->setSourceDir($sourceDir = sprintf('%s/var/importexport', $installationDir));
+            }
+
+            // add the target directory if NOT specified in the configuration file
+            if ($instance->getTargetDir() === null) {
+                $instance->setTargetDir($sourceDir);
+            }
+        }
+
+        return $instance;
     }
 
     /**
