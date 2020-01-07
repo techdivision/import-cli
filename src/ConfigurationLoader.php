@@ -156,14 +156,18 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             // load the connection data
             $connection = $db[MagentoConfigurationKeys::CONNECTION][$connectionName];
 
+            // try to load port and table prefix (they're optional)
+            $port = isset($connection[MagentoConfigurationKeys::PORT]) ? $connection[MagentoConfigurationKeys::PORT] : 3306;
+            $tablePrefix = isset($db[MagentoConfigurationKeys::TABLE_PREFIX]) ? $db[MagentoConfigurationKeys::TABLE_PREFIX] : null;
+
             // create and return a new database configuration
             return $this->newDatabaseConfiguration(
-                $this->newDsn($connection[MagentoConfigurationKeys::HOST], $connection[MagentoConfigurationKeys::DBNAME]),
+                $this->newDsn($connection[MagentoConfigurationKeys::HOST], $port, $connection[MagentoConfigurationKeys::DBNAME]),
                 $connection[MagentoConfigurationKeys::USERNAME],
                 $connection[MagentoConfigurationKeys::PASSWORD],
                 false,
                 null,
-                isset($db[MagentoConfigurationKeys::TABLE_PREFIX]) ? $db[MagentoConfigurationKeys::TABLE_PREFIX] : null
+                $tablePrefix
             );
         }
 
@@ -218,15 +222,16 @@ class ConfigurationLoader extends SimpleConfigurationLoader
     /**
      * Create's and return's a new DSN from the passed values.
      *
-     * @param string $host    The host to use
-     * @param string $dbName  The database name to use
-     * @param string $charset The charset to use
+     * @param string  $host    The host to use
+     * @param integer $port    The port to use
+     * @param string  $dbName  The database name to use
+     * @param string  $charset The charset to use
      *
      * @return string The DSN
      */
-    protected function newDsn($host, $dbName, $charset = 'utf8')
+    protected function newDsn($host, $port = 3306, $dbName = 'magento', $charset = 'utf8')
     {
-        return sprintf('mysql:host=%s;dbname=%s;charset=%s', $host, $dbName, $charset);
+        return sprintf('mysql:host=%s;port=%d;dbname=%s;charset=%s', $host, $port, $dbName, $charset);
     }
 
     /**

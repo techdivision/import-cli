@@ -71,6 +71,13 @@ class MagentoConfigurationKeys
     const HOST = 'host';
 
     /**
+     * The key for the DB port in the app/etc/env.php file.
+     *
+     * @var string
+     */
+    const PORT = 'port';
+
+    /**
      * The key for the DB name in the app/etc/env.php file.
      *
      * @var string
