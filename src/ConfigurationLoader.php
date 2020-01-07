@@ -156,18 +156,14 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             // load the connection data
             $connection = $db[MagentoConfigurationKeys::CONNECTION][$connectionName];
 
-            // try to load port and table prefix (they're optional)
-            $port = isset($connection[MagentoConfigurationKeys::PORT]) ? $connection[MagentoConfigurationKeys::PORT] : 3306;
-            $tablePrefix = isset($db[MagentoConfigurationKeys::TABLE_PREFIX]) ? $db[MagentoConfigurationKeys::TABLE_PREFIX] : null;
-
             // create and return a new database configuration
             return $this->newDatabaseConfiguration(
-                $this->newDsn($connection[MagentoConfigurationKeys::HOST], $port, $connection[MagentoConfigurationKeys::DBNAME]),
+                $this->newDsn($connection[MagentoConfigurationKeys::HOST], $connection[MagentoConfigurationKeys::DBNAME]),
                 $connection[MagentoConfigurationKeys::USERNAME],
                 $connection[MagentoConfigurationKeys::PASSWORD],
                 false,
                 null,
-                $tablePrefix
+                isset($db[MagentoConfigurationKeys::TABLE_PREFIX]) ? $db[MagentoConfigurationKeys::TABLE_PREFIX] : null
             );
         }
 
