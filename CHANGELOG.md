@@ -1,3 +1,13 @@
+# Version 9.0.0
+
+## Bugfixes
+
+* Also use DB port configuration from Magento env.php if given
+
+## Features
+
+* None
+
 # Version 8.0.0
 
 ## Bugfixes
