@@ -1,3 +1,13 @@
+# Version 9.0.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to latest techdivision/import-configuration-jms version
+
 # Version 9.0.0
 
 ## Bugfixes
