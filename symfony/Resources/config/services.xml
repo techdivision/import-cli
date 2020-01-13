@@ -101,8 +101,12 @@
             <argument type="service" id="service_container"/>
             <argument>%application.default.configuration.parser.mappings%</argument>
         </service>
+        <service id="import_cli.configuration.serializer.builder" class="JMS\Serializer\SerializerBuilder">
+            <factory class="JMS\Serializer\SerializerBuilder" method="create"/>
+        </service>
         <service id="import_cli.configuration.factory" class="TechDivision\Import\Configuration\Jms\ConfigurationFactory">
             <argument type="service" id="import_cli.configuration.parser.factory"/>
+            <argument type="service" id="import_cli.configuration.serializer.builder"/>
         </service>
         <service id="import_cli.configuration.console.option.loader" class="TechDivision\Import\Configuration\Jms\ConsoleOptionLoader">
             <argument type="service" id="input"/>
