@@ -101,16 +101,11 @@ class LibraryLoader
         // register autoloaders for additional vendor directories
         $customLoader = new XmlFileLoader($this->getContainer(), new FileLocator());
         foreach ($configuration->getAdditionalVendorDirs() as $additionalVendorDir) {
-            // load the vendor directory's auto loader
+            // try to load the vendor directory's auto loader, if available. Otherwise we assume
+            // that the vendor directory uses an autoloader that has already been loaded, e. g. in
+            // case of Magento which has app/code registered as vendor directory what we want to use
             if (file_exists($autoLoader = $additionalVendorDir->getVendorDir() . '/autoload.php')) {
                 require $autoLoader;
-            } else {
-                throw new \Exception(
-                    sprintf(
-                        'Can\'t find autoloader in configured additional vendor directory "%s"',
-                        $additionalVendorDir->getVendorDir()
-                    )
-                );
             }
 
             // try to load the DI configuration for the configured extension libraries

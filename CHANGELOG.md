@@ -1,3 +1,13 @@
+# Version 7.0.7
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Remove mandatory autoload.php from additional vendor directory
+
 # Version 7.0.6
 
 ## Bugfixes
