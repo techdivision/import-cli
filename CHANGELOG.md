@@ -1,3 +1,13 @@
+# Version 9.0.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Remove mandatory autoload.php from additional vendor directory
+
 # Version 9.0.1
 
 ## Bugfixes
