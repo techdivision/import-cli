@@ -31,8 +31,14 @@
         "psr-4": {
             "TechDivision\\Import\\Cli\\": [
                 "src/",
-                "symfony/",
-                "tests/unit/"
+                "symfony/"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TechDivision\\Import\\Cli\\": [
+                "tests/unit"
             ]
         }
     }

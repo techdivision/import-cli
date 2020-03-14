@@ -1,3 +1,14 @@
+# Version 9.0.3
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Extract dev autoloading
+* Add command to import URL rewrites
+
 # Version 9.0.2
 
 ## Bugfixes
