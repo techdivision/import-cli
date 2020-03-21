@@ -1,3 +1,13 @@
+# Version 9.0.4
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add extracted DI configuration import.configuration.manager from techdivision/import to make it overwritable
+
 # Version 9.0.3
 
 ## Bugfixes
