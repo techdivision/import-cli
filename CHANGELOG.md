@@ -1,3 +1,23 @@
+# Version 10.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Update to versions of techdivision/import 16.*, techdivision/import-configuration-jms 16.* and techdivision/import-app-simple 16.*
+
+# Version 9.0.4
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add extracted DI configuration import.configuration.manager from techdivision/import to make it overwritable
+
 # Version 9.0.3
 
 ## Bugfixes
