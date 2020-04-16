@@ -2,7 +2,7 @@
 
 ## Bugfixes
 
-* None
+* Fixed techdivision/import-cli#2
 
 ## Features
 
