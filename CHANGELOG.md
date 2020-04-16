@@ -1,3 +1,13 @@
+# Version 7.0.8
+
+## Bugfixes
+
+* Fixed techdivision/import-cli#2
+
+## Features
+
+* None
+
 # Version 7.0.7
 
 ## Bugfixes

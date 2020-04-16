@@ -110,7 +110,7 @@ class LibraryLoader
 
             // try to load the DI configuration for the configured extension libraries
             foreach ($additionalVendorDir->getLibraries() as $library) {
-                if ($libraryDir = realpath(sprintf('%s/%s', $additionalVendorDir->getVendorDir(), $library))) {
+                if ($libraryDir = realpath(sprintf('%s/%s/%s', $configuration->getInstallationDir(), $additionalVendorDir->getVendorDir(), $library))) {
                     $this->loadConfiguration($customLoader, $magentoVersion, $libraryDir);
                 } else {
                     throw new \Exception(
