@@ -20,7 +20,7 @@
 
 namespace TechDivision\Import\Cli\Connection;
 
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Connection\PDOConnectionWrapper;
 
 /**
@@ -38,7 +38,7 @@ class ConnectionFactory
     /**
      * Create's and return's the connection to use.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration with the data to create the connection with
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration with the data to create the connection with
      *
      * @return \TechDivision\Import\Connection\PDOConnectionWrapper The initialized connection
      */

@@ -24,7 +24,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 
@@ -99,9 +99,9 @@ abstract class AbstractSimpleImportCommand extends Command
     /**
      * Finally executes the simple command.
      *
-     * @param \TechDivision\Import\ConfigurationInterface       $configuration The configuration instance
-     * @param \Symfony\Component\Console\Input\InputInterface   $input         An InputInterface instance
-     * @param \Symfony\Component\Console\Output\OutputInterface $output        An OutputInterface instance
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration instance
+     * @param \Symfony\Component\Console\Input\InputInterface           $input         An InputInterface instance
+     * @param \Symfony\Component\Console\Output\OutputInterface         $output        An OutputInterface instance
      *
      * @return void
      */

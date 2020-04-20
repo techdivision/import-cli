@@ -22,7 +22,7 @@ namespace TechDivision\Import\Cli;
 
 use Psr\Log\LogLevel;
 use Ramsey\Uuid\Uuid;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Database;
 use TechDivision\Import\Cli\Command\InputArgumentKeys;
 use TechDivision\Import\Cli\Command\InputOptionKeys;
@@ -47,7 +47,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
      * If command line options are specified, they will always override the
      * values found in the configuration file.
      *
-     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
+     * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance
      * @throws \Exception Is thrown, if the specified configuration file doesn't exist or the mandatory arguments/options to run the requested operation are not available
      */
     public function load()
@@ -265,7 +265,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
     /**
      * Registers the configured aliases in the DI container.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration with the aliases to register
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration with the aliases to register
      *
      * @return void
      */

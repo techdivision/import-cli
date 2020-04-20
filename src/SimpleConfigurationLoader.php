@@ -143,7 +143,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
      * If command line options are specified, they will always override the
      * values found in the configuration file.
      *
-     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
+     * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance
      */
     public function load()
     {
@@ -165,7 +165,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
      * This method create the configuration instance from the configuration file
      * defined by the commandline args and options.
      *
-     * @return \TechDivision\Import\ConfigurationInterface The configuration instance loaded from the configuration file
+     * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance loaded from the configuration file
      * @throws \Exception Is thrown, if the specified configuration file doesn't exist or the mandatory arguments/options to run the requested operation are not available
      */
     protected function createInstance()
@@ -254,7 +254,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
      *
      * @param string|null $filename The configuration filename to use
      *
-     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
+     * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance
      */
     protected function createConfiguration($filename = null)
     {

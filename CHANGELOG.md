@@ -6,6 +6,7 @@
 
 ## Features
 
+* Add #PAC-85
 * Update to versions of techdivision/import 16.*, techdivision/import-configuration-jms 16.* and techdivision/import-app-simple 16.*
 
 # Version 9.0.4

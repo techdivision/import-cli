@@ -24,7 +24,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 
 /**
@@ -89,7 +89,7 @@ class LibraryLoader
     /**
      * Load's the external libraries registered in the passed configuration.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration instance
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration instance
      *
      * @return void
      */
