@@ -123,10 +123,18 @@ class LibraryLoader
 
             // try to load the DI configuration for the configured extension libraries
             foreach ($additionalVendorDir->getLibraries() as $library) {
-                if ($libraryDir = realpath(sprintf('%s/%s/%s', $configuration->getInstallationDir(), $additionalVendorDir->getVendorDir(), $library))) {
+                // concatenate the directory for the library
+                $libDir = sprintf('%s/%s', $additionalVendorDir->getVendorDir(), $library);
+                // prepend the installation directory, if the vendor is relative to it
+                if ($additionalVendorDir->isRelative()) {
+                    $libDir = sprintf('%s/%s', $configuration->getInstallationDir(), $libDir);
+                }
+
+                // create the canonicalized absolute pathname and try to load the configuration
+                if ($libraryDir = realpath($libDir)) {
                     $this->loadConfiguration($customLoader, $magentoVersion, $libraryDir);
                 } else {
-                    throw new \Exception(sprintf('Can\'t find find library directory "%s"', $libraryDir));
+                    throw new \Exception(sprintf('Can\'t find find library directory "%s"', $libDir));
                 }
             }
         }

@@ -290,7 +290,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         $vendorDir = $this->getVendorDir();
 
         // load the default configuration directory from the DI configuration
-        $defaultConfigurationDirectory = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_DEFAULT_CONFIGURATION_DIR);
+        $defaultConfigurationDir = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_DEFAULT_CONFIGURATION_DIR);
 
         // load the directories that has to be parsed for configuration files1
         foreach ($this->getDefaultLibraries() as $defaultLibrary) {
@@ -300,7 +300,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
                 array_merge(
                     array($vendorDir),
                     explode('/', $defaultLibrary),
-                    explode('/', $defaultConfigurationDirectory)
+                    explode('/', $defaultConfigurationDir)
                 )
             );
 
@@ -311,7 +311,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         }
 
         // initialize the default custom configuration directory
-        $customConfigurationDirectory = implode(
+        $customConfigurationDir = implode(
             DIRECTORY_SEPARATOR,
             array_merge(
                 array(getcwd()),
@@ -321,19 +321,22 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
 
         // query whether or not a custom configuration directory has been speified, if yes override the default one
         if ($this->input->hasOptionSpecified(InputOptionKeys::CUSTOM_CONFIGURATION_DIR) && $this->input->getOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR)) {
-            $customConfigurationDirectory = $this->input->getOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR);
+            $customConfigurationDir = $this->input->getOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR);
         }
 
         // specify the default directory for custom configuration files
-        if (is_dir($customConfigurationDirectory)) {
-            $directories[] = $customConfigurationDirectory;
+        if (is_dir($customConfigurationDir)) {
+            $directories[] = $customConfigurationDir;
         }
 
+        // load the assumed installation directory
+        $installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR);
+
         // load and return the configuration from the files found in the passed directories
-        $instance = $this->configurationFactory->factoryFromDirectories($directories, $format, $params, $paramsFile);
+        $instance = $this->configurationFactory->factoryFromDirectories($installationDir, $defaultConfigurationDir, $directories, $format, $params, $paramsFile);
 
         // query whether or not we've an valid Magento root directory specified
-        if ($this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
+        if ($this->isMagentoRootDir($installationDir)) {
             // add the source directory if NOT specified in the configuration file
             if (($sourceDir = $instance->getSourceDir()) === null) {
                 $instance->setSourceDir($sourceDir = sprintf('%s/var/importexport', $installationDir));
