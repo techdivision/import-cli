@@ -63,6 +63,7 @@ abstract class AbstractImportCommand extends Command
              ->addOption(InputOptionKeys::TARGET_DIR, null, InputOption::VALUE_REQUIRED, 'The target directory with the files that has been imported')
              ->addOption(InputOptionKeys::ARCHIVE_DIR, null, InputOption::VALUE_REQUIRED, 'The directory the imported files will be archived in')
              ->addOption(InputOptionKeys::ARCHIVE_ARTEFACTS, null, InputOption::VALUE_REQUIRED, 'Whether or not files should be archived')
+             ->addOption(InputOptionKeys::CLEAR_ARTEFACTS, null, InputOption::VALUE_REQUIRED, 'Whether or not artefacts should be cleared')
              ->addOption(InputOptionKeys::USE_DB_ID, null, InputOption::VALUE_REQUIRED, 'The explicit database ID used for the actual import process')
              ->addOption(InputOptionKeys::DB_PDO_DSN, null, InputOption::VALUE_REQUIRED, 'The DSN used to connect to the Magento database where the data has to be imported, e. g. mysql:host=127.0.0.1;dbname=magento;charset=utf8')
              ->addOption(InputOptionKeys::DB_USERNAME, null, InputOption::VALUE_REQUIRED, 'The username used to connect to the Magento database')

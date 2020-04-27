@@ -91,6 +91,13 @@ class InputOptionKeys extends \ArrayObject implements InputOptionKeysInterface
     const ARCHIVE_ARTEFACTS = 'archive-artefacts';
 
     /**
+     * The input option key for the directory containing the flag to artefacts have to be cleared.
+     *
+     * @var string
+     */
+    const CLEAR_ARTEFACTS = 'clear-artefacts';
+
+    /**
      * The input option key for the Magento edition, EE or CE.
      *
      * @var string
@@ -229,6 +236,7 @@ class InputOptionKeys extends \ArrayObject implements InputOptionKeysInterface
                 InputOptionKeys::TARGET_DIR,
                 InputOptionKeys::ARCHIVE_DIR,
                 InputOptionKeys::ARCHIVE_ARTEFACTS,
+                InputOptionKeys::CLEAR_ARTEFACTS,
                 InputOptionKeys::MAGENTO_EDITION,
                 InputOptionKeys::MAGENTO_VERSION,
                 InputOptionKeys::USE_DB_ID,
