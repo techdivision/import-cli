@@ -78,10 +78,13 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
         OutputInterface $output
     ) {
 
+        // initialie the directory where we want to export the configuration to
+        $exportDir = $input->hasParameterOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR) ? $input->getOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR) : $configuration->getInstallationDir();
+
         // initialize the configuration filename
         $configurationFilename = $input->getOption(InputOptionKeys::DEST);
         if ($configurationFilename === null) {
-            $configurationFilename = sprintf('%s/app/etc/techdivision-import.json', $configuration->getCustom());
+            $configurationFilename = sprintf('%s/app/etc/techdivision-import.json', $exportDir);
         }
 
         // extract the format from the configuration file suffix
