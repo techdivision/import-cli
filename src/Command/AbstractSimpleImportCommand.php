@@ -27,6 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
+use TechDivision\Import\Utils\InputOptionKeysInterface;
 
 /**
  * Abstract command implementation for simple import commands (not using Importer class).
@@ -50,15 +51,15 @@ abstract class AbstractSimpleImportCommand extends Command
     {
 
         // configure the command
-        $this->addOption(InputOptionKeys::PID_FILENAME, null, InputOption::VALUE_REQUIRED, 'The explicit PID filename to use', sprintf('%s/%s', sys_get_temp_dir(), Configuration::PID_FILENAME))
-             ->addOption(InputOptionKeys::INSTALLATION_DIR, null, InputOption::VALUE_REQUIRED, 'The Magento installation directory to which the files has to be imported', getcwd())
-             ->addOption(InputOptionKeys::SYSTEM_NAME, null, InputOption::VALUE_REQUIRED, 'Specify the system name to use', gethostname())
-             ->addOption(InputOptionKeys::SOURCE_DIR, null, InputOption::VALUE_REQUIRED, 'The directory that has to be watched for new files')
-             ->addOption(InputOptionKeys::MAGENTO_VERSION, null, InputOption::VALUE_REQUIRED, 'The Magento version to be used, e. g. "2.1.2"')
-             ->addOption(InputOptionKeys::MAGENTO_EDITION, null, InputOption::VALUE_REQUIRED, 'The Magento edition to be used, either one of "CE" or "EE"', 'CE')
-             ->addOption(InputOptionKeys::CONFIGURATION, null, InputOption::VALUE_REQUIRED, 'Specify the pathname to the configuration file to use')
-             ->addOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR, null, InputOption::VALUE_REQUIRED, 'The path to the custom configuration directory')
-             ->addOption(InputOptionKeys::LOG_LEVEL, null, InputOption::VALUE_REQUIRED, 'The log level to use');
+        $this->addOption(InputOptionKeysInterface::PID_FILENAME, null, InputOption::VALUE_REQUIRED, 'The explicit PID filename to use', sprintf('%s/%s', sys_get_temp_dir(), Configuration::PID_FILENAME))
+             ->addOption(InputOptionKeysInterface::INSTALLATION_DIR, null, InputOption::VALUE_REQUIRED, 'The Magento installation directory to which the files has to be imported', getcwd())
+             ->addOption(InputOptionKeysInterface::SYSTEM_NAME, null, InputOption::VALUE_REQUIRED, 'Specify the system name to use', gethostname())
+             ->addOption(InputOptionKeysInterface::SOURCE_DIR, null, InputOption::VALUE_REQUIRED, 'The directory that has to be watched for new files')
+             ->addOption(InputOptionKeysInterface::MAGENTO_VERSION, null, InputOption::VALUE_REQUIRED, 'The Magento version to be used, e. g. "2.1.2"')
+             ->addOption(InputOptionKeysInterface::MAGENTO_EDITION, null, InputOption::VALUE_REQUIRED, 'The Magento edition to be used, either one of "CE" or "EE"', 'CE')
+             ->addOption(InputOptionKeysInterface::CONFIGURATION, null, InputOption::VALUE_REQUIRED, 'Specify the pathname to the configuration file to use')
+             ->addOption(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR, null, InputOption::VALUE_REQUIRED, 'The path to the custom configuration directory')
+             ->addOption(InputOptionKeysInterface::LOG_LEVEL, null, InputOption::VALUE_REQUIRED, 'The log level to use');
     }
 
     /**

@@ -22,6 +22,7 @@ namespace TechDivision\Import\Cli\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
 use TechDivision\Import\Utils\CommandNames;
+use TechDivision\Import\Utils\InputArgumentKeysInterface;
 
 /**
  * The command implementation that creates a OK file from a directory with CSV files.
@@ -46,7 +47,7 @@ class ImportCreateOkFileCommand extends AbstractImportCommand
 
         // initialize the command with the required/optional options
         $this->setName(CommandNames::IMPORT_CREATE_OK_FILE)
-            ->addArgument(InputArgumentKeys::SHORTCUT, InputArgument::OPTIONAL, 'The shortcut that defines the operation(s) that has to be used for the import, one of "create-ok-files" or a combination of them', 'create-ok-files')
+            ->addArgument(InputArgumentKeysInterface::SHORTCUT, InputArgument::OPTIONAL, 'The shortcut that defines the operation(s) that has to be used for the import, one of "create-ok-files" or a combination of them', 'create-ok-files')
             ->setDescription('Create\'s the OK file for the CSV files of the configured source directory');
 
         // invoke the parent method

@@ -22,6 +22,7 @@ namespace TechDivision\Import\Cli\Command;
 
 use TechDivision\Import\Utils\OperationKeys;
 use Symfony\Component\Console\Input\InputArgument;
+use TechDivision\Import\Utils\InputArgumentKeysInterface;
 
 /**
  * The command implementation for shortcut aware import commands.
@@ -45,7 +46,7 @@ abstract class AbstractShortcutAwareImportCommand extends AbstractImportCommand
     {
 
         // initialize the command with the required/optional options
-        $this->addArgument(InputArgumentKeys::SHORTCUT, InputArgument::OPTIONAL, 'The shortcut that defines the operation(s) that has to be used for the import, one of "add-update", "replace", "delete" or "convert" or a combination of them', OperationKeys::ADD_UPDATE);
+        $this->addArgument(InputArgumentKeysInterface::SHORTCUT, InputArgument::OPTIONAL, 'The shortcut that defines the operation(s) that has to be used for the import, one of "add-update", "replace", "delete" or "convert" or a combination of them', OperationKeys::ADD_UPDATE);
 
         // invoke the parent method
         parent::configure();

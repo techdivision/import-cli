@@ -26,6 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TechDivision\Import\Utils\CommandNames;
 use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Serializers\ValueCsvSerializer;
+use TechDivision\Import\Utils\InputArgumentKeysInterface;
 
 /**
  * The command to simulate converting a file.
@@ -51,9 +52,9 @@ class ImportConvertValueCommand extends AbstractSimpleImportCommand
         // initialize the command with the required/optional options
         $this->setName(CommandNames::IMPORT_CONVERT_VALUE)
              ->setDescription('Converts the value to the format expected by the given column')
-             ->addArgument(InputArgumentKeys::ENTITY_TYPE_CODE, InputArgument::REQUIRED, 'The entity type code to use, e. g. catalog_product')
-             ->addArgument(InputArgumentKeys::COLUMN, InputArgument::REQUIRED, 'The column name to convert the value for')
-             ->addArgument(InputArgumentKeys::VALUES, InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The value to convert');
+             ->addArgument(InputArgumentKeysInterface::ENTITY_TYPE_CODE, InputArgument::REQUIRED, 'The entity type code to use, e. g. catalog_product')
+             ->addArgument(InputArgumentKeysInterface::COLUMN, InputArgument::REQUIRED, 'The column name to convert the value for')
+             ->addArgument(InputArgumentKeysInterface::VALUES, InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The value to convert');
 
         // invoke the parent method
         parent::configure();
@@ -82,10 +83,10 @@ class ImportConvertValueCommand extends AbstractSimpleImportCommand
         $serialize = array();
 
         // load the values that has to be serialized
-        $values = $input->getArgument(InputArgumentKeys::VALUES);
+        $values = $input->getArgument(InputArgumentKeysInterface::VALUES);
 
         // simulate custom column handling
-        switch ($input->getArgument(InputArgumentKeys::COLUMN)) {
+        switch ($input->getArgument(InputArgumentKeysInterface::COLUMN)) {
             case 'categories':
                 // serialize the categories and use the default delimiter
                 $serialize[] = $serializer->serialize($values);

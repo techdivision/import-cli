@@ -22,14 +22,14 @@ namespace TechDivision\Import\Cli;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use TechDivision\Import\ConfigurationFactoryInterface;
-use TechDivision\Import\Cli\Command\InputOptionKeys;
 use TechDivision\Import\Cli\Configuration\LibraryLoader;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 use TechDivision\Import\Cli\Utils\MagentoConfigurationKeys;
 use TechDivision\Import\Utils\CommandNames;
 use TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode;
 use TechDivision\Import\ConsoleOptionLoaderInterface;
+use TechDivision\Import\Utils\InputOptionKeysInterface;
+use TechDivision\Import\Configuration\ConfigurationFactoryInterface;
 
 /**
  * The configuration loader implementation.
@@ -81,7 +81,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     /**
      * The configuration factory instance.
      *
-     * @var \TechDivision\Import\ConfigurationFactoryInterface
+     * @var \TechDivision\Import\Configuration\ConfigurationFactoryInterface
      */
     protected $configurationFactory;
 
@@ -109,13 +109,13 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     /**
      * Initializes the configuration loader.
      *
-     * @param \Symfony\Component\Console\Input\InputInterface                 $input                        The input instance
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface       $container                    The container instance
-     * @param \TechDivision\Import\Cli\Configuration\LibraryLoader            $libraryLoader                The configuration loader instance
-     * @param \TechDivision\Import\ConfigurationFactoryInterface              $configurationFactory         The configuration factory instance
-     * @param \TechDivision\Import\Utils\CommandNames                         $commandNames                 The available command names
-     * @param \TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode $commandNameToEntityTypeCodes The mapping of the command names to the entity type codes
-     * @param \TechDivision\Import\ConsoleOptionLoaderInterface               $consoleOptionLoader          The console option loader instance
+     * @param \Symfony\Component\Console\Input\InputInterface                  $input                        The input instance
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface        $container                    The container instance
+     * @param \TechDivision\Import\Cli\Configuration\LibraryLoader             $libraryLoader                The configuration loader instance
+     * @param \TechDivision\Import\Configuration\ConfigurationFactoryInterface $configurationFactory         The configuration factory instance
+     * @param \TechDivision\Import\Utils\CommandNames                          $commandNames                 The available command names
+     * @param \TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode  $commandNameToEntityTypeCodes The mapping of the command names to the entity type codes
+     * @param \TechDivision\Import\ConsoleOptionLoaderInterface                $consoleOptionLoader          The console option loader instance
      */
     public function __construct(
         InputInterface $input,
@@ -195,14 +195,14 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         );
 
         // query whether or not, a configuration file has been specified
-        if ($configuration = $this->input->getOption(InputOptionKeys::CONFIGURATION)) {
+        if ($configuration = $this->input->getOption(InputOptionKeysInterface::CONFIGURATION)) {
             // load the configuration from the file with the given filename
             $instance = $this->createConfiguration($configuration);
             // set the actual command name in the configuration
             $instance->setCommandName($this->input->getFirstArgument());
             // return the instance
             return $instance;
-        } elseif (($magentoEdition = $this->input->getOption(InputOptionKeys::MAGENTO_EDITION)) && ($magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION))) {
+        } elseif (($magentoEdition = $this->input->getOption(InputOptionKeysInterface::MAGENTO_EDITION)) && ($magentoVersion = $this->input->getOption(InputOptionKeysInterface::MAGENTO_VERSION))) {
             // use the Magento Edition that has been specified as option
             $instance = $this->createConfiguration();
 
@@ -218,7 +218,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         }
 
         // finally, query whether or not the installation directory is a valid Magento root directory
-        if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR))) {
+        if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeysInterface::INSTALLATION_DIR))) {
             throw new \Exception(
                 sprintf(
                     'Directory "%s" is not a valid Magento root directory, please use option "--installation-dir" to specify it',
@@ -263,16 +263,16 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         $params = null;
 
         // try to load the params from the commandline
-        if ($this->input->hasOptionSpecified(InputOptionKeys::PARAMS) && $this->input->getOption(InputOptionKeys::PARAMS)) {
-            $params = $this->input->getOption(InputOptionKeys::PARAMS);
+        if ($this->input->hasOptionSpecified(InputOptionKeysInterface::PARAMS) && $this->input->getOption(InputOptionKeysInterface::PARAMS)) {
+            $params = $this->input->getOption(InputOptionKeysInterface::PARAMS);
         }
 
         // initialize the params file specified with the --params-file parameter
         $paramsFile = null;
 
         // try to load the path of the params file from the commandline
-        if ($this->input->hasOptionSpecified(InputOptionKeys::PARAMS_FILE) && $this->input->getOption(InputOptionKeys::PARAMS_FILE)) {
-            $paramsFile = $this->input->getOption(InputOptionKeys::PARAMS_FILE);
+        if ($this->input->hasOptionSpecified(InputOptionKeysInterface::PARAMS_FILE) && $this->input->getOption(InputOptionKeysInterface::PARAMS_FILE)) {
+            $paramsFile = $this->input->getOption(InputOptionKeysInterface::PARAMS_FILE);
         }
 
         // if a filename has been passed, try to load the configuration from the file
@@ -320,8 +320,8 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         );
 
         // query whether or not a custom configuration directory has been speified, if yes override the default one
-        if ($this->input->hasOptionSpecified(InputOptionKeys::CUSTOM_CONFIGURATION_DIR) && $this->input->getOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR)) {
-            $customConfigurationDir = $this->input->getOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR);
+        if ($this->input->hasOptionSpecified(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR) && $this->input->getOption(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR)) {
+            $customConfigurationDir = $this->input->getOption(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR);
         }
 
         // specify the default directory for custom configuration files
@@ -330,7 +330,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         }
 
         // load the assumed installation directory
-        $installationDir = $this->input->getOption(InputOptionKeys::INSTALLATION_DIR);
+        $installationDir = $this->input->getOption(InputOptionKeysInterface::INSTALLATION_DIR);
 
         // load and return the configuration from the files found in the passed directories
         $instance = $this->configurationFactory->factoryFromDirectories($installationDir, $defaultConfigurationDir, $directories, $format, $params, $paramsFile);

@@ -1,6 +1,6 @@
 {
     "name": "techdivision/import-cli",
-    "description": "Commands and Helpers to implement a CLI providing single-threaded Magento 2 importing functionality based on M2IF",
+    "description": "Commands and Helpers to implement a CLI providing single-threaded Magento 2 importing functionality based on Pacemaker",
     "license": "OSL-3.0",
     "require": {
         "php": ">=7.1.0",

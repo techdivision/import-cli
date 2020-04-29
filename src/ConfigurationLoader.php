@@ -24,8 +24,8 @@ use Psr\Log\LogLevel;
 use Ramsey\Uuid\Uuid;
 use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Database;
-use TechDivision\Import\Cli\Command\InputArgumentKeys;
-use TechDivision\Import\Cli\Command\InputOptionKeys;
+use TechDivision\Import\Utils\InputOptionKeysInterface;
+use TechDivision\Import\Utils\InputArgumentKeysInterface;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 use TechDivision\Import\Cli\Utils\MagentoConfigurationKeys;
 
@@ -58,15 +58,15 @@ class ConfigurationLoader extends SimpleConfigurationLoader
 
         // query whether or not a shortcut has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($this->input->hasArgument(InputArgumentKeys::SHORTCUT)) {
-            $instance->setShortcut($this->input->getArgument(InputArgumentKeys::SHORTCUT));
+        if ($this->input->hasArgument(InputArgumentKeysInterface::SHORTCUT)) {
+            $instance->setShortcut($this->input->getArgument(InputArgumentKeysInterface::SHORTCUT));
         }
 
         // query whether or not operation names has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($this->input->hasArgument(InputArgumentKeys::OPERATION_NAMES)) {
+        if ($this->input->hasArgument(InputArgumentKeysInterface::OPERATION_NAMES)) {
             // load the operation names from the commandline
-            $operationNames = $this->input->getArgument(InputArgumentKeys::OPERATION_NAMES);
+            $operationNames = $this->input->getArgument(InputArgumentKeysInterface::OPERATION_NAMES);
             // append the names of the operations we want to execute to the configuration
             foreach ($operationNames as $operationName) {
                 $instance->addOperationName($operationName);
@@ -81,12 +81,12 @@ class ConfigurationLoader extends SimpleConfigurationLoader
 
         // query whether or not a DB ID has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($useDbId = $this->input->getOption(InputOptionKeys::USE_DB_ID)) {
+        if ($useDbId = $this->input->getOption(InputOptionKeysInterface::USE_DB_ID)) {
             $instance->setUseDbId($useDbId);
         } else {
             // query whether or not a PDO DSN has been specified as command line
             // option, if yes override the value from the configuration file
-            if ($dsn = $this->input->getOption(InputOptionKeys::DB_PDO_DSN)) {
+            if ($dsn = $this->input->getOption(InputOptionKeysInterface::DB_PDO_DSN)) {
                 // first REMOVE all other database configurations
                 $instance->clearDatabases();
 
@@ -94,8 +94,8 @@ class ConfigurationLoader extends SimpleConfigurationLoader
                 $instance->addDatabase(
                     $this->newDatabaseConfiguration(
                         $dsn,
-                        $this->input->getOption(InputOptionKeys::DB_USERNAME),
-                        $this->input->getOption(InputOptionKeys::DB_PASSWORD)
+                        $this->input->getOption(InputOptionKeysInterface::DB_USERNAME),
+                        $this->input->getOption(InputOptionKeysInterface::DB_PASSWORD)
                     )
                 );
             }
@@ -103,13 +103,13 @@ class ConfigurationLoader extends SimpleConfigurationLoader
 
         // query whether or not a DB ID has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($tablePrefix = $this->input->getOption(InputOptionKeys::DB_TABLE_PREFIX)) {
+        if ($tablePrefix = $this->input->getOption(InputOptionKeysInterface::DB_TABLE_PREFIX)) {
             $instance->getDatabase()->setTablePrefix($tablePrefix);
         }
 
         // query whether or not the debug mode is enabled and log level
         // has NOT been overwritten with a commandline option
-        if ($instance->isDebugMode() && !$this->input->getOption(InputOptionKeys::LOG_LEVEL)) {
+        if ($instance->isDebugMode() && !$this->input->getOption(InputOptionKeysInterface::LOG_LEVEL)) {
             // set debug log level, if log level has NOT been overwritten on command line
             $instance->setLogLevel(LogLevel::DEBUG);
         }

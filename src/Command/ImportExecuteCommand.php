@@ -22,6 +22,7 @@ namespace TechDivision\Import\Cli\Command;
 
 use TechDivision\Import\Utils\CommandNames;
 use Symfony\Component\Console\Input\InputArgument;
+use TechDivision\Import\Utils\InputArgumentKeysInterface;
 
 /**
  * The import command implementation.
@@ -47,7 +48,7 @@ class ImportExecuteCommand extends AbstractImportCommand
         // initialize the command with the required/optional options
         $this->setName(CommandNames::IMPORT_EXECUTE)
              ->setDescription('Executes the operations passed as argument')
-             ->addArgument(InputArgumentKeys::OPERATION_NAMES, InputArgument::IS_ARRAY|InputArgument::OPTIONAL, 'The operation(s) that has to be executed');
+             ->addArgument(InputArgumentKeysInterface::OPERATION_NAMES, InputArgument::IS_ARRAY|InputArgument::OPTIONAL, 'The operation(s) that has to be executed');
 
         // invoke the parent method
         parent::configure();

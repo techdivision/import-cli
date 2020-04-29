@@ -31,6 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use TechDivision\Import\Utils\CommandNames;
 use TechDivision\Import\Configuration\ConfigurationInterface;
+use TechDivision\Import\Utils\InputOptionKeysInterface;
 
 /**
  * The command implementation that creates a configuration file from one of the templates.
@@ -56,7 +57,7 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
         // initialize the command with the required/optional options
         $this->setName(CommandNames::IMPORT_CREATE_CONFIGURATION_FILE)
              ->setDescription('Create\'s a configuration file from the given entity\'s template')
-             ->addOption(InputOptionKeys::DEST, null, InputOption::VALUE_REQUIRED, 'The relative/absolut pathname of the destination file');
+             ->addOption(InputOptionKeysInterface::DEST, null, InputOption::VALUE_REQUIRED, 'The relative/absolut pathname of the destination file');
 
         // invoke the parent method
         parent::configure();
@@ -79,10 +80,10 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
     ) {
 
         // initialie the directory where we want to export the configuration to
-        $exportDir = $input->hasParameterOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR) ? $input->getOption(InputOptionKeys::CUSTOM_CONFIGURATION_DIR) : $configuration->getInstallationDir();
+        $exportDir = $input->hasParameterOption(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR) ? $input->getOption(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR) : $configuration->getInstallationDir();
 
         // initialize the configuration filename
-        $configurationFilename = $input->getOption(InputOptionKeys::DEST);
+        $configurationFilename = $input->getOption(InputOptionKeysInterface::DEST);
         if ($configurationFilename === null) {
             $configurationFilename = sprintf('%s/app/etc/techdivision-import.json', $exportDir);
         }
