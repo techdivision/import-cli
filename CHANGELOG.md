@@ -1,3 +1,13 @@
+# Version 10.0.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Make composer dependencies more generic
+
 # Version 10.0.0
 
 ## Bugfixes
