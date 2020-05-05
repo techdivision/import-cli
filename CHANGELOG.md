@@ -1,3 +1,13 @@
+# Version 10.0.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Update console application name
+
 # Version 10.0.1
 
 ## Bugfixes

@@ -5,7 +5,7 @@
 
     <parameters>
 
-        <parameter key="application.name">M2IF - Console Tool</parameter>
+        <parameter key="application.name">Pacemaker - Community Console Tool</parameter>
         <parameter key="application.version.file">.semver</parameter>
         <parameter key="application.default.configuration.dir">etc</parameter>
         <parameter key="application.custom.configuration.dir">app/etc</parameter>
