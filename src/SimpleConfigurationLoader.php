@@ -310,11 +310,14 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             }
         }
 
+        // load the assumed installation directory
+        $installationDir = $this->input->getOption(InputOptionKeysInterface::INSTALLATION_DIR);
+
         // initialize the default custom configuration directory
         $customConfigurationDir = implode(
             DIRECTORY_SEPARATOR,
             array_merge(
-                array(getcwd()),
+                array($installationDir),
                 explode('/', $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_CUSTOM_CONFIGURATION_DIR))
             )
         );
@@ -328,9 +331,6 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         if (is_dir($customConfigurationDir)) {
             $directories[] = $customConfigurationDir;
         }
-
-        // load the assumed installation directory
-        $installationDir = $this->input->getOption(InputOptionKeysInterface::INSTALLATION_DIR);
 
         // load and return the configuration from the files found in the passed directories
         $instance = $this->configurationFactory->factoryFromDirectories($installationDir, $defaultConfigurationDir, $directories, $format, $params, $paramsFile);

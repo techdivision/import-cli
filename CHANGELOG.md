@@ -1,3 +1,13 @@
+# Version 10.0.3
+
+## Bugfixes
+
+* Fixed #PAC-151: Directive `additional-vendor-dirs` not applied
+
+## Features
+
+* None
+
 # Version 10.0.2
 
 ## Bugfixes
