@@ -1,3 +1,13 @@
+# Version 11.0.1
+
+## Bugfixes
+
+* Fixed invalid Magento edition/version mapping
+
+## Features
+
+* None
+
 # Version 11.0.0
 
 ## Bugfixes

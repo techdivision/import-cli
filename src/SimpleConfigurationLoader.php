@@ -433,9 +433,9 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
                 // try to load and explode the Magento Edition from the Composer configuration
                 if (isset($editionMappings[$possibleEdition])) {
                     // try to load and explode the Magento Version from the Composer configuration
-                    if (isset($composer[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE])) {
+                    if (isset($package[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE])) {
                         // add Magento edition => version mapping and continue
-                        $packages[$editionMappings[$possibleEdition]] = $composer[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE];
+                        $packages[$editionMappings[$possibleEdition]] = $package[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE];
                         continue;
                     }
 
@@ -462,8 +462,8 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         // return the array with the Magento Version/Edition data
         foreach ($packages as $edition => $version) {
             return array(
-                SimpleConfigurationLoader::VERSION => $edition,
-                SimpleConfigurationLoader::EDITION => $version
+                SimpleConfigurationLoader::EDITION => $edition,
+                SimpleConfigurationLoader::VERSION => $version
             );
         }
 
