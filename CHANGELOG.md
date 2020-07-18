@@ -1,3 +1,13 @@
+# Version 11.0.0
+
+## Bugfixes
+
+* Fixed techdivision/import-cli-simple#250
+
+## Features
+
+* None
+
 # Version 10.0.3
 
 ## Bugfixes

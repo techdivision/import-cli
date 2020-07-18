@@ -99,6 +99,13 @@ class MagentoConfigurationKeys
     const PASSWORD = 'password';
 
     /**
+     * The attribute with packages in the composer.json file.
+     *
+     * @var string
+     */
+    const COMPOSER_PACKAGES = 'packages';
+
+    /**
      * The attribute with the Magento Edition name in the composer.json file.
      *
      * @var string

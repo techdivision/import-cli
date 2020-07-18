@@ -22,13 +22,14 @@ namespace TechDivision\Import\Cli;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use TechDivision\Import\ConsoleOptionLoaderInterface;
 use TechDivision\Import\Cli\Configuration\LibraryLoader;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 use TechDivision\Import\Cli\Utils\MagentoConfigurationKeys;
 use TechDivision\Import\Utils\CommandNames;
-use TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode;
-use TechDivision\Import\ConsoleOptionLoaderInterface;
+use TechDivision\Import\Utils\EditionNamesInterface;
 use TechDivision\Import\Utils\InputOptionKeysInterface;
+use TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode;
 use TechDivision\Import\Configuration\ConfigurationFactoryInterface;
 
 /**
@@ -105,6 +106,16 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
      * @var \TechDivision\Import\ConsoleOptionLoaderInterface
      */
     protected $consoleOptionLoader;
+
+    /**
+     * The default sorting for the edition detection.
+     *
+     * @var array
+     */
+    protected $editionSortOrder = array(
+        EditionNamesInterface::EE,
+        EditionNamesInterface::CE
+    );
 
     /**
      * Initializes the configuration loader.
@@ -194,52 +205,33 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             $annotationDir
         );
 
+        // try to load the Magento installation directory
+        $installationDir = $this->input->getOption(InputOptionKeysInterface::INSTALLATION_DIR);
+
         // query whether or not, a configuration file has been specified
-        if ($configuration = $this->input->getOption(InputOptionKeysInterface::CONFIGURATION)) {
-            // load the configuration from the file with the given filename
-            $instance = $this->createConfiguration($configuration);
-            // set the actual command name in the configuration
-            $instance->setCommandName($this->input->getFirstArgument());
-            // return the instance
-            return $instance;
-        } elseif (($magentoEdition = $this->input->getOption(InputOptionKeysInterface::MAGENTO_EDITION)) && ($magentoVersion = $this->input->getOption(InputOptionKeysInterface::MAGENTO_VERSION))) {
-            // use the Magento Edition that has been specified as option
-            $instance = $this->createConfiguration();
+        $configuration = $this->input->getOption(InputOptionKeysInterface::CONFIGURATION);
 
-            // override the Magento Edition/Version
+        // load the configuration from the file with the given filename
+        $instance = $configuration ? $this->createConfiguration($configuration) : $this->createConfiguration();
+
+        // query whether or not the installation directory is a valid Magento root directory
+        if ($this->isMagentoRootDir($installationDir)) {
+            // if yes, try to load the Magento Edition from the Composer configuration file
+            $metadata = $this->getEditionMapping($installationDir);
+            // initialize/override the Magento edition/version with the values from the Magento installation
+            $instance->setMagentoEdition($metadata[SimpleConfigurationLoader::EDITION]);
+            $instance->setMagentoVersion($metadata[SimpleConfigurationLoader::VERSION]);
+        }
+
+        // initialize/override the Magento edition with the value from the command line
+        if ($magentoEdition = $this->input->getOption(InputOptionKeysInterface::MAGENTO_EDITION)) {
             $instance->setMagentoEdition($magentoEdition);
+        }
+
+        // initialize/override the Magento version with the value from the command line
+        if ($magentoVersion = $this->input->getOption(InputOptionKeysInterface::MAGENTO_VERSION)) {
             $instance->setMagentoVersion($magentoVersion);
-
-            // set the actual command name in the configuration
-            $instance->setCommandName($this->input->getFirstArgument());
-
-            // return the instance
-            return $instance;
         }
-
-        // finally, query whether or not the installation directory is a valid Magento root directory
-        if (!$this->isMagentoRootDir($installationDir = $this->input->getOption(InputOptionKeysInterface::INSTALLATION_DIR))) {
-            throw new \Exception(
-                sprintf(
-                    'Directory "%s" is not a valid Magento root directory, please use option "--installation-dir" to specify it',
-                    $installationDir
-                )
-            );
-        }
-
-        // use the Magento Edition that has been detected by the installation directory
-        $instance = $this->createConfiguration();
-
-        // load the Magento Edition from the Composer configuration file
-        $metadata = $this->getEditionMapping($installationDir);
-
-        // extract edition & version from the metadata
-        $magentoEdition = $metadata[SimpleConfigurationLoader::EDITION];
-        $magentoVersion = $metadata[SimpleConfigurationLoader::VERSION];
-
-        // override the Magento Edition/Version
-        $instance->setMagentoEdition($magentoEdition);
-        $instance->setMagentoVersion($magentoVersion);
 
         // set the actual command name in the configuration
         $instance->setCommandName($this->input->getFirstArgument());
@@ -348,6 +340,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             }
         }
 
+        // return the configuration instance
         return $instance;
     }
 
@@ -425,36 +418,61 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         $editionMappings = $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_EDITION_MAPPINGS);
 
         // load the composer file from the Magento root directory
-        $composer = json_decode(file_get_contents($composerFile = sprintf('%s/composer.json', $installationDir)), true);
+        $composer = json_decode(file_get_contents($composerFile = sprintf('%s/composer.lock', $installationDir)), true);
 
-        // try to load and explode the Magento Edition identifier from the Composer name
-        $explodedEdition = explode('/', $composer[MagentoConfigurationKeys::COMPOSER_EDITION_NAME_ATTRIBUTE]);
+        // initialize the array that contains the packages to identify the Magento edition
+        $packages = array();
 
-        // try to load and explode the Magento Edition from the Composer configuration
-        if (!isset($editionMappings[$possibleEdition = end($explodedEdition)])) {
-            throw new \Exception(
-                sprintf(
-                    '"%s" detected in "%s" is not a valid Magento Edition, please set Magento Edition with the "--magento-edition" option',
-                    $possibleEdition,
-                    $composerFile
-                )
-            );
+        // query whether or not packages are available in the composer file
+        if (isset($composer[MagentoConfigurationKeys::COMPOSER_PACKAGES])) {
+            // iterate over the available packages to figure out the ones that allows us to identify the Magento edition
+            foreach ($composer[MagentoConfigurationKeys::COMPOSER_PACKAGES] as $package) {
+                // try to load and explode the Magento Edition identifier from the Composer name
+                $possibleEdition = $package[MagentoConfigurationKeys::COMPOSER_EDITION_NAME_ATTRIBUTE];
+
+                // try to load and explode the Magento Edition from the Composer configuration
+                if (isset($editionMappings[$possibleEdition])) {
+                    // try to load and explode the Magento Version from the Composer configuration
+                    if (isset($composer[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE])) {
+                        // add Magento edition => version mapping and continue
+                        $packages[$editionMappings[$possibleEdition]] = $composer[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE];
+                        continue;
+                    }
+
+                    // throw an exception if the package has NO version defineds
+                    throw new \Exception(
+                        sprintf(
+                            'Can\'t detect a valid Magento version for package "%s" in "%s", please set Magento Version with the "--magento-version" option',
+                            $possibleEdition,
+                            $composerFile
+                        )
+                    );
+                }
+            }
         }
 
-        // try to load and explode the Magento Version from the Composer configuration
-        if (!isset($composer[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE])) {
-            throw new \Exception(
-                sprintf(
-                    'Can\'t detect a version in "%s", please set Magento Version with the "--magento-version" option',
-                    $composerFile
-                )
-            );
-        }
+        // create the default sort order for the edition detection
+        $editionSortOrder = array_flip($this->editionSortOrder);
+
+        // sort the packages according the default sort order
+        uksort($packages, function ($a, $b) use ($editionSortOrder) {
+            return $editionSortOrder[$a] <=> $editionSortOrder[$b];
+        });
 
         // return the array with the Magento Version/Edition data
-        return array(
-            SimpleConfigurationLoader::VERSION => $composer[MagentoConfigurationKeys::COMPOSER_EDITION_VERSION_ATTRIBUTE],
-            SimpleConfigurationLoader::EDITION => $editionMappings[$possibleEdition]
+        foreach ($packages as $edition => $version) {
+            return array(
+                SimpleConfigurationLoader::VERSION => $edition,
+                SimpleConfigurationLoader::EDITION => $version
+            );
+        }
+
+        // throw an exception if NO edition information can be found in the composer.lock file
+        throw new \Exception(
+            sprintf(
+                'Can\'t detect a valid Magento edition/version in "%s", please pass them with the "--magento-edition" and "--magento-version" options',
+                $composerFile
+            )
         );
     }
 

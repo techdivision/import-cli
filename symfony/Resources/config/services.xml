@@ -10,10 +10,8 @@
         <parameter key="application.default.configuration.dir">etc</parameter>
         <parameter key="application.custom.configuration.dir">app/etc</parameter>
         <parameter key="application.edition.mappings" type="collection">
-            <parameter key="magento2ce" type="constant">TechDivision\Import\Utils\EditionNamesInterface::CE</parameter>
-            <parameter key="magento2ee" type="constant">TechDivision\Import\Utils\EditionNamesInterface::EE</parameter>
-            <parameter key="project-community-edition" type="constant">TechDivision\Import\Utils\EditionNamesInterface::CE</parameter>
-            <parameter key="project-enterprise-edition" type="constant">TechDivision\Import\Utils\EditionNamesInterface::EE</parameter>
+            <parameter key="magento/project-community-edition" type="constant">TechDivision\Import\Utils\EditionNamesInterface::CE</parameter>
+            <parameter key="magento/project-enterprise-edition" type="constant">TechDivision\Import\Utils\EditionNamesInterface::EE</parameter>
         </parameter>
         <parameter key="application.default.libraries" type="collection">
             <parameter key="ce" type="collection">
