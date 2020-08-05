@@ -1,14 +1,89 @@
-# Version 7.0.8
+# Version 11.0.1
 
 ## Bugfixes
 
-* Fixed techdivision/import-cli#2
+* Fixed invalid Magento edition/version mapping
 
 ## Features
 
 * None
 
-# Version 7.0.7
+# Version 11.0.0
+
+## Bugfixes
+
+* Fixed techdivision/import-cli-simple#250
+
+## Features
+
+* None
+
+# Version 10.0.3
+
+## Bugfixes
+
+* Fixed #PAC-151: Directive `additional-vendor-dirs` not applied
+
+## Features
+
+* None
+
+# Version 10.0.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Update console application name
+
+# Version 10.0.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Make composer dependencies more generic
+
+# Version 10.0.0
+
+## Bugfixes
+
+* Fixed techdivision/import-cli#2
+* Fixed techdivision/import-cli-simple#242
+
+## Features
+
+* Add #PAC-85
+* Add techdivision/import-cli-simple#244
+* Add functionality to also parse configuration files that'll be available in configured additional vendor directory
+* Update to versions of techdivision/import 16.*, techdivision/import-configuration-jms 16.* and techdivision/import-app-simple 16.*
+
+# Version 9.0.4
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add extracted DI configuration import.configuration.manager from techdivision/import to make it overwritable
+
+# Version 9.0.3
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Extract dev autoloading
+* Add command to import URL rewrites
+
+# Version 9.0.2
 
 ## Bugfixes
 
@@ -17,6 +92,41 @@
 ## Features
 
 * Remove mandatory autoload.php from additional vendor directory
+
+# Version 9.0.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to latest techdivision/import-configuration-jms version
+
+# Version 9.0.0
+
+## Bugfixes
+
+* Also use DB port configuration from Magento env.php if given
+
+## Features
+
+* None
+
+# Version 8.0.0
+
+## Bugfixes
+
+* Fixed techdivision/import-cli-simple#224
+
+## Features
+
+* Add converter libraries to default libraries
+* Add techdivision/import#162
+* Add techdivision/import#163
+* Add techdivision/import-cli-simple#216
+* Add techdivision/import-configuration-jms#25
+* Update to versions of techdivision/import 15.*, techdivision/import-configuration-jms 15.* and techdivision/import-app-simple 16.*
 
 # Version 7.0.6
 
@@ -32,11 +142,11 @@
 
 ## Bugfixes
 
-* None
+* Fixed invalid composer dependencies
 
 ## Features
 
-* Fixed invalid composer dependencies
+* None
 
 # Version 7.0.2
 

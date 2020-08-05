@@ -20,8 +20,10 @@
 
 namespace TechDivision\Import\Cli\Command;
 
+use TechDivision\Import\Utils\InputOptionKeysInterface;
+
 /**
- * Utility class containing the available visibility keys.
+ * Utility class containing the available input options.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
@@ -29,198 +31,65 @@ namespace TechDivision\Import\Cli\Command;
  * @link      https://github.com/techdivision/import-cli-simple
  * @link      http://www.techdivision.com
  */
-class InputOptionKeys
+class InputOptionKeys extends \ArrayObject implements InputOptionKeysInterface
 {
 
     /**
-     * This is a utility class, so protect it against direct
-     * instantiation.
+     * Construct a new input option instance.
+     *
+     * @param array $inputOptionKeys The array with the additional input option names
+     * @link http://www.php.net/manual/en/arrayobject.construct.php
      */
-    private function __construct()
+    public function __construct(array $inputOptionKeys = array())
     {
+
+        // merge the input options with the passed ones
+        $mergedInputOptionKeys = array_merge(
+            array(
+                InputOptionKeysInterface::SERIAL,
+                InputOptionKeysInterface::SYSTEM_NAME,
+                InputOptionKeysInterface::CONFIGURATION,
+                InputOptionKeysInterface::INSTALLATION_DIR,
+                InputOptionKeysInterface::SOURCE_DIR,
+                InputOptionKeysInterface::TARGET_DIR,
+                InputOptionKeysInterface::ARCHIVE_DIR,
+                InputOptionKeysInterface::ARCHIVE_ARTEFACTS,
+                InputOptionKeysInterface::CLEAR_ARTEFACTS,
+                InputOptionKeysInterface::MAGENTO_EDITION,
+                InputOptionKeysInterface::MAGENTO_VERSION,
+                InputOptionKeysInterface::USE_DB_ID,
+                InputOptionKeysInterface::DB_PDO_DSN,
+                InputOptionKeysInterface::DB_USERNAME,
+                InputOptionKeysInterface::DB_PASSWORD,
+                InputOptionKeysInterface::DB_TABLE_PREFIX,
+                InputOptionKeysInterface::DEBUG_MODE,
+                InputOptionKeysInterface::LOG_LEVEL,
+                InputOptionKeysInterface::PID_FILENAME,
+                InputOptionKeysInterface::DEST,
+                InputOptionKeysInterface::SINGLE_TRANSACTION,
+                InputOptionKeysInterface::PARAMS,
+                InputOptionKeysInterface::PARAMS_FILE,
+                InputOptionKeysInterface::CACHE_ENABLED,
+                InputOptionKeysInterface::MOVE_FILES_PREFIX,
+                InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR,
+                InputOptionKeysInterface::RENDER_VALIDATION_ISSUES
+            ),
+            $inputOptionKeys
+        );
+
+        // initialize the parent class with the merged input options
+        parent::__construct($mergedInputOptionKeys);
     }
 
     /**
-     * This is a utility class, so protect it against cloning.
+     * Query whether or not the passed input option is valid.
      *
-     * @return void
+     * @param string $inputOption The input option to query for
+     *
+     * @return boolean TRUE if the input option is valid, else FALSE
      */
-    private function __clone()
+    public function isInputOption($inputOption)
     {
+        return in_array($inputOption, (array) $this);
     }
-
-    /**
-     * Input key for the --serial option.
-     *
-     * @var string
-     */
-    const SERIAL = 'serial';
-
-    /**
-     * The input option key for the system name to use.
-     *
-     * @var string
-     */
-    const SYSTEM_NAME = 'system-name';
-
-    /**
-     * The input option key for the path to the configuration file to use.
-     *
-     * @var string
-     */
-    const CONFIGURATION = 'configuration';
-
-    /**
-     * The input option key for the Magento installation directory.
-     *
-     * @var string
-     */
-    const INSTALLATION_DIR = 'installation-dir';
-
-    /**
-     * The input option key for the directory containing the files to be imported.
-     *
-     * @var string
-     */
-    const SOURCE_DIR = 'source-dir';
-
-    /**
-     * The input option key for the directory containing the imported files.
-     *
-     * @var string
-     */
-    const TARGET_DIR = 'target-dir';
-
-    /**
-     * The input option key for the directory containing the archived imported files.
-     *
-     * @var string
-     */
-    const ARCHIVE_DIR = 'archive-dir';
-
-    /**
-     * The input option key for the directory containing the flag to archive the imported files.
-     *
-     * @var string
-     */
-    const ARCHIVE_ARTEFACTS = 'archive-artefacts';
-
-    /**
-     * The input option key for the Magento edition, EE or CE.
-     *
-     * @var string
-     */
-    const MAGENTO_EDITION = 'magento-edition';
-
-    /**
-     * The input option key for the Magento version, e. g. 2.1.0.
-     *
-     * @var string
-     */
-    const MAGENTO_VERSION = 'magento-version';
-
-    /**
-     * The input option key for the source date format to use.
-     *
-     * @var string
-     */
-    const SOURCE_DATE_FORMAT = 'source-date-format';
-
-    /**
-     * The input option key for the database ID to use.
-     *
-     * @var string
-     */
-    const USE_DB_ID = 'use-db-id';
-
-    /**
-     * The input option key for the PDO DSN to use.
-     *
-     * @var string
-     */
-    const DB_PDO_DSN = 'db-pdo-dsn';
-
-    /**
-     * The input option key for the DB username to use.
-     *
-     * @var string
-     */
-    const DB_USERNAME = 'db-username';
-
-    /**
-     * The input option key for the DB password to use.
-     *
-     * @var string
-     */
-    const DB_PASSWORD = 'db-password';
-
-    /**
-     * The input option key for the DB table prefix to use.
-     *
-     * @var string
-     */
-    const DB_TABLE_PREFIX = 'db-table-prefix';
-
-    /**
-     * The input option key for the debug mode.
-     *
-     * @var string
-     */
-    const DEBUG_MODE = 'debug-mode';
-
-    /**
-     * The input option key for the log level to use.
-     *
-     * @var string
-     */
-    const LOG_LEVEL = 'log-level';
-
-    /**
-     * The input option key for the PID filename to use.
-     *
-     * @var string
-     */
-    const PID_FILENAME = 'pid-filename';
-
-    /**
-     * The input option key for the entity type code to use.
-     *
-     * @var string
-     */
-    const ENTITY_TYPE_CODE = 'entity-type-code';
-
-    /**
-     * The input option key for the destination pathname to use.
-     *
-     * @var string
-     */
-    const DEST = 'dest';
-
-    /**
-     * The input option key for the single transaction flag.
-     *
-     * @var string
-     */
-    const SINGLE_TRANSACTION = 'single-transaction';
-
-    /**
-     * The input option key for additional params that has to be merged into the application configuration.
-     *
-     * @var string
-     */
-    const PARAMS = 'params';
-
-    /**
-     * The input option key for the path to additional params as file that has to be merged into the application configuration.
-     *
-     * @var string
-     */
-    const PARAMS_FILE = 'params-file';
-
-    /**
-     * The input option key for the flag to enable the cache functionality or not.
-     *
-     * @var string
-     */
-    const CACHE_ENABLED = 'cache-enabled';
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Import\Cli\Command\ImportProductsInventoryCommand
+ * TechDivision\Import\Cli\Command\ImportProductsUrlCommand
  *
  * NOTICE OF LICENSE
  *
@@ -12,7 +12,7 @@
  * PHP version 5
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
- * @copyright 2016 TechDivision GmbH <info@techdivision.com>
+ * @copyright 2020 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-cli-simple
  * @link      http://www.techdivision.com
@@ -23,15 +23,15 @@ namespace TechDivision\Import\Cli\Command;
 use TechDivision\Import\Utils\CommandNames;
 
 /**
- * The import command implementation for importing products inventory.
+ * The import command implementation for importing product URL keys.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
- * @copyright 2016 TechDivision GmbH <info@techdivision.com>
+ * @copyright 2020 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-cli-simple
  * @link      http://www.techdivision.com
  */
-class ImportProductsInventoryCommand extends AbstractShortcutAwareImportCommand
+class ImportProductsUrlCommand extends AbstractShortcutAwareImportCommand
 {
 
     /**
@@ -44,8 +44,8 @@ class ImportProductsInventoryCommand extends AbstractShortcutAwareImportCommand
     {
 
         // initialize the command with the required/optional options
-        $this->setName(CommandNames::IMPORT_PRODUCTS_INVENTORY)
-             ->setDescription('Imports product inventory in the configured Magento 2 instance');
+        $this->setName(CommandNames::IMPORT_PRODUCTS_URL)
+             ->setDescription('Imports product URLs in the configured Magento 2 instance');
 
         // invoke the parent method
         parent::configure();

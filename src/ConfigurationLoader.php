@@ -22,10 +22,10 @@ namespace TechDivision\Import\Cli;
 
 use Psr\Log\LogLevel;
 use Ramsey\Uuid\Uuid;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Database;
-use TechDivision\Import\Cli\Command\InputArgumentKeys;
-use TechDivision\Import\Cli\Command\InputOptionKeys;
+use TechDivision\Import\Utils\InputOptionKeysInterface;
+use TechDivision\Import\Utils\InputArgumentKeysInterface;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 use TechDivision\Import\Cli\Utils\MagentoConfigurationKeys;
 
@@ -47,7 +47,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
      * If command line options are specified, they will always override the
      * values found in the configuration file.
      *
-     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
+     * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance
      * @throws \Exception Is thrown, if the specified configuration file doesn't exist or the mandatory arguments/options to run the requested operation are not available
      */
     public function load()
@@ -56,93 +56,37 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         // load the configuration instance
         $instance = parent::load();
 
-        // set the serial that has been specified as command line option (or the default value)
-        $instance->setSerial($this->input->getOption(InputOptionKeys::SERIAL));
-
-        // query whether or not an operation name has been specified as command line
+        // query whether or not a shortcut has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($operationName = $this->input->getArgument(InputArgumentKeys::OPERATION_NAME)) {
-            $instance->setOperationName($operationName);
+        if ($this->input->hasArgument(InputArgumentKeysInterface::SHORTCUT)) {
+            $instance->setShortcut($this->input->getArgument(InputArgumentKeysInterface::SHORTCUT));
         }
 
-        // query whether or not a Magento version has been specified as command line
+        // query whether or not operation names has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($magentoVersion = $this->input->getOption(InputOptionKeys::MAGENTO_VERSION)) {
-            $instance->setMagentoVersion($magentoVersion);
-        }
-
-        // query whether or not a directory containing the imported files has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($targetDir = $this->input->getOption(InputOptionKeys::TARGET_DIR)) {
-            $instance->setTargetDir($targetDir);
-        }
-
-        // query whether or not a directory containing the archived imported files has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($archiveDir = $this->input->getOption(InputOptionKeys::ARCHIVE_DIR)) {
-            $instance->setArchiveDir($archiveDir);
-        }
-
-        // query whether or not the debug mode has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($archiveArtefacts = $this->input->getOption(InputOptionKeys::ARCHIVE_ARTEFACTS)) {
-            $instance->setArchiveArtefacts($instance->mapBoolean($archiveArtefacts));
-        }
-
-        // query whether or not a source date format has been specified as command
-        // line  option, if yes override the value from the configuration file
-        if ($sourceDateFormat = $this->input->getOption(InputOptionKeys::SOURCE_DATE_FORMAT)) {
-            $instance->setSourceDateFormat($sourceDateFormat);
-        }
-
-        // query whether or not the debug mode has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($debugMode = $this->input->getOption(InputOptionKeys::DEBUG_MODE)) {
-            $instance->setDebugMode($instance->mapBoolean($debugMode));
-        }
-
-        // query whether or not the log level has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($logLevel = $this->input->getOption(InputOptionKeys::LOG_LEVEL)) {
-            $instance->setLogLevel($logLevel);
-        }
-
-        // query whether or not the single transaction flag has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($singleTransaction = $this->input->getOption(InputOptionKeys::SINGLE_TRANSACTION)) {
-            $instance->setSingleTransaction($instance->mapBoolean($singleTransaction));
-        }
-
-        // query whether or not the cache flag has been specified as command line
-        // option, if yes override the value from the configuration file
-        if ($cacheEnabled = $this->input->getOption(InputOptionKeys::CACHE_ENABLED)) {
-            $instance->setCacheEnabled($instance->mapBoolean($cacheEnabled));
+        if ($this->input->hasArgument(InputArgumentKeysInterface::OPERATION_NAMES)) {
+            // load the operation names from the commandline
+            $operationNames = $this->input->getArgument(InputArgumentKeysInterface::OPERATION_NAMES);
+            // append the names of the operations we want to execute to the configuration
+            foreach ($operationNames as $operationName) {
+                $instance->addOperationName($operationName);
+            }
         }
 
         // query whether or not we've an valid Magento root directory specified
         if ($this->isMagentoRootDir($installationDir = $instance->getInstallationDir())) {
             // if yes, add the database configuration
             $instance->addDatabase($this->getMagentoDbConnection($installationDir));
-
-            // add the source directory if NOT specified in the configuration file
-            if (($sourceDir = $instance->getSourceDir()) === null) {
-                $instance->setSourceDir($sourceDir = sprintf('%s/var/importexport', $installationDir));
-            }
-
-            // add the target directory if NOT specified in the configuration file
-            if ($instance->getTargetDir() === null) {
-                $instance->setTargetDir($sourceDir);
-            }
         }
 
         // query whether or not a DB ID has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($useDbId = $this->input->getOption(InputOptionKeys::USE_DB_ID)) {
+        if ($useDbId = $this->input->getOption(InputOptionKeysInterface::USE_DB_ID)) {
             $instance->setUseDbId($useDbId);
         } else {
             // query whether or not a PDO DSN has been specified as command line
             // option, if yes override the value from the configuration file
-            if ($dsn = $this->input->getOption(InputOptionKeys::DB_PDO_DSN)) {
+            if ($dsn = $this->input->getOption(InputOptionKeysInterface::DB_PDO_DSN)) {
                 // first REMOVE all other database configurations
                 $instance->clearDatabases();
 
@@ -150,8 +94,8 @@ class ConfigurationLoader extends SimpleConfigurationLoader
                 $instance->addDatabase(
                     $this->newDatabaseConfiguration(
                         $dsn,
-                        $this->input->getOption(InputOptionKeys::DB_USERNAME),
-                        $this->input->getOption(InputOptionKeys::DB_PASSWORD)
+                        $this->input->getOption(InputOptionKeysInterface::DB_USERNAME),
+                        $this->input->getOption(InputOptionKeysInterface::DB_PASSWORD)
                     )
                 );
             }
@@ -159,30 +103,13 @@ class ConfigurationLoader extends SimpleConfigurationLoader
 
         // query whether or not a DB ID has been specified as command line
         // option, if yes override the value from the configuration file
-        if ($tablePrefix = $this->input->getOption(InputOptionKeys::DB_TABLE_PREFIX)) {
+        if ($tablePrefix = $this->input->getOption(InputOptionKeysInterface::DB_TABLE_PREFIX)) {
             $instance->getDatabase()->setTablePrefix($tablePrefix);
-        }
-
-        // extend the plugins with the main configuration instance
-        /** @var \TechDivision\Import\Cli\Configuration\Subject $subject */
-        foreach ($instance->getPlugins() as $plugin) {
-            // set the configuration instance on the plugin
-            $plugin->setConfiguration($instance);
-
-            // query whether or not the plugin has subjects configured
-            if ($subjects = $plugin->getSubjects()) {
-                // extend the plugin's subjects with the main configuration instance
-                /** @var \TechDivision\Import\Cli\Configuration\Subject $subject */
-                foreach ($subjects as $subject) {
-                    // set the configuration instance on the subject
-                    $subject->setConfiguration($instance);
-                }
-            }
         }
 
         // query whether or not the debug mode is enabled and log level
         // has NOT been overwritten with a commandline option
-        if ($instance->isDebugMode() && !$this->input->getOption(InputOptionKeys::LOG_LEVEL)) {
+        if ($instance->isDebugMode() && !$this->input->getOption(InputOptionKeysInterface::LOG_LEVEL)) {
             // set debug log level, if log level has NOT been overwritten on command line
             $instance->setLogLevel(LogLevel::DEBUG);
         }
@@ -190,7 +117,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         // prepend the array with the Magento Edition specific core libraries
         $instance->setExtensionLibraries(
             array_merge(
-                $this->getDefaultLibraries($instance->getMagentoEdition()),
+                $this->getDefaultLibrariesByMagentoEdition($instance->getMagentoEdition()),
                 $instance->getExtensionLibraries()
             )
         );
@@ -229,14 +156,18 @@ class ConfigurationLoader extends SimpleConfigurationLoader
             // load the connection data
             $connection = $db[MagentoConfigurationKeys::CONNECTION][$connectionName];
 
+            // try to load port and table prefix (they're optional)
+            $port = isset($connection[MagentoConfigurationKeys::PORT]) ? $connection[MagentoConfigurationKeys::PORT] : 3306;
+            $tablePrefix = isset($db[MagentoConfigurationKeys::TABLE_PREFIX]) ? $db[MagentoConfigurationKeys::TABLE_PREFIX] : null;
+
             // create and return a new database configuration
             return $this->newDatabaseConfiguration(
-                $this->newDsn($connection[MagentoConfigurationKeys::HOST], $connection[MagentoConfigurationKeys::DBNAME]),
+                $this->newDsn($connection[MagentoConfigurationKeys::HOST], $port, $connection[MagentoConfigurationKeys::DBNAME]),
                 $connection[MagentoConfigurationKeys::USERNAME],
                 $connection[MagentoConfigurationKeys::PASSWORD],
                 false,
                 null,
-                isset($db[MagentoConfigurationKeys::TABLE_PREFIX]) ? $db[MagentoConfigurationKeys::TABLE_PREFIX] : null
+                $tablePrefix
             );
         }
 
@@ -291,15 +222,16 @@ class ConfigurationLoader extends SimpleConfigurationLoader
     /**
      * Create's and return's a new DSN from the passed values.
      *
-     * @param string $host    The host to use
-     * @param string $dbName  The database name to use
-     * @param string $charset The charset to use
+     * @param string  $host    The host to use
+     * @param integer $port    The port to use
+     * @param string  $dbName  The database name to use
+     * @param string  $charset The charset to use
      *
      * @return string The DSN
      */
-    protected function newDsn($host, $dbName, $charset = 'utf8')
+    protected function newDsn($host, $port = 3306, $dbName = 'magento', $charset = 'utf8')
     {
-        return sprintf('mysql:host=%s;dbname=%s;charset=%s', $host, $dbName, $charset);
+        return sprintf('mysql:host=%s;port=%d;dbname=%s;charset=%s', $host, $port, $dbName, $charset);
     }
 
     /**
@@ -310,7 +242,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
      * @return array The Magento Edition specific default libraries
      * @throws \Exception Is thrown, if the passed Magento Edition is NOT supported
      */
-    protected function getDefaultLibraries($magentoEdition)
+    protected function getDefaultLibrariesByMagentoEdition($magentoEdition)
     {
 
         // load the default libraries from the configuration
@@ -333,7 +265,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
     /**
      * Registers the configured aliases in the DI container.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration with the aliases to register
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration with the aliases to register
      *
      * @return void
      */

@@ -1,24 +1,22 @@
 {
     "name": "techdivision/import-cli",
-    "description": "Commands and Helpers to implement a CLI providing single-threaded Magento 2 importing functionality based on M2IF",
+    "description": "Commands and Helpers to implement a CLI providing single-threaded Magento 2 importing functionality based on Pacemaker",
     "license": "OSL-3.0",
     "require": {
-        "php": ">=5.6.0",
-        "ramsey/uuid": "~3.7.3|3.8.*",
+        "php": ">=7.1.0",
         "symfony/config": "~2.8|~3.0|~4.0",
         "symfony/console": "~2.3,!=2.7.0|~4.0",
         "symfony/dependency-injection": "~2.3,!=2.7.0|~3.0|~4.0",
-        "techdivision/import": "14.*",
-        "techdivision/import-app-simple": "15.*",
-        "techdivision/import-configuration-jms": "14.*"
+        "techdivision/import-app-simple": "17.*",
+        "techdivision/import-configuration-jms": "16.*"
     },
     "require-dev": {
         "doctrine/dbal": "2.5.*",
         "pdepend/pdepend": "2.5.2",
         "phpmd/phpmd": "@stable",
-        "phpunit/phpunit": "~5.0",
+        "phpunit/phpunit": "~6.5.0",
         "sebastian/phpcpd": "~3.0.0",
-        "squizlabs/php_codesniffer": "3.3.1",
+        "squizlabs/php_codesniffer": "~3.4.0",
         "consolidation/robo": "~1.0",
         "mikey179/vfsstream": "~1.0",
         "symfony/http-kernel": "~3.4"
@@ -33,8 +31,14 @@
         "psr-4": {
             "TechDivision\\Import\\Cli\\": [
                 "src/",
-                "symfony/",
-                "tests/unit/"
+                "symfony/"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TechDivision\\Import\\Cli\\": [
+                "tests/unit"
             ]
         }
     }

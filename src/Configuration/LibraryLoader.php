@@ -24,7 +24,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 
 /**
@@ -70,7 +70,6 @@ class LibraryLoader
      * Return's the absolute path to the actual vendor directory.
      *
      * @return string The absolute path to the actual vendor directory
-     * @throws \Exception Is thrown, if none of the possible vendor directories can be found
      */
     protected function getVendorDir()
     {
@@ -78,20 +77,34 @@ class LibraryLoader
     }
 
     /**
+     * Return's the relative path to the custom configuration directory.
+     *
+     * @return string The relative path to the custom configuration directory
+     */
+    protected function getCustomConfigurationDir()
+    {
+        return $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_CUSTOM_CONFIGURATION_DIR);
+    }
+
+    /**
      * Load's the external libraries registered in the passed configuration.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration instance
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration instance
      *
      * @return void
      */
     public function load(ConfigurationInterface $configuration)
     {
 
-        // load the Magento Version from the configuration
+        // load the DI container, vendor and custom configuration
+        // directory as well as the Magento version
+        $container = $this->getContainer();
+        $vendorDir = $this->getVendorDir();
         $magentoVersion = $configuration->getMagentoVersion();
+        $customConfigurationDir = $this->getCustomConfigurationDir();
 
         // initialize the default loader and load the DI configuration for the this library
-        $defaultLoader = new XmlFileLoader($this->getContainer(), new FileLocator($vendorDir = $this->getVendorDir()));
+        $defaultLoader = new XmlFileLoader($container, new FileLocator($vendorDir));
 
         // load the DI configuration for all the extension libraries
         foreach ($configuration->getExtensionLibraries() as $library) {
@@ -99,7 +112,7 @@ class LibraryLoader
         }
 
         // register autoloaders for additional vendor directories
-        $customLoader = new XmlFileLoader($this->getContainer(), new FileLocator());
+        $customLoader = new XmlFileLoader($container, new FileLocator());
         foreach ($configuration->getAdditionalVendorDirs() as $additionalVendorDir) {
             // try to load the vendor directory's auto loader, if available. Otherwise we assume
             // that the vendor directory uses an autoloader that has already been loaded, e. g. in
@@ -110,19 +123,27 @@ class LibraryLoader
 
             // try to load the DI configuration for the configured extension libraries
             foreach ($additionalVendorDir->getLibraries() as $library) {
-                if ($libraryDir = realpath(sprintf('%s/%s/%s', $configuration->getInstallationDir(), $additionalVendorDir->getVendorDir(), $library))) {
+                // concatenate the directory for the library
+                $libDir = sprintf('%s/%s', $additionalVendorDir->getVendorDir(), $library);
+                // prepend the installation directory, if the vendor is relative to it
+                if ($additionalVendorDir->isRelative()) {
+                    $libDir = sprintf('%s/%s', $configuration->getInstallationDir(), $libDir);
+                }
+
+                // create the canonicalized absolute pathname and try to load the configuration
+                if ($libraryDir = realpath($libDir)) {
                     $this->loadConfiguration($customLoader, $magentoVersion, $libraryDir);
                 } else {
-                    throw new \Exception(
-                        sprintf(
-                            'Can\'t find find library directory "%s/%s"',
-                            $additionalVendorDir->getVendorDir(),
-                            $library
-                        )
-                    );
+                    throw new \Exception(sprintf('Can\'t find find library directory "%s"', $libDir));
                 }
             }
         }
+
+        // initialize the project specific configuration loader for the DI configuration
+        $projectLoader = new XmlFileLoader($container, new FileLocator(getcwd()));
+
+        // finally load the project specific custom library configuration which overwrites the default one
+        $this->loadConfiguration($projectLoader, $magentoVersion, $customConfigurationDir);
     }
 
     /**
@@ -132,7 +153,7 @@ class LibraryLoader
      * @param string                                           $magentoVersion The Magento Version to load the configuration for
      * @param string                                           $libraryDir     The library directory
      *
-     * @return void
+     * @return boolean TRUE if the configuration file has been loaded, else FALSE
      */
     protected function loadConfiguration(LoaderInterface $loader, $magentoVersion, $libraryDir)
     {
@@ -141,30 +162,29 @@ class LibraryLoader
         if (file_exists($diConfiguration = sprintf('%s/symfony/Resources/config/services.xml', $libraryDir))) {
             // load the DI configuration
             $loader->load($diConfiguration);
-        } else {
-            throw new \Exception(
-                sprintf(
-                    'Can\'t load default DI configuration "%s"',
-                    $diConfiguration
-                )
-            );
-        }
 
-        // load the directories that equals the versions custom configuration files are available for
-        $versions = glob(sprintf('%s/symfony/Resources/config/*', $libraryDir), GLOB_ONLYDIR);
+            // load the directories that equals the versions custom configuration files are available for
+            $versions = glob(sprintf('%s/symfony/Resources/config/*', $libraryDir), GLOB_ONLYDIR);
 
-        // sort the directories descending by their version
-        usort($versions, 'version_compare');
-        krsort($versions);
+            // sort the directories descending by their version
+            usort($versions, 'version_compare');
+            krsort($versions);
 
-        // override DI configuration with version specifc data
-        foreach ($versions as $version) {
-            if (version_compare(basename($version), $magentoVersion, '<=')) {
-                if (file_exists($diConfiguration = sprintf('%s/services.xml', $version))) {
-                    // load the version specific DI configuration
-                    $loader->load($diConfiguration);
+            // override DI configuration with version specifc data
+            foreach ($versions as $version) {
+                if (version_compare(basename($version), $magentoVersion, '<=')) {
+                    if (file_exists($diConfiguration = sprintf('%s/services.xml', $version))) {
+                        // load the version specific DI configuration
+                        $loader->load($diConfiguration);
+                    }
                 }
             }
+
+            // return TRUE if the configuration has been loaded
+            return true;
         }
+
+        // return FALSE if the configuration file has NOT been available
+        return false;
     }
 }
