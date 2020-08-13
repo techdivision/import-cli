@@ -1,3 +1,13 @@
+# Version 11.0.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Update symfony dependencies for Magento 2.4 compatibility
+
 # Version 11.0.1
 
 ## Bugfixes
