@@ -22,7 +22,6 @@ namespace TechDivision\Import\Cli\Plugins;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\LogicException;
-use Symfony\Component\Console\Helper\HelperInterface;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
