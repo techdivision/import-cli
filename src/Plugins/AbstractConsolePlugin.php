@@ -44,7 +44,7 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     /**
      * The M2IF console application instance.
      *
-     * @var Application
+     * @var \Symfony\Component\Console\Application
      */
     protected $cliApplication;
 
@@ -70,9 +70,9 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     protected $helperSet;
 
     /**
-     * AbstractConsolePlugin constructor
+     * The constructor to initialize the plugin with.
      *
-     * @param ApplicationInterface $application
+     * @param \TechDivision\Import\ApplicationInterface $application The application instance
      *
      * @throws \Exception
      */
@@ -111,9 +111,9 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     }
 
     /**
-     * Returns the import cli application instance.
+     * Return's the console application instance.
      *
-     * @return \Symfony\Component\Console\Application
+     * @return \Symfony\Component\Console\Application The console application instance
      */
     public function getCliApplication()
     {
@@ -121,7 +121,9 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     }
 
     /**
-     * @param \Symfony\Component\Console\Application $cliApplication
+     * Set's the console application instance.
+     *
+     * @param \Symfony\Component\Console\Application $cliApplication The console application instance
      *
      * @return void
      */
@@ -131,9 +133,9 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     }
 
     /**
-     * Returns the console input instance.
+     * Return's the console input instance.
      *
-     * @return \Symfony\Component\Console\Input\InputInterface
+     * @return \Symfony\Component\Console\Input\InputInterface The console input instance
      */
     public function getInput()
     {
@@ -141,7 +143,9 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * Set's the console input instance.
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface $input The console input instance
      *
      * @return void
      */
@@ -151,9 +155,9 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     }
 
     /**
-     * Returns the console output instance.
+     * Return's the console output instance.
      *
-     * @return \Symfony\Component\Console\Output\OutputInterface
+     * @return \Symfony\Component\Console\Output\OutputInterface The console output instance
      */
     public function getOutput()
     {
@@ -161,7 +165,9 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     }
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * Set's the console output instance.
+     *
+     * @param \Symfony\Component\Console\Output\OutputInterface $output The console output instance
      *
      * @return void
      */
@@ -171,9 +177,9 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     }
 
     /**
-     * Returns the helper set.
+     * Return's the helper set instance.
      *
-     * @return \Symfony\Component\Console\Helper\HelperSet
+     * @return \Symfony\Component\Console\Helper\HelperSet The helper set instance
      */
     public function getHelperSet()
     {
@@ -181,7 +187,9 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
     }
 
     /**
-     * @param HelperSet $helperSet
+     * Set's the helper set instance.
+     *
+     * @param \Symfony\Component\Console\Helper\HelperSet $helperSet The helper set instance
      *
      * @return void
      */
@@ -195,7 +203,7 @@ abstract class AbstractConsolePlugin extends AbstractPlugin
      *
      * @param string $name The name of the helper to retrieve
      *
-     * @return HelperInterface
+     * @return \Symfony\Component\Console\Helper\HelperInterface The helper instance
      */
     public function getHelper($name)
     {
