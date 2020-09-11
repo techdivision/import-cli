@@ -1,0 +1,24 @@
+{
+  "operations": {
+    "general": {
+      "general": {
+        "debug-send": {
+          "plugins": {
+            "debug-send": {
+              "id": "import_cli.plugin.debug.send",
+              "swift-mailer" : {
+                "id" : "import.logger.factory.transport.swift.sendmail",
+                "params" : {
+                  "to" : "helpdesk@techdivision.com",
+                  "from" : "pacemaker@pacemaker.local",
+                  "subject": "Pacemaker Debug Report",
+                  "content-type" : "text/plain"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "shortcuts": {
+    "general": {
+      "general": {
+        "debug-send": [
+          "general/general/debug-send"
+        ]
+      }
+    }
+  }
+}

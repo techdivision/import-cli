@@ -239,6 +239,10 @@
             <argument type="service" id="configuration"/>
         </service>
 
+        <service id="import_cli.plugin.debug.send" class="TechDivision\Import\Cli\Plugins\DebugSendPlugin">
+            <argument type="service" id="import_app_simple.simple"/>
+        </service>
+
     </services>
 
 </container>
