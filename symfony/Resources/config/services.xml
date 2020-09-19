@@ -17,6 +17,7 @@
             <parameter key="ce" type="collection">
                 <parameter>techdivision/import-app-simple</parameter>
                 <parameter>techdivision/import</parameter>
+                <parameter>techdivision/import-cli</parameter>
                 <parameter>techdivision/import-attribute</parameter>
                 <parameter>techdivision/import-attribute-set</parameter>
                 <parameter>techdivision/import-category</parameter>
@@ -38,6 +39,7 @@
             <parameter key="ee" type="collection">
                 <parameter>techdivision/import-app-simple</parameter>
                 <parameter>techdivision/import</parameter>
+                <parameter>techdivision/import-cli</parameter>
                 <parameter>techdivision/import-ee</parameter>
                 <parameter>techdivision/import-attribute</parameter>
                 <parameter>techdivision/import-attribute-set</parameter>
@@ -112,7 +114,7 @@
             <argument>%application.cli.options.override.if.empty.only%</argument>
         </service>
 
-        <service id="import_cli.command.debug.send" class="TechDivision\Import\Cli\Command\DebugSendCommand"/>
+        <service id="import_cli.command.import.debug" class="TechDivision\Import\Cli\Command\ImportDebugCommand"/>
         <service id="import_cli.command.import.execute" class="TechDivision\Import\Cli\Command\ImportExecuteCommand"/>
         <service id="import_cli.command.import.products" class="TechDivision\Import\Cli\Command\ImportProductsCommand"/>
         <service id="import_cli.command.import.products.price" class="TechDivision\Import\Cli\Command\ImportProductsPriceCommand"/>
@@ -133,7 +135,7 @@
         <service id="application" class="TechDivision\Import\Cli\Application">
             <argument type="service" id="service_container"/>
             <call method="add">
-                <argument id="import_cli.command.debug.send" type="service"/>
+                <argument id="import_cli.command.import.debug" type="service"/>
             </call>
             <call method="add">
                 <argument id="import_cli.command.import.products" type="service"/>
@@ -243,6 +245,19 @@
             <argument type="service" id="configuration"/>
         </service>
 
+        <!--
+         | ATTENTION: Override the DI of the default configuration renderer with a JMS serializer one
+         |-->
+        <service id="import.renderer.debug.file.configuration" class="TechDivision\Import\Configuration\Jms\Listeners\Renderer\Debug\ConfigurationFileRenderer">
+            <argument type="service" id="import.processor.registry"/>
+            <argument type="service" id="configuration"/>
+            <argument type="service" id="loggers"/>
+        </service>
+
+        <service id="import_cli.plugin.debug.create" class="TechDivision\Import\Cli\Plugins\DebugCreatePlugin">
+            <argument type="service" id="import_app_simple.simple"/>
+            <argument type="service" id="import.utils.debug"/>
+        </service>
         <service id="import_cli.plugin.debug.send" class="TechDivision\Import\Cli\Plugins\DebugSendPlugin">
             <argument type="service" id="import_app_simple.simple"/>
         </service>

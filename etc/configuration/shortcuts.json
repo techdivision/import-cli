@@ -1,9 +1,13 @@
 {
   "shortcuts": {
     "general": {
-      "general": {
-        "debug-send": [
-          "general/general/debug-send"
+      "debug": {
+        "create": [
+          "general/debug/create"
+        ],
+        "send": [
+          "general/debug/create",
+          "general/debug/send"
         ]
       }
     }
