@@ -48,7 +48,7 @@ class DebugCreatePlugin extends AbstractConsolePlugin
     /**
      * The constructor to initialize the plugin with.
      *
-     * @param \TechDivision\Import\ApplicationInterface         $application The application instance
+     * @param \TechDivision\Import\ApplicationInterface     $application The application instance
      * @param \TechDivision\Import\Utils\DebugUtilInterface $debugUtil   The debug util instance
      */
     public function __construct(ApplicationInterface $application, DebugUtilInterface $debugUtil)

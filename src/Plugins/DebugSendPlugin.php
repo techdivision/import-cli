@@ -146,7 +146,6 @@ class DebugSendPlugin extends AbstractConsolePlugin
 
             // write a message to the console, that the debug report has successfully been submitted
             $this->getOutput()->writeln('<info>The debug report has successfully been submitted to ' . implode(', ', $recipient) . '</info>');
-
         } else {
             // write a message to the console, that the mailer configuration has not been available
             $this->getOutput()->writeln('<warning>The mailer configuration is not available or mailer can not be loaded</warning>');
