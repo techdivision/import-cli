@@ -50,7 +50,7 @@ class ImportDebugCommand extends AbstractImportCommand
         // initialize the command with the required/optional options
         $this->setName(CommandNames::IMPORT_DEBUG)
              ->addArgument(InputArgumentKeysInterface::SHORTCUT, InputArgument::OPTIONAL, 'The shortcut that defines the operation(s) that has to be used for debugging the import, one of "send" or a combination of them', 'send')
-             ->addOption(InputOptionKeysInterface::RENDER_DEBUG_SERIALS, null, InputOption::VALUE_OPTIONAL, 'The number of debug serialias rendered on the console', 10)
+             ->addOption(InputOptionKeysInterface::RENDER_DEBUG_SERIALS, null, InputOption::VALUE_OPTIONAL, 'The number of debug serials rendered on the console', 10)
              ->setDescription('Creates a debug dump and mails it to the specified recipient');
 
         // invoke the parent method

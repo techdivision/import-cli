@@ -117,7 +117,6 @@ class DebugSendPlugin extends AbstractConsolePlugin
 
             // initialize the array with the failed recipients
             $failedRecipients = array();
-            $recipientsAccepted = 0;
 
             // send the mail
             $recipientsAccepted = $mailer->send($message, $failedRecipients);
@@ -130,11 +129,12 @@ class DebugSendPlugin extends AbstractConsolePlugin
             // if at least one recipient has been accepted
             if ($recipientsAccepted > 0) {
                 // cast 'to' into an array if not already
-                is_array($recipient) ? : $recipient = (array) $recipient;
+                is_array($recipient) ?: $recipient = (array)$recipient;
+
                 // remove the NOT accepted recipients
                 $acceptedRecipients = array_diff($recipient, $failedRecipients);
 
-                // log a message with the successfull receivers
+                // log a message with the accepted receivers
                 $this->getSystemLogger()->info(
                     sprintf(
                         'Mail successfully sent to %d recipient(s) (%s)',
@@ -143,9 +143,6 @@ class DebugSendPlugin extends AbstractConsolePlugin
                     )
                 );
             }
-
-            // write a message to the console, that the debug report has successfully been submitted
-            $this->getOutput()->writeln('<info>The debug report has successfully been submitted to ' . implode(', ', $recipient) . '</info>');
         } else {
             // write a message to the console, that the mailer configuration has not been available
             $this->getOutput()->writeln('<warning>The mailer configuration is not available or mailer can not be loaded</warning>');

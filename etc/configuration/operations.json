@@ -14,16 +14,16 @@
             "debug.send": {
               "id": "import_cli.plugin.debug.send",
               "swift-mailer" : {
-                "id" : "import.logger.factory.transport.swift.smtp",
+                "id" : "import.logger.factory.transport.swift.sendmail",
                 "params" : {
-                  "to" : "t.wagner@techdivision.com",
-                  "from" : "pacemaker@techdivision.com",
+                  "to" : "helpdesk@techdivision.com",
+                  "from" : "pacemaker@localhost",
                   "subject": "Pacemaker Debug Report",
                   "content-type" : "text/html"
                 },
                 "transport" : {
                   "params" : {
-                    "smtp-host" : "mail.techdivision.com",
+                    "smtp-host" : "localhost",
                     "smtp-port" : 25
                   }
                 }

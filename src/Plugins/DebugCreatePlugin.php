@@ -115,14 +115,14 @@ class DebugCreatePlugin extends AbstractConsolePlugin
             $availableSerials[ basename($possibleArtefact, '.zip')] = filemtime($possibleArtefact);
         }
 
-        // sort the available serials
+        // sort the available serials by modification time
         uasort($availableSerials, function ($a, $b) {
             // return zero, if the passed values are equal
             if ($a == $b) {
                 return 0;
             }
             // otherwise return -1 or 1
-            return ($a < $b) ? -1 : 1;
+            return ($a > $b) ? -1 : 1;
         });
 
         // finally create the array with the available serials to render on the console
