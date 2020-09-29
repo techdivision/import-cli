@@ -1,3 +1,13 @@
+# Version 12.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add #PAC-89: Add debug email command + DebugSendPlugin
+
 # Version 11.0.1
 
 ## Bugfixes
