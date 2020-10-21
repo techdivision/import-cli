@@ -7,6 +7,7 @@
 ## Features
 
 * Add #PAC-89: Add debug email command + DebugSendPlugin
+* Add functionality to also parse JSON configuration in extension libraries
 
 # Version 11.0.1
 
