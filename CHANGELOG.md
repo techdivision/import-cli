@@ -6,7 +6,7 @@
 
 ## Features
 
-* Add functionality to also parse JSON configuration in extension libraries
+* Add techdivision/import-cli-simple#256
 
 # Version 11.0.2
 
