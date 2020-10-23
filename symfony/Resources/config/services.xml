@@ -69,7 +69,7 @@
             </parameter>
         </parameter>
         <parameter key="application.default.configuration.parser.mappings" type="collection">
-            <parameter key="json">import_cli.configuration.parser.json</parameter>
+            <parameter key="json">import_cli.configuration.parser.json.extended</parameter>
         </parameter>
         <parameter key="application.cli.options.override.if.empty.only" type="collection">
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::SYSTEM_NAME</parameter>
@@ -94,8 +94,17 @@
 
         <service id="import_cli.input.option.keys" class="TechDivision\Import\Cli\Command\InputOptionKeys"/>
         <service id="import_cli.utils.array" class="TechDivision\Import\Configuration\Jms\Utils\ArrayUtil"/>
+
+        <service id="import_cli.loader.vendor.dir" class="TechDivision\Import\Cli\Loaders\ContainerParameterLoader">
+            <argument type="service" id="service_container"/>
+            <argument type="constant">TechDivision\Import\Cli\Utils\DependencyInjectionKeys::CONFIGURATION_VENDOR_DIR</argument>
+        </service>
         <service id="import_cli.configuration.parser.json" class="TechDivision\Import\Configuration\Jms\Parsers\JsonParser">
             <argument type="service" id="import_cli.utils.array"/>
+        </service>
+        <service id="import_cli.configuration.parser.json.extended" class="TechDivision\Import\Configuration\Jms\Parsers\ExtendedJsonParser">
+            <argument type="service" id="import_cli.utils.array"/>
+            <argument type="service" id="import_cli.loader.vendor.dir"/>
         </service>
         <service id="import_cli.configuration.parser.factory" class="TechDivision\Import\Configuration\Jms\ConfigurationParserFactory">
             <argument type="service" id="service_container"/>
