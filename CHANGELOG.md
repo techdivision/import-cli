@@ -8,6 +8,7 @@
 
 * Add #PAC-89: Add debug email command + DebugSendPlugin
 * Add functionality to also parse JSON configuration in extension libraries
+* Add #PAC-57: "--empty-attribute-value-constant" for deleting dedicated attribute values via import by setting a configurable value.
 
 # Version 11.0.1
 
