@@ -72,7 +72,9 @@ class InputOptionKeys extends \ArrayObject implements InputOptionKeysInterface
                 InputOptionKeysInterface::CACHE_ENABLED,
                 InputOptionKeysInterface::MOVE_FILES_PREFIX,
                 InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR,
-                InputOptionKeysInterface::RENDER_VALIDATION_ISSUES
+                InputOptionKeysInterface::RENDER_VALIDATION_ISSUES,
+                InputOptionKeysInterface::EMPTY_ATTRIBUTE_VALUE_CONSTANT
+
             ),
             $inputOptionKeys
         );

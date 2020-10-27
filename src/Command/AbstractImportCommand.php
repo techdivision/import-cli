@@ -76,7 +76,8 @@ abstract class AbstractImportCommand extends Command
              ->addOption(InputOptionKeysInterface::SINGLE_TRANSACTION, null, InputOption::VALUE_REQUIRED, 'Whether or not the import should be wrapped within a single transaction')
              ->addOption(InputOptionKeysInterface::PARAMS, null, InputOption::VALUE_REQUIRED, 'Additional options passed as a string (MUST have the same format as the used configuration file has)')
              ->addOption(InputOptionKeysInterface::PARAMS_FILE, null, InputOption::VALUE_REQUIRED, 'Additional options passed as pathname')
-             ->addOption(InputOptionKeysInterface::MOVE_FILES_PREFIX, null, InputOption::VALUE_REQUIRED, 'Prefix of the files to move (defaults to the prefix of the first of the first plugin subject)');
+             ->addOption(InputOptionKeysInterface::MOVE_FILES_PREFIX, null, InputOption::VALUE_REQUIRED, 'Prefix of the files to move (defaults to the prefix of the first of the first plugin subject)')
+             ->addOption(InputOptionKeysInterface::EMPTY_ATTRIBUTE_VALUE_CONSTANT, null, InputOption::VALUE_REQUIRED, 'Value to define empty value to remove EAV attributes values in categories, products and customers');
     }
 
     /**
