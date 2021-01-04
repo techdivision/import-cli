@@ -32,6 +32,7 @@
                 <parameter>techdivision/import-product-media</parameter>
                 <parameter>techdivision/import-product-variant</parameter>
                 <parameter>techdivision/import-product-grouped</parameter>
+                <parameter>techdivision/import-cache</parameter>
                 <parameter>techdivision/import-converter</parameter>
                 <parameter>techdivision/import-converter-product-category</parameter>
                 <parameter>techdivision/import-converter-product-attribute</parameter>
@@ -62,6 +63,7 @@
                 <parameter>techdivision/import-product-variant-ee</parameter>
                 <parameter>techdivision/import-product-grouped</parameter>
                 <parameter>techdivision/import-product-grouped-ee</parameter>
+                <parameter>techdivision/import-cache</parameter>
                 <parameter>techdivision/import-converter</parameter>
                 <parameter>techdivision/import-converter-ee</parameter>
                 <parameter>techdivision/import-converter-product-category</parameter>
