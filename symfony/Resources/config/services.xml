@@ -32,7 +32,6 @@
                 <parameter>techdivision/import-product-media</parameter>
                 <parameter>techdivision/import-product-variant</parameter>
                 <parameter>techdivision/import-product-grouped</parameter>
-                <parameter>techdivision/import-cache</parameter>
                 <parameter>techdivision/import-converter</parameter>
                 <parameter>techdivision/import-converter-product-category</parameter>
                 <parameter>techdivision/import-converter-product-attribute</parameter>
@@ -63,7 +62,6 @@
                 <parameter>techdivision/import-product-variant-ee</parameter>
                 <parameter>techdivision/import-product-grouped</parameter>
                 <parameter>techdivision/import-product-grouped-ee</parameter>
-                <parameter>techdivision/import-cache</parameter>
                 <parameter>techdivision/import-converter</parameter>
                 <parameter>techdivision/import-converter-ee</parameter>
                 <parameter>techdivision/import-converter-product-category</parameter>
@@ -251,8 +249,8 @@
             <factory service="import_cli.configuration.simple.loader" method="load"/>
         </service>
 
-        <service id="connection" class="TechDivision\Import\Connection\PDOConnectionWrapper">
-            <factory class="TechDivision\Import\Cli\Connection\ConnectionFactory" method="createConnection"/>
+        <service id="connection" class="TechDivision\Import\Dbal\Connection\PDOConnectionWrapper">
+            <factory class="TechDivision\Import\Dbal\Connection\ConnectionFactory" method="createConnection"/>
             <argument type="service" id="configuration"/>
         </service>
 

@@ -8,8 +8,9 @@
         "symfony/console": "~2.3,!=2.7.0|~4.0|~5.0",
         "symfony/expression-language": "~2.3,!=2.7.0|~4.0|~5.0",
         "symfony/dependency-injection": "~2.3,!=2.7.0|~3.0|~4.0|~5.0",
-        "techdivision/import-app-simple": "dev-master",
-        "techdivision/import-configuration-jms": "dev-master"
+        "techdivision/import": "dev-pac-264--pdo-exception as dev-master",
+        "techdivision/import-app-simple": "dev-pac-264--pdo-exception as dev-master",
+        "techdivision/import-configuration-jms": "dev-pac-264--pdo-exception as dev-master"
     },
     "require-dev": {
         "doctrine/dbal": "2.5.*",
