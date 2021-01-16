@@ -249,8 +249,8 @@
             <factory service="import_cli.configuration.simple.loader" method="load"/>
         </service>
 
-        <service id="connection" class="TechDivision\Import\Connection\PDOConnectionWrapper">
-            <factory class="TechDivision\Import\Cli\Connection\ConnectionFactory" method="createConnection"/>
+        <service id="connection" class="TechDivision\Import\Dbal\Collection\Connection\PDOConnectionWrapper">
+            <factory class="TechDivision\Import\Dbal\Collection\Connection\ConnectionFactory" method="createConnection"/>
             <argument type="service" id="configuration"/>
         </service>
 
