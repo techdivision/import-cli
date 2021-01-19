@@ -2,7 +2,8 @@
 
 ## Bugfixes
 
-* None
+* Fixed import-cli-simple#258
+* Fixed #PAC-318: Serialization exception when using a custom database configuration
 
 ## Features
 

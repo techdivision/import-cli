@@ -110,8 +110,15 @@
             <argument type="service" id="service_container"/>
             <argument>%application.default.configuration.parser.mappings%</argument>
         </service>
+        <service id="import_cli.configuration.expression.language" class="Symfony\Component\DependencyInjection\ExpressionLanguage"/>
+        <service id="import_cli.configuration.expression.evaluator" class="JMS\Serializer\Expression\ExpressionEvaluator">
+            <argument type="service" id="import_cli.configuration.expression.language"/>
+        </service>
         <service id="import_cli.configuration.serializer.builder" class="JMS\Serializer\SerializerBuilder">
             <factory class="JMS\Serializer\SerializerBuilder" method="create"/>
+            <call method="setExpressionEvaluator">
+                <argument id="import_cli.configuration.expression.evaluator" type="service"/>
+            </call>
         </service>
         <service id="import_cli.configuration.factory" class="TechDivision\Import\Configuration\Jms\ConfigurationFactory">
             <argument type="service" id="import_cli.configuration.parser.factory"/>
