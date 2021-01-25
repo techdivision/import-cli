@@ -78,6 +78,7 @@
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::MAGENTO_EDITION</parameter>
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::MAGENTO_VERSION</parameter>
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::SOURCE_DIR</parameter>
+            <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::TARGET_DIR</parameter>
         </parameter>
         
     </parameters>
