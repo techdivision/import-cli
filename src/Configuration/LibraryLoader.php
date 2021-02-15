@@ -166,12 +166,12 @@ class LibraryLoader
             // available versions that'll override the defaults
             $versions = array();
             // load the directories that equals the versions custom configuration files are available for
-            $iterator = new \GlobIterator(sprintf('%s/symfony/Resources/config/*', $libraryDir), \FilesystemIterator::SKIP_DOTS);
+            $iterator = new \DirectoryIterator(sprintf('%s/symfony/Resources/config', $libraryDir));
             // iterate over the subdirectories
             while ($iterator->valid()) {
                 // query whether or not we've a directory, if yes we
                 // assume it'll contain additional version information
-                if ($iterator->isDir()) {
+                if ($iterator->isDir() && !$iterator->isDot()) {
                     $versions[] = $iterator->current()->getPathname();
                 }
                 // continue reading the directry content
