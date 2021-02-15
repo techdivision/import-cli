@@ -162,9 +162,21 @@ class LibraryLoader
         if (file_exists($diConfiguration = sprintf('%s/symfony/Resources/config/services.xml', $libraryDir))) {
             // load the DI configuration
             $loader->load($diConfiguration);
-
+            // initialize the array for the directories with the
+            // available versions that'll override the defaults
+            $versions = array();
             // load the directories that equals the versions custom configuration files are available for
-            $versions = glob(sprintf('%s/symfony/Resources/config/*', $libraryDir), GLOB_ONLYDIR);
+            $iterator = new \GlobIterator(sprintf('%s/symfony/Resources/config/*', $libraryDir), \FilesystemIterator::SKIP_DOTS);
+            // iterate over the subdirectories
+            while ($iterator->valid()) {
+                // query whether or not we've a directory, if yes we
+                // assume it'll contain additional version information
+                if ($iterator->isDir()) {
+                    $versions[] = $iterator->current()->getPathname();
+                }
+                // continue reading the directry content
+                $iterator->next();
+            }
 
             // sort the directories descending by their version
             usort($versions, 'version_compare');
