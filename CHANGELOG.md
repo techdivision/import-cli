@@ -1,3 +1,13 @@
+# Version 11.1.1
+
+## Bugfixes
+
+* Fixed #PAC-347: Parsing of version specific configuration does not work when using PHAR version
+
+## Features
+
+* None
+
 # Version 11.1.0
 
 ## Bugfixes
