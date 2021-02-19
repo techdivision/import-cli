@@ -8,9 +8,10 @@
 ## Features
 
 * Add `--strict-type` commandline parameter
-* Add #PAC-89: Add debug email command + DebugSendPlugin
 * Add functionality to also parse JSON configuration in extension libraries
-* Add #PAC-57: "--empty-attribute-value-constant" for deleting dedicated attribute values via import by setting a configurable value.
+* Add #PAC-89: Add debug email command + DebugSendPlugin
+* Add #PAC-57: "--empty-attribute-value-constant" for deleting dedicated attribute values via import by setting a configurable value
+* Add #PAC-349: Support for JMS serializer v2.0 + v3.0
 
 # Version 11.0.1
 

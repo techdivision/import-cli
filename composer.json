@@ -9,8 +9,7 @@
         "symfony/expression-language": "~2.3,!=2.7.0|~4.0|~5.0",
         "symfony/dependency-injection": "~2.3,!=2.7.0|~3.0|~4.0|~5.0",
         "techdivision/import-app-simple": "dev-master",
-        "techdivision/import-configuration-jms": "dev-master",
-        "jean85/pretty-package-versions": "~1.6"
+        "techdivision/import-configuration-jms": "dev-master"
     },
     "require-dev": {
         "doctrine/dbal": "2.5.*",

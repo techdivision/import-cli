@@ -122,6 +122,7 @@
             </call>
         </service>
         <service id="import_cli.configuration.factory" class="TechDivision\Import\Configuration\Jms\ConfigurationFactory">
+            <argument type="service" id="service_container"/>
             <argument type="service" id="import_cli.configuration.parser.factory"/>
             <argument type="service" id="import_cli.configuration.serializer.builder"/>
         </service>

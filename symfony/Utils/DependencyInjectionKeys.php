@@ -82,13 +82,6 @@ class DependencyInjectionKeys extends \TechDivision\Import\App\Utils\DependencyI
     const CONFIGURATION_BASE_DIR = 'import_cli.configuration.base.dir';
 
     /**
-     * The key for the vendor directory.
-     *
-     * @var string
-     */
-    const CONFIGURATION_VENDOR_DIR = 'import_cli.configuration.vendor.dir';
-
-    /**
      * The key for the library loader.
      *
      * @var string
