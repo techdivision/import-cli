@@ -22,7 +22,6 @@ namespace TechDivision\Import\Cli\Command;
 
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\XmlSerializationVisitor;
-use JMS\Serializer\YamlSerializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
@@ -110,12 +109,6 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
             // initialize the XML visitor
             case 'xml':
                 $visitor = new XmlSerializationVisitor($namingStrategy);
-                break;
-
-            // initialize the YAML visitor
-            case 'yml':
-            case 'yaml':
-                $visitor = new YamlSerializationVisitor($namingStrategy);
                 break;
 
             // throw an execption in all other cases

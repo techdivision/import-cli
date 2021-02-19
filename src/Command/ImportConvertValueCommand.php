@@ -24,9 +24,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use TechDivision\Import\Utils\CommandNames;
-use TechDivision\Import\Configuration\ConfigurationInterface;
-use TechDivision\Import\Serializers\ValueCsvSerializer;
 use TechDivision\Import\Utils\InputArgumentKeysInterface;
+use TechDivision\Import\Serializer\Csv\ValueCsvSerializer;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 
 /**
  * The command to simulate converting a file.
