@@ -31,6 +31,8 @@ use TechDivision\Import\Utils\EditionNamesInterface;
 use TechDivision\Import\Utils\InputOptionKeysInterface;
 use TechDivision\Import\Utils\Mappings\CommandNameToEntityTypeCode;
 use TechDivision\Import\Configuration\ConfigurationFactoryInterface;
+use Composer\Autoload\ClassLoader;
+use Jean85\PrettyVersions;
 
 /**
  * The configuration loader implementation.
@@ -199,11 +201,23 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             );
         }
 
-        // register the autoloader for the JMS serializer annotations
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation',
-            $annotationDir
-        );
+        // try to load the JMS serializer
+        $version = PrettyVersions::getVersion('jms/serializer');
+
+        // query whether or not we're > than 1.14.1
+        if (version_compare($version->getPrettyVersion(), '2.0.0', '<')) {
+            // register the autoloader for the JMS serializer annotations
+            \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+                'JMS\Serializer\Annotation',
+                $annotationDir
+            );
+        } else {
+            // initialize the composer class loader
+            $classLoader = new ClassLoader();
+            $classLoader->addPsr4('JMS\\Serializer\\', array($annotationDir));
+            // register the class loader to load annotations
+            \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($classLoader, 'loadClass'));
+        }
 
         // try to load the Magento installation directory
         $installationDir = $this->input->getOption(InputOptionKeysInterface::INSTALLATION_DIR);
