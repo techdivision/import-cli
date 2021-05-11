@@ -1,3 +1,13 @@
+# Version 11.1.3
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Implement import-converter-product-attribute for importing customer attributes
+
 # Version 11.1.2
 
 ## Bugfixes

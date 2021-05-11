@@ -34,6 +34,7 @@
                 <parameter>techdivision/import-converter</parameter>
                 <parameter>techdivision/import-converter-product-category</parameter>
                 <parameter>techdivision/import-converter-product-attribute</parameter>
+                <parameter>techdivision/import-converter-customer-attribute</parameter>
             </parameter>
             <parameter key="ee" type="collection">
                 <parameter>techdivision/import-app-simple</parameter>
@@ -64,6 +65,7 @@
                 <parameter>techdivision/import-converter-ee</parameter>
                 <parameter>techdivision/import-converter-product-category</parameter>
                 <parameter>techdivision/import-converter-product-attribute</parameter>
+                <parameter>techdivision/import-converter-customer-attribute</parameter>
             </parameter>
         </parameter>
         <parameter key="application.default.configuration.parser.mappings" type="collection">
