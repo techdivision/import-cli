@@ -40,7 +40,8 @@ abstract class AbstractShortcutAwareImportCommand extends AbstractImportCommand
     {
 
         // initialize the command with the required/optional options
-        $this->addArgument(InputArgumentKeysInterface::SHORTCUT, InputArgument::OPTIONAL, 'The shortcut that defines the operation(s) that has to be used for the import, one of "add-update", "replace", "delete" or "convert" or a combination of them', OperationKeys::ADD_UPDATE);
+        $this->addArgument(InputArgumentKeysInterface::SHORTCUT, InputArgument::OPTIONAL, 'The shortcut that defines the operation(s) that has to be used for the import, one of "add-update", "replace", "delete" or "convert" or a combination of them', OperationKeys::ADD_UPDATE)
+             ->addArgument(InputArgumentKeysInterface::FILENAME, InputArgument::OPTIONAL, 'An explicit filename that should be imported');
 
         // invoke the parent method
         parent::configure();

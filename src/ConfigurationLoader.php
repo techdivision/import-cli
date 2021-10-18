@@ -51,9 +51,30 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         $instance = parent::load();
 
         // query whether or not a shortcut has been specified as command line
-        // option, if yes override the value from the configuration file
+        // argument, if yes override the value from the configuration file
         if ($this->input->hasArgument(InputArgumentKeysInterface::SHORTCUT)) {
             $instance->setShortcut($this->input->getArgument(InputArgumentKeysInterface::SHORTCUT));
+        }
+
+        // query whether or not an explicit filename has been specified as command
+        // line argument, if yes override the value from the configuration file
+        if ($this->input->hasArgument(InputArgumentKeysInterface::FILENAME) &&
+            $filename = $this->input->getArgument(InputArgumentKeysInterface::FILENAME)
+        ) {
+            // try to load the realpath of the given filename
+            $filename = realpath($filename);
+            // query whether or not the file is available
+            if (is_file($filename)) {
+                // set the filename in the configuration
+                $instance->setFilename($filename);
+                // AND update the source directory to the directory
+                // where the specified file has been sourced
+                $instance->setSourceDir(dirname($filename));
+            } else {
+                throw new \InvalidArgumentException(
+                    sprintf('Can\'t find file "%s" that has to be imported', $this->input->getArgument(InputArgumentKeysInterface::FILENAME))
+                );
+            }
         }
 
         // query whether or not operation names has been specified as command line
