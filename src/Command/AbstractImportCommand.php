@@ -72,7 +72,8 @@ abstract class AbstractImportCommand extends Command
              ->addOption(InputOptionKeysInterface::PARAMS_FILE, null, InputOption::VALUE_REQUIRED, 'Additional options passed as pathname')
              ->addOption(InputOptionKeysInterface::MOVE_FILES_PREFIX, null, InputOption::VALUE_REQUIRED, 'Prefix of the files to move (defaults to the prefix of the first of the first plugin subject)')
              ->addOption(InputOptionKeysInterface::EMPTY_ATTRIBUTE_VALUE_CONSTANT, null, InputOption::VALUE_REQUIRED, 'Value to define empty value to remove EAV attributes values in categories, products and customers')
-             ->addOption(InputOptionKeysInterface::STRICT_MODE, null, InputOption::VALUE_REQUIRED, 'Whether or not strict mode should be used');
+             ->addOption(InputOptionKeysInterface::STRICT_MODE, null, InputOption::VALUE_REQUIRED, 'Whether or not strict mode should be used')
+             ->addOption(InputOptionKeysInterface::LOG_FILE, null, InputOption::VALUE_REQUIRED, 'The log file to use');
     }
 
     /**
