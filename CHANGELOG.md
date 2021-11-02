@@ -14,6 +14,7 @@
 * Add #PAC-349: Support for JMS serializer v2.0 + v3.0
 * Implement import-converter-product-attribute for importing customer attributes
 * Add #PAC-486: Add `--log-file` commandline parameter 
+* CLI attribute for import explizit filename
 
 # Version 11.0.1
 
