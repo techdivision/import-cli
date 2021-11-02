@@ -13,6 +13,7 @@
 * Add #PAC-57: "--empty-attribute-value-constant" for deleting dedicated attribute values via import by setting a configurable value
 * Add #PAC-349: Support for JMS serializer v2.0 + v3.0
 * Implement import-converter-product-attribute for importing customer attributes
+* Add #PAC-486: Add `--log-file` commandline parameter 
 
 # Version 11.0.1
 
