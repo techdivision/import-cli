@@ -15,6 +15,7 @@
 * Implement import-converter-product-attribute for importing customer attributes
 * Add #PAC-486: Add `--log-file` commandline parameter 
 * CLI attribute for import explizit filename
+* PAC-541: Update composer with php Version ">=^7.3"
 
 # Version 11.0.1
 

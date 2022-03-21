@@ -239,7 +239,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         }
 
         // if a filename has been passed, try to load the configuration from the file
-        if (is_file($filename)) {
+        if ($filename !== null && is_file($filename)) {
             return $this->configurationFactory->factory($filename, pathinfo($filename, PATHINFO_EXTENSION), $params, $paramsFile);
         }
 
