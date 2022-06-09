@@ -90,6 +90,8 @@ class ConfigurationLoader extends SimpleConfigurationLoader
 
         // query whether or not we've an valid Magento root directory specified
         if ($this->isMagentoRootDir($installationDir = $instance->getInstallationDir())) {
+            $config = require $this->getMagentoConfig($installationDir);
+            $instance->setMagentoConfig($config);
             // if yes, add the database configuration
             $instance->addDatabase($this->getMagentoDbConnection($installationDir));
         }

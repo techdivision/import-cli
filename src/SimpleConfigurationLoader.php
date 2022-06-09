@@ -484,4 +484,16 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     {
         return sprintf('%s/app/etc/env.php', $dir);
     }
+
+    /**
+     * Return's the path to the Magento file with the environment configuration.
+     *
+     * @param string $dir The path to the Magento root directory
+     *
+     * @return string The path to the Magento file with the environment configuration
+     */
+    protected function getMagentoConfig($dir)
+    {
+        return sprintf('%s/app/etc/config.php', $dir);
+    }
 }
