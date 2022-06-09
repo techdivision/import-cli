@@ -486,7 +486,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     }
 
     /**
-     * Return's the path to the Magento file with the environment configuration.
+     * Return's the path to the Magento file with the configuratuion.
      *
      * @param string $dir The path to the Magento root directory
      *
