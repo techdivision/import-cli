@@ -112,6 +112,11 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
     );
 
     /**
+     * @var array
+     */
+    private $configurationFiles = array();
+
+    /**
      * Initializes the configuration loader.
      *
      * @param \Symfony\Component\Console\Input\InputInterface                  $input                        The input instance
@@ -207,6 +212,14 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         // set the actual command name in the configuration
         $instance->setCommandName($this->input->getFirstArgument());
 
+        $configurationFiles = [];
+
+        foreach ($this->configurationFiles as $configurationFile) {
+            $configurationFiles = array_merge($configurationFiles, $configurationFile);
+        }
+        // set the configuration Files in the configuration instance
+        $instance->setConfigurationFiles($configurationFiles);
+
         // return the instance
         return $instance;
     }
@@ -294,6 +307,8 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         if (is_dir($customConfigurationDir)) {
             $directories[] = $customConfigurationDir;
         }
+
+        $this->configurationFiles = $this->configurationFactory->getConfigurationFiles($directories, $format);
 
         // load and return the configuration from the files found in the passed directories
         return $this->configurationFactory->factoryFromDirectories($installationDir, $defaultConfigurationDir, $directories, $format, $params, $paramsFile);

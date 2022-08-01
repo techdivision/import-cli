@@ -74,6 +74,13 @@ class DebugCreatePlugin extends AbstractConsolePlugin
      */
     public function process()
     {
+        if ($this->getConfiguration()->isConfigOutput()) {
+            $configurationFiles = $this->getConfigurationFiles();
+            $this->getSystemLogger()->info(
+                print_r($configurationFiles, true)
+            );
+            return;
+        }
 
         // load the actual status
         $status = $this->getRegistryProcessor()->getAttribute(RegistryKeys::STATUS);
@@ -152,5 +159,13 @@ class DebugCreatePlugin extends AbstractConsolePlugin
 
         // write a success message to the console
         $this->getOutput()->writeln(sprintf('<info>Successfully created debug dump "%s"</info>', $dumpFilename));
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigurationFiles()
+    {
+        return $this->getConfiguration()->getConfigurationFiles();
     }
 }

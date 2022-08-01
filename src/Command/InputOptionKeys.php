@@ -69,6 +69,7 @@ class InputOptionKeys extends \ArrayObject implements InputOptionKeysInterface
                 InputOptionKeysInterface::RENDER_VALIDATION_ISSUES,
                 InputOptionKeysInterface::EMPTY_ATTRIBUTE_VALUE_CONSTANT,
                 InputOptionKeysInterface::STRICT_MODE,
+                InputOptionKeysInterface::CONFIG_OUTPUT,
                 InputOptionKeysInterface::LOG_FILE
 
             ),
