@@ -215,7 +215,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         $configurationFiles = [];
 
         foreach ($this->configurationFiles as $configurationFile) {
-            $configurationFiles = array_merge($configurationFiles, $configurationFile);
+            $configurationFiles[] = $configurationFile->getPathname();
         }
         // set the configuration Files in the configuration instance
         $instance->setConfigurationFiles($configurationFiles);
@@ -308,10 +308,13 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             $directories[] = $customConfigurationDir;
         }
 
-        $this->configurationFiles = $this->configurationFactory->getConfigurationFiles($directories, $format);
 
         // load and return the configuration from the files found in the passed directories
-        return $this->configurationFactory->factoryFromDirectories($installationDir, $defaultConfigurationDir, $directories, $format, $params, $paramsFile);
+        $completeConfiguration = $this->configurationFactory->factoryFromDirectories($installationDir, $defaultConfigurationDir, $directories, $format, $params, $paramsFile);
+
+        $this->configurationFiles = $this->configurationFactory->getConfigurationFiles($directories, $format);
+
+        return $completeConfiguration;
     }
 
     /**
