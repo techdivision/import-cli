@@ -1,3 +1,14 @@
+# Version 12.1.0
+
+## Bugfixes
+
+* none
+
+## Features
+
+* Add #PAC-215: option `config-output` as default false to report all configuration json files on debug logs
+    * The command: `bin/import-simple import:debug --config-output=true`
+
 # Version 12.0.0
 
 ## Bugfixes
