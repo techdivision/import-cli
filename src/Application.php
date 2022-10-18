@@ -119,7 +119,7 @@ class Application extends \Symfony\Component\Console\Application implements Cont
 
         // extract the version information
         if (!preg_match_all(self::REGEX, $output, $matches)) {
-            throw new \Exception($this, 'Bad semver file.');
+            throw new \Exception('Bad semver file.');
         }
 
         // prepare and return the version number
