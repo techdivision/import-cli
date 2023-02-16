@@ -47,6 +47,7 @@ abstract class AbstractSimpleImportCommand extends Command
         // configure the command
         $this->addOption(InputOptionKeysInterface::PID_FILENAME, null, InputOption::VALUE_REQUIRED, 'The explicit PID filename to use', sprintf('%s/%s', sys_get_temp_dir(), Configuration::PID_FILENAME))
              ->addOption(InputOptionKeysInterface::INSTALLATION_DIR, null, InputOption::VALUE_REQUIRED, 'The Magento installation directory to which the files has to be imported', getcwd())
+             ->addOption(InputOptionKeysInterface::CONFIGURATION_DIR, null, InputOption::VALUE_OPTIONAL, 'The Magento configuration directory')
              ->addOption(InputOptionKeysInterface::SYSTEM_NAME, null, InputOption::VALUE_REQUIRED, 'Specify the system name to use', gethostname())
              ->addOption(InputOptionKeysInterface::SOURCE_DIR, null, InputOption::VALUE_REQUIRED, 'The directory that has to be watched for new files')
              ->addOption(InputOptionKeysInterface::MAGENTO_VERSION, null, InputOption::VALUE_REQUIRED, 'The Magento version to be used, e. g. "2.1.2"')

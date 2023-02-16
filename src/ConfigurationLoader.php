@@ -89,9 +89,10 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         }
 
         // query whether or not we've an valid Magento root directory specified
-        if ($this->isMagentoRootDir($installationDir = $instance->getInstallationDir())) {
+        $configurationDir = $instance->getEtcDir() ?: $instance->getInstallationDir() . '/app/etc';
+        if ($this->isMagentoRootDir($configurationDir)) {
             // if yes, add the database configuration
-            $instance->addDatabase($this->getMagentoDbConnection($installationDir));
+            $instance->addDatabase($this->getMagentoDbConnection($configurationDir));
         }
 
         // query whether or not a DB ID has been specified as command line
@@ -150,7 +151,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
     }
 
     /**
-     * Return's the requested Magento DB connction data.
+     * Return's the requested Magento DB connection data.
      *
      * @param string $dir            The path to the Magento root directory
      * @param string $connectionName The connection name to return the data for

@@ -77,12 +77,13 @@
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::SYSTEM_NAME</parameter>
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::PID_FILENAME</parameter>
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::INSTALLATION_DIR</parameter>
+            <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::CONFIGURATION_DIR</parameter>
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::MAGENTO_EDITION</parameter>
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::MAGENTO_VERSION</parameter>
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::SOURCE_DIR</parameter>
             <parameter type="constant">TechDivision\Import\Cli\Command\InputOptionKeys::TARGET_DIR</parameter>
         </parameter>
-        
+
     </parameters>
 
     <services>
@@ -207,7 +208,7 @@
             </call>
         </service>
 
-        <!-- 
+        <!--
          ! The DI configuration for the execution context
          !-->
         <service id="import_cli.configuration.manager" class="TechDivision\Import\Execution\ConfigurationManager">

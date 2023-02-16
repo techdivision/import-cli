@@ -500,6 +500,6 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
      */
     protected function getMagentoEnv($dir)
     {
-        return sprintf('%s/app/etc/env.php', $dir);
+        return sprintf('%s/env.php', $dir);
     }
 }

@@ -44,6 +44,7 @@ class InputOptionKeys extends \ArrayObject implements InputOptionKeysInterface
                 InputOptionKeysInterface::SYSTEM_NAME,
                 InputOptionKeysInterface::CONFIGURATION,
                 InputOptionKeysInterface::INSTALLATION_DIR,
+                InputOptionKeysInterface::CONFIGURATION_DIR,
                 InputOptionKeysInterface::SOURCE_DIR,
                 InputOptionKeysInterface::TARGET_DIR,
                 InputOptionKeysInterface::ARCHIVE_DIR,

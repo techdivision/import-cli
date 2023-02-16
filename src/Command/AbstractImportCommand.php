@@ -47,6 +47,7 @@ abstract class AbstractImportCommand extends Command
         // configure the command
         $this->addOption(InputOptionKeysInterface::SERIAL, null, InputOption::VALUE_REQUIRED, 'The unique identifier of this import process', Uuid::uuid4()->__toString())
              ->addOption(InputOptionKeysInterface::INSTALLATION_DIR, null, InputOption::VALUE_REQUIRED, 'The Magento installation directory to which the files has to be imported', getcwd())
+             ->addOption(InputOptionKeysInterface::CONFIGURATION_DIR, null, InputOption::VALUE_OPTIONAL, 'The Magento configuration')
              ->addOption(InputOptionKeysInterface::SYSTEM_NAME, null, InputOption::VALUE_REQUIRED, 'Specify the system name to use', gethostname())
              ->addOption(InputOptionKeysInterface::PID_FILENAME, null, InputOption::VALUE_REQUIRED, 'The explicit PID filename to use', sprintf('%s/%s', sys_get_temp_dir(), Configuration::PID_FILENAME))
              ->addOption(InputOptionKeysInterface::CACHE_ENABLED, null, InputOption::VALUE_REQUIRED, 'Whether or not the cache functionality for the import should be enabled', false)
