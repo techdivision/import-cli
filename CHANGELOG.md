@@ -1,4 +1,16 @@
+# Version 12.2.0
+
+## Bugfixes
+
+* none
+
+## Features
+
+* Introduct new argument --configuration-dir for magento app/etc directory
+  * this is especially useful when running import during Magento integration tests
+
 # Version 12.1.1
+
 ## Bugfixes
 
 * Fix #PAC-684: set \Exception() parameter Compatibile with php8.1 
