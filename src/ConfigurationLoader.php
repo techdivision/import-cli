@@ -89,7 +89,7 @@ class ConfigurationLoader extends SimpleConfigurationLoader
         }
 
         // query whether or not we've an valid Magento root directory specified
-        $configurationDir = $instance->getEtcDir() ?: $instance->getInstallationDir() . '/app/etc';
+        $configurationDir = $instance->getEtcDir() ?: $instance->getInstallationDir() . SimpleConfigurationLoader::CONFIGENVPATH;
         if ($this->isMagentoRootDir($configurationDir)) {
             // if yes, add the database configuration
             $instance->addDatabase($this->getMagentoDbConnection($configurationDir));

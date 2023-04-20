@@ -37,6 +37,12 @@ use TechDivision\Import\Configuration\ConfigurationFactoryInterface;
  */
 class SimpleConfigurationLoader implements ConfigurationLoaderInterface
 {
+    /**
+     * The key for the Magento Folder to env.php.
+     *
+     * @var string
+     */
+    const CONFIGENVPATH = '/app/etc';
 
     /**
      * The key for the Magento Edition in the metadata extracted from the Composer configuration.
@@ -184,6 +190,10 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         // try to load the Magento installation directory
         $installationDir = $this->input->getOption(InputOptionKeysInterface::INSTALLATION_DIR);
 
+        // try to load the Magento config directory
+        $configurationDirParam = $this->input->getOption(InputOptionKeysInterface::CONFIGURATION_DIR);
+        $configurationDir = $configurationDirParam ?: $installationDir . SimpleConfigurationLoader::CONFIGENVPATH;
+
         // query whether or not, a configuration file has been specified
         $configuration = $this->input->getOption(InputOptionKeysInterface::CONFIGURATION);
 
@@ -191,7 +201,7 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         $instance = $configuration ? $this->createConfiguration($configuration) : $this->createConfiguration();
 
         // query whether or not the installation directory is a valid Magento root directory
-        if ($this->isMagentoRootDir($installationDir)) {
+        if ($this->isMagentoRootDir($configurationDir)) {
             // if yes, try to load the Magento Edition from the Composer configuration file
             $metadata = $this->getEditionMapping($installationDir);
             // initialize/override the Magento edition/version with the values from the Magento installation

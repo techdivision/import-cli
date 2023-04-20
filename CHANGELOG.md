@@ -1,3 +1,13 @@
+# Version 12.2.1
+
+## Bugfixes
+
+* Fix --config-dir query for Magento versions determination
+
+## Features
+
+* none
+
 # Version 12.2.0
 
 ## Bugfixes
@@ -6,7 +16,7 @@
 
 ## Features
 
-* Introduct new argument --configuration-dir for magento app/etc directory
+* Introduct new argument --config-dir for magento app/etc directory
   * this is especially useful when running import during Magento integration tests
 
 # Version 12.1.1
