@@ -1,3 +1,9 @@
+# Version 12.2.2
+
+## Bugfixes
+
+* Start fix php8.2 deprecated warnings
+
 # Version 12.2.1
 
 ## Bugfixes

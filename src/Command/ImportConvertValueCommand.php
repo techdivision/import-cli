@@ -99,7 +99,7 @@ class ImportConvertValueCommand extends AbstractSimpleImportCommand
                     // clean-up (means to remove surrounding + double quotes)
                     // because we've no delimiter within the value
                     if (strstr($val, $delimiter) === false) {
-                        $val = preg_replace("/^(\'(.*)\'|${enclosure}(.*)${enclosure})$/", '$2$3', $val);
+                        $val = preg_replace("/^(\'(.*)\'|".$enclosure."(.*)".$enclosure.")$/", '$2$3', $val);
                         $val = str_replace('""', '"', $val);
                     }
 
