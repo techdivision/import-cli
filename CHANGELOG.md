@@ -1,3 +1,9 @@
+# Version 12.2.3
+
+## Bugfixes
+
+* Fix command `import:create:configuration-file` query for Magento versions determination
+
 # Version 12.2.2
 
 ## Bugfixes
