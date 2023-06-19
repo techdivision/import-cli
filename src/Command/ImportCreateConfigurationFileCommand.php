@@ -103,7 +103,6 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
 
                 // query whether or not we're < than 2.0.0
                 if (version_compare($version->getPrettyVersion(), '2.0.0', '<')) {
-
                     // initialize the visitor because we want to set JSON options
                     $visitor = new JsonSerializationVisitor($namingStrategy);
                     $visitor->setOptions(JSON_PRETTY_PRINT);
