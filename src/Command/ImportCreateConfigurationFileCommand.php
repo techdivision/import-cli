@@ -14,6 +14,9 @@
 
 namespace TechDivision\Import\Cli\Command;
 
+use Jean85\PrettyVersions;
+use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
+use JMS\Serializer\Visitor\Factory\XmlSerializationVisitorFactory;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\XmlSerializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
@@ -95,14 +98,35 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
         switch ($format) {
             // initialize the JSON visitor
             case 'json':
-                // initialize the visitor because we want to set JSON options
-                $visitor = new JsonSerializationVisitor($namingStrategy);
-                $visitor->setOptions(JSON_PRETTY_PRINT);
+                // try to load the JMS serializer
+                $version = PrettyVersions::getVersion('jms/serializer');
+
+                // query whether or not we're < than 2.0.0
+                if (version_compare($version->getPrettyVersion(), '2.0.0', '<')) {
+
+                    // initialize the visitor because we want to set JSON options
+                    $visitor = new JsonSerializationVisitor($namingStrategy);
+                    $visitor->setOptions(JSON_PRETTY_PRINT);
+                } else {
+                    // initialize the json visitor factory because we want to set JSON options
+                    $visitor = new JsonSerializationVisitorFactory();
+                }
+
                 break;
 
             // initialize the XML visitor
             case 'xml':
-                $visitor = new XmlSerializationVisitor($namingStrategy);
+                // try to load the JMS serializer
+                $version = PrettyVersions::getVersion('jms/serializer');
+
+                // query whether or not we're < than 2.0.0
+                if (version_compare($version->getPrettyVersion(), '2.0.0', '<')) {
+                    // initialize the visitor because we want to set JSON options
+                    $visitor = new XmlSerializationVisitor($namingStrategy);
+                } else {
+                    // initialize the json visitor factory because we want to set JSON options
+                    $visitor = new XmlSerializationVisitorFactory();
+                }
                 break;
 
             // throw an execption in all other cases
