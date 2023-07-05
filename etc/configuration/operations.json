@@ -1,7 +1,7 @@
 {
   "operations": {
     "general": {
-      "debug": { 
+      "debug": {
         "create": {
           "plugins": {
             "debug.send": {
