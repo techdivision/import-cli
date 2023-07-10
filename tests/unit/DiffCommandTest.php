@@ -25,7 +25,7 @@ class DiffCommandTest extends TestCase
 {
 
     /** @var ImportConfigDiffCommand */
-    private ImportConfigDiffCommand $importConfigDiffCommand;
+    private $importConfigDiffCommand;
 
     /**
      * @return void
