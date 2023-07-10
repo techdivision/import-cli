@@ -4,7 +4,7 @@
  *
  * PHP version 7
  *
- * @author
+ * @author    met@techdivision.com
  * @copyright 2023 TechDivision GmbH <info@techdivision.com>
  * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-cli-simple
@@ -13,10 +13,6 @@
 
 namespace TechDivision\Import\Cli\Command;
 
-use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
-use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
-use JMS\Serializer\SerializerBuilder;
-use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TechDivision\Import\Configuration\ConfigurationInterface;
@@ -26,7 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * The import command implementation.
  *
- * @author
+ * @author    met@techdivision.com
  * @copyright 2023 TechDivision GmbH <info@techdivision.com>
  * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-cli-simple
@@ -40,7 +36,7 @@ class ImportCreateDefaultConfigCommand extends AbstractSimpleImportCommand
      * @return void
      * @see \Symfony\Component\Console\Command\Command::configure()
      */
-    protected function configure()
+    protected function configure(): void
     {
         // initialize the command with the required/optional options
         $this->setName(CommandNames::IMPORT_CREATE_CONFIG)
@@ -53,34 +49,27 @@ class ImportCreateDefaultConfigCommand extends AbstractSimpleImportCommand
     /**
      * Finally executes the simple command.
      *
-     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration instance
-     * @param \Symfony\Component\Console\Input\InputInterface           $input         An InputInterface instance
-     * @param \Symfony\Component\Console\Output\OutputInterface         $output        An OutputInterface instance
+     * @param ConfigurationInterface $configuration The configuration instance
+     * @param InputInterface $input         An InputInterface instance
+     * @param OutputInterface $output        An OutputInterface instance
      *
-     * @return void
+     * @return int
      */
     protected function executeSimpleCommand(
         ConfigurationInterface $configuration,
         InputInterface $input,
         OutputInterface $output
-    ) {
-        $format = 'json';
-        $builder = SerializerBuilder::create();
-        $builder->addDefaultSerializationVisitors();
-        $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
+    ): int
+    {
+        $serializer = $this->createSerializer();
+        $configValues = $serializer->serialize($configuration, 'json');
 
-        // register the visitor in the builder instance
-        $visitor = new JsonSerializationVisitorFactory($namingStrategy);
-        $visitor->setOptions(JSON_PRETTY_PRINT);
-        $builder->setSerializationVisitor($format, $visitor);
-        $serializer = $builder->build();
-
-        // write values to file
-        $configValues = $serializer->serialize($configuration, $format);
+        // create new default json file
         $fs = new Filesystem();
         $fs->remove(ImportConfigDiffCommand::DEFAULT_FILE);
         $fs->appendToFile(ImportConfigDiffCommand::DEFAULT_FILE, $configValues);
-        $output->writeln('[*] succesfully created default file');
+
+        $output->writeln('[*] successfully created default file');
         return 0;
     }
 }

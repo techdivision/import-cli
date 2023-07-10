@@ -1,10 +1,10 @@
 <?php
 /**
- * TechDivision\Import\Cli\Command\ImportClearPidFileCommand
+ * TechDivision\Import\Cli\Command\ImportConfigDiffCommand
  *
  * PHP version 7
  *
- * @author
+ * @author    met@techdivision.com
  * @copyright 2023 TechDivision GmbH <info@techdivision.com>
  * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-cli-simple
@@ -13,23 +13,15 @@
 
 namespace TechDivision\Import\Cli\Command;
 
-use JMS\Serializer\JsonSerializationVisitor;
-use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
-use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
-use JMS\Serializer\SerializerBuilder;
-use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
-use JMS\Serializer\XmlSerializationVisitor;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Utils\CommandNames;
-use TechDivision\Import\Configuration\Jms\Configuration;
-use TechDivision\Import\Utils\InputOptionKeysInterface;
 
 /**
  * The import command implementation.
  *
- * @author
+ * @author    met@techdivision.com
  * @copyright 2023 TechDivision GmbH <info@techdivision.com>
  * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-cli-simple
@@ -38,25 +30,20 @@ use TechDivision\Import\Utils\InputOptionKeysInterface;
 class ImportConfigDiffCommand extends AbstractSimpleImportCommand
 {
     /**
-     * project config Values
-     *
-     * @var array
-     */
-    private $paths = [];
-
-    /**
-     * default config Values
-     *
-     * @var array
-     */
-    private $defaultPaths = [];
-
-    /**
      * file where default values are saved
      *
      * @var string
      */
-    const DEFAULT_FILE = __DIR__ . '/../../config.json.default';
+    public const DEFAULT_FILE = __DIR__ . '/../../config.json.default';
+
+    /** @var string */
+    public const ADD_KEY = 'added';
+
+    /** @var string */
+    public const DELETE_KEY = 'deleted';
+
+    /** @var string */
+    public const CHANGED_KEY = 'changed';
 
     /**
      * Configures the current command.
@@ -64,7 +51,7 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
      * @return void
      * @see \Symfony\Component\Console\Command\Command::configure()
      */
-    protected function configure()
+    protected function configure(): void
     {
         // initialize the command with the required/optional options
         $this->setName(CommandNames::IMPORT_CONFIG_DIFF)
@@ -77,38 +64,30 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
     /**
      * Finally executes the simple command.
      *
-     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration instance
-     * @param \Symfony\Component\Console\Input\InputInterface           $input         An InputInterface instance
-     * @param \Symfony\Component\Console\Output\OutputInterface         $output        An OutputInterface instance
+     * @param ConfigurationInterface $configuration The configuration instance
+     * @param InputInterface $input         An InputInterface instance
+     * @param OutputInterface $output        An OutputInterface instance
      *
-     * @return void
+     * @return int
      */
     protected function executeSimpleCommand(
         ConfigurationInterface $configuration,
         InputInterface $input,
         OutputInterface $output
-    ) {
-        $format = 'json';
-        $builder = SerializerBuilder::create();
-        $builder->addDefaultSerializationVisitors();
-
-        // create serializer
-        $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
-        $visitor = new JsonSerializationVisitorFactory($namingStrategy);
-        $visitor->setOptions(JSON_PRETTY_PRINT);
-        $builder->setSerializationVisitor($format, $visitor);
-        $serializer = $builder->build();
-
-        // write default values to output
-        $projectValues = $serializer->serialize($configuration, $format);
+    ): int
+    {
+        $serializer = $this->createSerializer();
+        $projectValues = $serializer->serialize($configuration, 'json');
         $defaultValues = file_get_contents(self::DEFAULT_FILE);
 
+        // compare project and default Values
         if ($defaultValues !== $projectValues) {
             $projectJsonValues = json_decode($projectValues);
             $defaultValuesJson = json_decode($defaultValues);
-            $this->callGetPath($projectJsonValues, '', true);
-            $this->callGetPath($defaultValuesJson, '', false);
-            $this->showDiffs($output);
+            $paths = $this->getDataAsFlatArray($projectJsonValues);
+            $defaultPaths = $this->getDataAsFlatArray($defaultValuesJson);
+            $diff = $this->getAllDiffs($defaultPaths, $paths);
+            $this->writeDiffs($defaultPaths, $paths, $diff, $output);
             return 0;
         }
 
@@ -117,49 +96,103 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
     }
 
     /**
+     * @param array $defaultPaths
+     * @param array $paths
+     * @return array
+     */
+    public function getAllDiffs(array $defaultPaths, array $paths): array
+    {
+        $addedKeys = $this->getAddedKeys($defaultPaths, $paths);
+        $manipulatedKeys = array_diff_assoc($defaultPaths, $paths);
+        $deletedKeys = $this->getDeletedKeys($defaultPaths, $paths);
+        return [
+            self::ADD_KEY => $addedKeys,
+            self::DELETE_KEY => $deletedKeys,
+            self::CHANGED_KEY => $manipulatedKeys,
+        ];
+    }
+
+    /**
+     * @param array $defaultConfig
+     * @param array $projectConfig
+     * @param array $diff
+     * @param OutputInterface $output
      * @return void
      */
-    private function showDiffs(OutputInterface $output) {
+    private function writeDiffs(
+        array $defaultConfig,
+        array $projectConfig,
+        array $diff,
+        OutputInterface $output
+    ): void
+    {
         $output->writeln('Original | Override');
-        foreach ($this->paths as $key => $value) {
-            if ($this->defaultPaths[$key] !== $value) {
-                $output->writeln($key . ':' .
-                    '"'.$this->defaultPaths[$key].'"' . '|' . $key . ':'. '"'.$value.'"');
-            }
+        foreach ($diff[self::DELETE_KEY] as $deletedKey) {
+            $output->writeln($deletedKey . ':' .
+                '"' . $defaultConfig[$deletedKey] . '"' . ' | --- key was deleted ---');
+        }
+        foreach ($diff[self::ADD_KEY] as $addedKey) {
+            $output->writeln('--- key was added --- | ' . $addedKey . ':' .
+                '"' . $projectConfig[$addedKey] . '"');
+        }
+        foreach ($diff[self::CHANGED_KEY] as $key => $value) {
+            $output->writeln($key. ':' .
+                '"'.$defaultConfig[$key].'"' . ' | ' . $key . ':'. '"'.$projectConfig[$key].'"');
         }
     }
 
     /**
-     * @param $value
-     * @param $path
-     * @param $projectValues
-     * @return void
+     * @param array $default
+     * @param array $project
+     * @return array
      */
-    private function callGetPath($value, $path, $projectValues) {
-        foreach ($value as $key => $nvalue) {
-            $this->getPath($key, $nvalue, $path, $projectValues);
+    private function getDeletedKeys(array $default, array $project): array
+    {
+        $deletedKeys = [];
+        foreach ($default as $key => $value) {
+            if (!array_key_exists($key, $project)) {
+                $deletedKeys[] = $key;
+            }
         }
+        return $deletedKeys;
     }
 
     /**
-     * @param $key
-     * @param $value
-     * @param $path
-     * @param $paths
-     * @return void
+     * @param array $default
+     * @param array $project
+     * @return array
      */
-    private function getPath($key, $value, $path, $projectValues) {
-        $path = $path . '/' . $key;
-        if (is_object($value) || is_array($value)) {
-            $this->callGetPath($value, $path, $projectValues);
-        }
-
-        if (is_string($value)) {
-            if ($projectValues) {
-                $this->paths[$path] = $value;
-            } else {
-                $this->defaultPaths[$path] = $value;
+    private function getAddedKeys(array $default, array $project): array
+    {
+        $addedKeys = [];
+        foreach ($project as $key => $value) {
+            if (!array_key_exists($key, $default)) {
+                $addedKeys[] = $key;
             }
         }
+        return $addedKeys;
+    }
+
+    /**
+     * @param $data
+     * @param string $key
+     * @param string $path
+     * @param array $arr
+     * @return array
+     */
+    public function getDataAsFlatArray($data, string $key='', string $path='', array $arr=[]): array
+    {
+        if ($path != '') {
+            $path = $path . '/';
+        }
+        $path = $path . $key;
+        if (is_object($data) || is_array($data)) {
+            foreach ($data as $key => $value) {
+                $arr = $this->getDataAsFlatArray($value, $key, $path, $arr);
+            }
+        } else {
+            $arr[$path] = $data;
+        }
+        return $arr;
     }
 }
