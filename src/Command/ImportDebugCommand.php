@@ -40,7 +40,6 @@ class ImportDebugCommand extends AbstractImportCommand
      */
     protected function configure()
     {
-
         // initialize the command with the required/optional options
         $this->setName(CommandNames::IMPORT_DEBUG)
              ->addArgument(InputArgumentKeysInterface::SHORTCUT, InputArgument::OPTIONAL, 'The shortcut that defines the operation(s) that has to be used for debugging the import, one of "send" or a combination of them', 'send')

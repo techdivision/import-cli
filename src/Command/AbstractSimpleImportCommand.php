@@ -14,6 +14,11 @@
 
 namespace TechDivision\Import\Cli\Command;
 
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
+use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
+use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -91,6 +96,25 @@ abstract class AbstractSimpleImportCommand extends Command
 
         // finally execute the simple command
         return $this->executeSimpleCommand($configuration, $input, $output);
+    }
+
+    /**
+     * create json serializer for configs
+     *
+     * @return Serializer
+     */
+    protected function createSerializer(): Serializer
+    {
+        $format = 'json';
+        $builder = SerializerBuilder::create();
+        $builder->addDefaultSerializationVisitors();
+        $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
+
+        // register the visitor in the builder instance
+        $visitor = new JsonSerializationVisitorFactory($namingStrategy);
+        $visitor->setOptions(JSON_PRETTY_PRINT);
+        $builder->setSerializationVisitor($format, $visitor);
+        return $builder->build();
     }
 
     /**

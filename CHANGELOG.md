@@ -1,3 +1,9 @@
+# Version 12.3.0
+
+## Feature
+
+* Debug info for configuration files
+
 # Version 12.2.2
 
 ## Bugfixes
