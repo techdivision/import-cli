@@ -34,7 +34,7 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
      *
      * @var string
      */
-    public const DEFAULT_FILE = __DIR__ . '/../../config.json.default';
+    public const DEFAULT_FILE = 'config.json';
 
     /** @var string */
     public const ADD_KEY = 'added';
@@ -77,7 +77,7 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
     ): int {
         $serializer = $this->createSerializer();
         $projectValues = $serializer->serialize($configuration, 'json');
-        $defaultValues = file_get_contents(self::DEFAULT_FILE);
+        $defaultValues = file_get_contents($this->getFilePathComplete());
 
         // compare project and default Values
         if ($defaultValues !== $projectValues) {
@@ -92,6 +92,22 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
 
         $output->writeln('[*] no changes found');
         return 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName(): string
+    {
+        return self::DEFAULT_FILE;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilePathComplete(): string
+    {
+        return __DIR__ . '/../../' . $this->getFileName() . '.simple';
     }
 
     /**

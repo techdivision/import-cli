@@ -1,7 +1,7 @@
 {
-    "system-name": "01688-mbp",
+    "system-name": "",
     "entity-type-code": "none",
-    "installation-dir": "\/Users\/kafflj\/MagentoInstalls\/magento246ce",
+    "installation-dir": "",
     "source-dir": "var\/pacemaker\/import",
     "target-dir": "var\/pacemaker\/import",
     "magento-edition": "CE",

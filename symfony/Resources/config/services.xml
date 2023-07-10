@@ -161,6 +161,12 @@
                 <argument id="import_cli.command.import.debug" type="service"/>
             </call>
             <call method="add">
+                <argument id="import_cli.command.import.config.diff" type="service"/>
+            </call>
+            <call method="add">
+                <argument id="import_cli.command.import.create.config.default" type="service"/>
+            </call>
+            <call method="add">
                 <argument id="import_cli.command.import.products" type="service"/>
             </call>
             <call method="add">
@@ -207,12 +213,6 @@
             </call>
             <call method="add">
                 <argument id="import_cli.command.import.products.url" type="service"/>
-            </call>
-            <call method="add">
-                <argument id="import_cli.command.import.config.diff" type="service"/>
-            </call>
-            <call method="add">
-                <argument id="import_cli.command.import.create.config.default" type="service"/>
             </call>
         </service>
 

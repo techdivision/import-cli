@@ -65,10 +65,26 @@ class ImportCreateDefaultConfigCommand extends AbstractSimpleImportCommand
 
         // create new default json file
         $fs = new Filesystem();
-        $fs->remove(ImportConfigDiffCommand::DEFAULT_FILE);
-        $fs->appendToFile(ImportConfigDiffCommand::DEFAULT_FILE, $configValues);
+        $fs->remove($this->getFilePathComplete());
+        $fs->appendToFile($this->getFilePathComplete(), $configValues);
 
         $output->writeln('[*] successfully created default file');
         return 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName(): string
+    {
+        return ImportConfigDiffCommand::DEFAULT_FILE;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilePathComplete(): string
+    {
+        return __DIR__ . '/../../' . $this->getFileName() . '.simple';
     }
 }
