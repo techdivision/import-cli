@@ -65,8 +65,8 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
      * Finally executes the simple command.
      *
      * @param ConfigurationInterface $configuration The configuration instance
-     * @param InputInterface $input         An InputInterface instance
-     * @param OutputInterface $output        An OutputInterface instance
+     * @param InputInterface         $input         An InputInterface instance
+     * @param OutputInterface        $output        An OutputInterface instance
      *
      * @return int
      */
@@ -74,8 +74,7 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
         ConfigurationInterface $configuration,
         InputInterface $input,
         OutputInterface $output
-    ): int
-    {
+    ): int {
         $serializer = $this->createSerializer();
         $projectValues = $serializer->serialize($configuration, 'json');
         $defaultValues = file_get_contents(self::DEFAULT_FILE);
@@ -96,8 +95,8 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
     }
 
     /**
-     * @param array $defaultPaths
-     * @param array $paths
+     * @param array $defaultPaths Default values as flat array
+     * @param array $paths        Project values as flat array
      * @return array
      */
     public function getAllDiffs(array $defaultPaths, array $paths): array
@@ -113,10 +112,10 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
     }
 
     /**
-     * @param array $defaultConfig
-     * @param array $projectConfig
-     * @param array $diff
-     * @param OutputInterface $output
+     * @param array           $defaultConfig Default values as flat array
+     * @param array           $projectConfig Project values as flat array
+     * @param array           $diff          Array with all diffs
+     * @param OutputInterface $output        OutputInterface instance
      * @return void
      */
     private function writeDiffs(
@@ -124,8 +123,7 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
         array $projectConfig,
         array $diff,
         OutputInterface $output
-    ): void
-    {
+    ): void {
         $output->writeln('Original | Override');
         foreach ($diff[self::DELETE_KEY] as $deletedKey) {
             $output->writeln($deletedKey . ':' .
@@ -142,8 +140,8 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
     }
 
     /**
-     * @param array $default
-     * @param array $project
+     * @param array $default Default values as flat array
+     * @param array $project Project values as flat array
      * @return array
      */
     private function getDeletedKeys(array $default, array $project): array
@@ -158,8 +156,8 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
     }
 
     /**
-     * @param array $default
-     * @param array $project
+     * @param array $default Default values as flat array
+     * @param array $project Project values as flat array
      * @return array
      */
     private function getAddedKeys(array $default, array $project): array
@@ -174,13 +172,13 @@ class ImportConfigDiffCommand extends AbstractSimpleImportCommand
     }
 
     /**
-     * @param $data
-     * @param string $key
-     * @param string $path
-     * @param array $arr
+     * @param mixd   $data Data to be converted to flat array
+     * @param string $key  Key of the data
+     * @param string $path Path of the data
+     * @param array  $arr  Array to be filled with data
      * @return array
      */
-    public function getDataAsFlatArray($data, string $key='', string $path='', array $arr=[]): array
+    public function getDataAsFlatArray($data, string $key = '', string $path = '', array $arr = []): array
     {
         if ($path != '') {
             $path = $path . '/';

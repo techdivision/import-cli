@@ -50,8 +50,8 @@ class ImportCreateDefaultConfigCommand extends AbstractSimpleImportCommand
      * Finally executes the simple command.
      *
      * @param ConfigurationInterface $configuration The configuration instance
-     * @param InputInterface $input         An InputInterface instance
-     * @param OutputInterface $output        An OutputInterface instance
+     * @param InputInterface         $input         An InputInterface instance
+     * @param OutputInterface        $output        An OutputInterface instance
      *
      * @return int
      */
@@ -59,8 +59,7 @@ class ImportCreateDefaultConfigCommand extends AbstractSimpleImportCommand
         ConfigurationInterface $configuration,
         InputInterface $input,
         OutputInterface $output
-    ): int
-    {
+    ): int {
         $serializer = $this->createSerializer();
         $configValues = $serializer->serialize($configuration, 'json');
 
