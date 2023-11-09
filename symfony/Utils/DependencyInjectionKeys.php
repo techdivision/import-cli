@@ -123,4 +123,11 @@ class DependencyInjectionKeys extends \TechDivision\Import\App\Utils\DependencyI
      * @var string
      */
     const APPLICATION_CUSTOM_CONFIGURATION_DIR = 'application.custom.configuration.dir';
+
+    /**
+     * The key for the DI parameter that contains the custom configuration public directory.
+     *
+     * @var string
+     */
+    const APPLICATION_CUSTOM_CONFIGURATION_PUBLIC_DIR = 'application.custom.configuration.public.dir';
 }

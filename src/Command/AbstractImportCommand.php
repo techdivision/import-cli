@@ -56,6 +56,7 @@ abstract class AbstractImportCommand extends Command
              ->addOption(InputOptionKeysInterface::MAGENTO_VERSION, null, InputOption::VALUE_REQUIRED, 'The Magento version to be used, e. g. "2.1.2"')
              ->addOption(InputOptionKeysInterface::CONFIGURATION, null, InputOption::VALUE_REQUIRED, 'Specify the pathname to the configuration file to use')
              ->addOption(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR, null, InputOption::VALUE_REQUIRED, 'The path to the custom configuration directory')
+             ->addOption(InputOptionKeysInterface::CUSTOM_CONFIGURATION_PUBLIC_DIR, null, InputOption::VALUE_OPTIONAL, 'The path to the custom configuration public directory')
              ->addOption(InputOptionKeysInterface::SOURCE_DIR, null, InputOption::VALUE_REQUIRED, 'The directory that has to be watched for new files')
              ->addOption(InputOptionKeysInterface::TARGET_DIR, null, InputOption::VALUE_REQUIRED, 'The target directory with the files that has been imported')
              ->addOption(InputOptionKeysInterface::ARCHIVE_DIR, null, InputOption::VALUE_REQUIRED, 'The directory the imported files will be archived in')

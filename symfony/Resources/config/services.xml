@@ -9,6 +9,7 @@
         <parameter key="application.version.file">.semver</parameter>
         <parameter key="application.default.configuration.dir">etc</parameter>
         <parameter key="application.custom.configuration.dir">app/etc</parameter>
+        <parameter key="application.custom.configuration.public.dir">var/pacemaker/import</parameter>
         <parameter key="application.edition.mappings" type="collection">
             <parameter key="magento/product-community-edition" type="constant">TechDivision\Import\Utils\EditionNamesInterface::CE</parameter>
             <parameter key="magento/product-enterprise-edition" type="constant">TechDivision\Import\Utils\EditionNamesInterface::EE</parameter>
