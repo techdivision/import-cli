@@ -1,3 +1,10 @@
+# Version 12.5.0
+
+## Feature
+
+* Preparation of a customer path for Magento backend storage of the configuration in `var/pacemaker/import/configuration`
+
+
 # Version 12.4.0
 ## Bugfixes
 
