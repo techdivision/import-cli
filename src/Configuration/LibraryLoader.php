@@ -81,6 +81,16 @@ class LibraryLoader
     }
 
     /**
+     * Return's the relative path to the custom configuration public directory.
+     *
+     * @return string The relative path to the custom configuration public directory
+     */
+    protected function getCustomConfigurationPublicDir()
+    {
+        return $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_CUSTOM_CONFIGURATION_PUBLIC_DIR);
+    }
+
+    /**
      * Load's the external libraries registered in the passed configuration.
      *
      * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration instance

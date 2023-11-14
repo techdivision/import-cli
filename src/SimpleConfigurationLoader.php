@@ -308,6 +308,15 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
             )
         );
 
+        // initialize the default custom configuration directory
+        $customConfigurationPublicDir = implode(
+            DIRECTORY_SEPARATOR,
+            array_merge(
+                [$installationDir],
+                explode('/', $this->getContainer()->getParameter(DependencyInjectionKeys::APPLICATION_CUSTOM_CONFIGURATION_PUBLIC_DIR))
+            )
+        );
+
         // query whether or not a custom configuration directory has been speified, if yes override the default one
         if ($this->input->hasOptionSpecified(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR) && $this->input->getOption(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR)) {
             $customConfigurationDir = $this->input->getOption(InputOptionKeysInterface::CUSTOM_CONFIGURATION_DIR);
@@ -316,6 +325,11 @@ class SimpleConfigurationLoader implements ConfigurationLoaderInterface
         // specify the default directory for custom configuration files
         if (is_dir($customConfigurationDir)) {
             $directories[] = $customConfigurationDir;
+        }
+
+        // specify the default directory for custom configuration public files
+        if (is_dir($customConfigurationPublicDir)) {
+            $directories[] = $customConfigurationPublicDir;
         }
 
 
