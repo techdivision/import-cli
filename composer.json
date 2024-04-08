@@ -6,7 +6,7 @@
         "php": ">=7.3.0",
         "ramsey/uuid": "^3.7|^3.8|^4.1|^4.2",
         "symfony/config": "~2.8|~3.0|~4.0|~5.0|~6.0",
-        "symfony/console": "~2.3,!=2.7.0|~4.0|~5.0",
+        "symfony/console": "~2.3,!=2.7.0|~4.0|~5.0|~6.0|~7.0",
         "symfony/expression-language": "~2.3,!=2.7.0|~4.0|~5.0",
         "symfony/dependency-injection": "~2.3,!=2.7.0|~3.0|~4.0|~5.0|~6.0",
         "techdivision/import-app-simple": "^18.0.0",
