@@ -1,17 +1,22 @@
+# Version 12.5.1
+
+## Bugfixes
+*  Make composer dependencies compatible with Magento 2.4.7
+* Update `symfony/console` with version `~6.0|~7.0`
+
 # Version 12.5.0
 
 ## Feature
-
 * Preparation of a customer path for Magento backend storage of the configuration in `var/pacemaker/import/configuration`
 
 
 # Version 12.4.0
-## Bugfixes
 
+## Bugfixes
 *  Make composer dependencies compatible with Magento 2.4.6
   * Update `symfony/dependency-injection` with version `~6.0`
   * Update `symfony/http-kernel` with version `~5.0 ~6.0`
-  * Update `symfony/configl` with version `~6.0`
+  * Update `symfony/config` with version `~6.0`
 
 # Version 12.3.0
 
