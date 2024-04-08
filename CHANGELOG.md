@@ -1,8 +1,8 @@
 # Version 12.5.1
 
 ## Bugfixes
-*  Make composer dependencies compatible with Magento 2.4.7
-* Update `symfony/console` with version `~6.0|~7.0`
+* Make composer dependencies compatible with Magento 2.4.7
+  * Update `symfony/console` with version `~6.0|~7.0`
 
 # Version 12.5.0
 
@@ -13,7 +13,7 @@
 # Version 12.4.0
 
 ## Bugfixes
-*  Make composer dependencies compatible with Magento 2.4.6
+* Make composer dependencies compatible with Magento 2.4.6
   * Update `symfony/dependency-injection` with version `~6.0`
   * Update `symfony/http-kernel` with version `~5.0 ~6.0`
   * Update `symfony/config` with version `~6.0`
