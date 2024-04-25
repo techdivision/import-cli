@@ -1,3 +1,8 @@
+# Version 12.5.2
+
+## Bugfixes
+* The --cache-enabled option's definition will be updated to include the default value, and it will be set globally
+
 # Version 12.5.1
 
 ## Bugfixes

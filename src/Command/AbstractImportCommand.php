@@ -50,7 +50,7 @@ abstract class AbstractImportCommand extends Command
              ->addOption(InputOptionKeysInterface::CONFIGURATION_DIR, null, InputOption::VALUE_OPTIONAL, 'The Magento configuration')
              ->addOption(InputOptionKeysInterface::SYSTEM_NAME, null, InputOption::VALUE_REQUIRED, 'Specify the system name to use', gethostname())
              ->addOption(InputOptionKeysInterface::PID_FILENAME, null, InputOption::VALUE_REQUIRED, 'The explicit PID filename to use', sprintf('%s/%s', sys_get_temp_dir(), Configuration::PID_FILENAME))
-             ->addOption(InputOptionKeysInterface::CACHE_ENABLED, null, InputOption::VALUE_REQUIRED, 'Whether or not the cache functionality for the import should be enabled', false)
+             ->addOption(InputOptionKeysInterface::CACHE_ENABLED, null, InputOption::VALUE_REQUIRED, 'Whether or not the cache functionality for the import should be enabled')
              ->addOption(InputOptionKeysInterface::RENDER_VALIDATION_ISSUES, null, InputOption::VALUE_REQUIRED, 'The number of validation issues that has to be rendered on the CLI', 100)
              ->addOption(InputOptionKeysInterface::MAGENTO_EDITION, null, InputOption::VALUE_REQUIRED, 'The Magento edition to be used, either one of "CE" or "EE" (will be autodetected if possible and not specified)')
              ->addOption(InputOptionKeysInterface::MAGENTO_VERSION, null, InputOption::VALUE_REQUIRED, 'The Magento version to be used, e. g. "2.1.2"')
