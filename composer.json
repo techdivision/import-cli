@@ -9,8 +9,8 @@
         "symfony/console": "v4.4.49",
         "symfony/expression-language": "v6.4.8",
         "symfony/dependency-injection": "v4.4.49",
-        "techdivision/import-app-simple": "*",
-        "techdivision/import-configuration-jms": "*"
+        "techdivision/import-app-simple": "dev-compatibility-php-81",
+        "techdivision/import-configuration-jms": "dev-compatibility-php-81"
     },
     "require-dev": {
         "doctrine/dbal": "^4.0.4",
