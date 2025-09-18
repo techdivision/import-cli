@@ -15,8 +15,8 @@
 namespace TechDivision\Import\Cli\Command;
 
 use JMS\Serializer\SerializerBuilder;
-use JMS\Serializer\XmlSerializationVisitor;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
+use JMS\Serializer\Visitor\Factory\XmlSerializationVisitorFactory;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use Symfony\Component\Console\Input\InputInterface;
@@ -64,7 +64,7 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
      * @param \Symfony\Component\Console\Input\InputInterface           $input         An InputInterface instance
      * @param \Symfony\Component\Console\Output\OutputInterface         $output        An OutputInterface instance
      *
-     * @return void
+     * @return int
      */
     protected function executeSimpleCommand(
         ConfigurationInterface $configuration,
@@ -90,19 +90,21 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
 
         // initialize the naming strategy
         $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
+        // set the naming strategy on the builder (JMS Serializer v3+)
+        $builder->setPropertyNamingStrategy($namingStrategy);
 
         // create the configuration based on the given configuration file suffix
         switch ($format) {
             // initialize the JSON visitor
             case 'json':
-                // initialize the visitor because we want to set JSON options
-                $visitor = new JsonSerializationVisitor($namingStrategy);
-                $visitor->setOptions(JSON_PRETTY_PRINT);
+                // configure the factory because we want to set JSON options
+                $visitor = new JsonSerializationVisitorFactory();
+                $visitor->setOptions(JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION);
                 break;
 
             // initialize the XML visitor
             case 'xml':
-                $visitor = new XmlSerializationVisitor($namingStrategy);
+                $visitor = new XmlSerializationVisitorFactory();
                 break;
 
             // throw an execption in all other cases
@@ -122,5 +124,6 @@ class ImportCreateConfigurationFileCommand extends AbstractSimpleImportCommand
         } else {
             $output->writeln(sprintf('<error>Can\'t write configuration file %s</error>', $configurationFilename));
         }
+        return 0;
     }
 }

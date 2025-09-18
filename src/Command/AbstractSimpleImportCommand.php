@@ -85,11 +85,11 @@ abstract class AbstractSimpleImportCommand extends Command
      * @param \Symfony\Component\Console\Input\InputInterface   $input  An InputInterface instance
      * @param \Symfony\Component\Console\Output\OutputInterface $output An OutputInterface instance
      *
-     * @return null|int null or 0 if everything went fine, or an error code
+     * @return int 0 if everything went fine, or an error code
      * @throws \LogicException When this abstract method is not implemented
      * @see \Symfony\Component\Console\Command\Command::execute()
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
         // try to load the configuration file
@@ -110,10 +110,11 @@ abstract class AbstractSimpleImportCommand extends Command
         $builder = SerializerBuilder::create();
         $builder->addDefaultSerializationVisitors();
         $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
-
-        // register the visitor in the builder instance
-        $visitor = new JsonSerializationVisitorFactory($namingStrategy);
-        $visitor->setOptions(JSON_PRETTY_PRINT);
+        // set naming strategy on builder (JMS Serializer v3+)
+        $builder->setPropertyNamingStrategy($namingStrategy);
+        // register the visitor factory in the builder instance
+        $visitor = new JsonSerializationVisitorFactory();
+        $visitor->setOptions(JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION);
         $builder->setSerializationVisitor($format, $visitor);
         return $builder->build();
     }
@@ -125,7 +126,7 @@ abstract class AbstractSimpleImportCommand extends Command
      * @param \Symfony\Component\Console\Input\InputInterface           $input         An InputInterface instance
      * @param \Symfony\Component\Console\Output\OutputInterface         $output        An OutputInterface instance
      *
-     * @return void
+     * @return int
      */
     abstract protected function executeSimpleCommand(
         ConfigurationInterface $configuration,

@@ -2,13 +2,14 @@
     "name": "techdivision/import-cli",
     "description": "Commands and Helpers to implement a CLI providing single-threaded Magento 2 importing functionality based on Pacemaker",
     "license": "MIT",
+    "version": "13.1.0",
     "require": {
         "php": "^8.1",
         "ramsey/uuid": "^4.2|^4.7",
-        "symfony/config": "~4.0|~5.0|~6.0",
+        "symfony/config": "~5.0|~6.0|~7.0",
         "symfony/console": "~4.0|~5.0|~6.0|~7.0",
         "symfony/expression-language": "~6.0",
-        "symfony/dependency-injection": "~4.0|~5.0|~6.0",
+        "symfony/dependency-injection": "~5.0|~6.0|~7.0",
         "techdivision/import-app-simple": "^19.0.0",
         "techdivision/import-configuration-jms": "^18.0.0"
     },

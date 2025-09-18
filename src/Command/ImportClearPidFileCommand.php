@@ -55,7 +55,7 @@ class ImportClearPidFileCommand extends AbstractSimpleImportCommand
      * @param \Symfony\Component\Console\Input\InputInterface           $input         An InputInterface instance
      * @param \Symfony\Component\Console\Output\OutputInterface         $output        An OutputInterface instance
      *
-     * @return void
+     * @return int
      */
     protected function executeSimpleCommand(
         ConfigurationInterface $configuration,
@@ -75,5 +75,6 @@ class ImportClearPidFileCommand extends AbstractSimpleImportCommand
             // write a message to the console
             $output->writeln(sprintf('<error>PID file %s not available</error>', $pidFilename));
         }
+        return 0;
     }
 }

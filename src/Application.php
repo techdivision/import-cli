@@ -16,7 +16,6 @@ namespace TechDivision\Import\Cli;
 
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * The M2IF - Console Tool implementation.
@@ -30,7 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
  * @link      https://github.com/techdivision/import-cli-simple
  * @link      http://www.techdivision.com
  */
-class Application extends \Symfony\Component\Console\Application implements ContainerAwareInterface
+class Application extends \Symfony\Component\Console\Application
 {
 
     /**
@@ -43,9 +42,9 @@ class Application extends \Symfony\Component\Console\Application implements Cont
     /**
      * The DI container instance.
      *
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @var ContainerInterface|null
      */
-    protected $container;
+    protected ?ContainerInterface $container = null;
 
     /**
      * The constructor to initialize the instance.
@@ -85,7 +84,7 @@ class Application extends \Symfony\Component\Console\Application implements Cont
      *
      * @return void
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null): void
     {
         $this->container = $container;
     }
@@ -95,7 +94,7 @@ class Application extends \Symfony\Component\Console\Application implements Cont
      *
      * @return \Symfony\Component\DependencyInjection\ContainerInterface|null The DI container instance
      */
-    public function getContainer()
+    public function getContainer(): ?ContainerInterface
     {
         return $this->container;
     }
