@@ -132,7 +132,7 @@ class DebugCreatePlugin extends AbstractConsolePlugin
         // if no serials are available, abort gracefully instead of asking an empty \Symfony\Component\Console\Question\ChoiceQuestion
         if (empty($availableSerials)) {
             $this->getOutput()->writeln(
-                '<info>No debug artefacts or import directories found to create a debug dump for. Aborting.</info>'
+                '<comment>No debug artefacts or import directories found to create a debug dump for. Aborting.</comment>'
             );
             return;
         }

@@ -308,8 +308,8 @@
                         {
                             "id": "import_cli.plugin.debug.send",
                             "subjects": [],
-                            "swift-mailer": {
-                                "id": "import.logger.factory.transport.swift.sendmail",
+                            "mailer": {
+                                "id": "import.logger.factory.transport.mailer.sendmail",
                                 "transport": {
                                     "params": {
                                         "smtp-host": "localhost",

@@ -2,7 +2,6 @@
     "name": "techdivision/import-cli",
     "description": "Commands and Helpers to implement a CLI providing single-threaded Magento 2 importing functionality based on Pacemaker",
     "license": "MIT",
-    "version": "13.1.0",
     "require": {
         "php": "^8.1",
         "ramsey/uuid": "^4.2|^4.7",
