@@ -14,10 +14,14 @@
 
 namespace TechDivision\Import\Cli\Plugins;
 
-use Symfony\Component\Console\Question\Question;
+use Exception;
+use InvalidArgumentException;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use TechDivision\Import\Configuration\MailerConfigurationInterface;
 use TechDivision\Import\Utils\RegistryKeys;
-use TechDivision\Import\Configuration\SwiftMailerConfigurationInterface;
 
 /**
  * Plugin that creates and sends a debug report via email.
@@ -35,7 +39,7 @@ class DebugSendPlugin extends AbstractConsolePlugin
      * Process the plugin functionality.
      *
      * @return void
-     * @throws \InvalidArgumentException Is thrown if either the directory nor a artefact for the given serial is available
+     * @throws InvalidArgumentException|Exception Is thrown if either the directory nor a artefact for the given serial is available
      */
     public function process()
     {
@@ -49,15 +53,15 @@ class DebugSendPlugin extends AbstractConsolePlugin
             $serial = $status[RegistryKeys::DEBUG_SERIAL];
         }
 
-        // retrieve the SwiftMailer configuration
-        $swiftMailerConfiguration = $this->getPluginConfiguration()->getSwiftMailer();
+        // retrieve the mailer configuration
+        $mailerConfiguration = $this->getPluginConfiguration()->getMailer();
 
         // retrieve the question helper
         $questionHelper = $this->getHelper('question');
 
-        // use the configured SwiftMail recipient address as default if possible
-        if ($swiftMailerConfiguration instanceof SwiftMailerConfigurationInterface && $swiftMailerConfiguration->hasParam('to')) {
-            $recipient = $swiftMailerConfiguration->getParam('to');
+        // use the configured mailer recipient address as default if possible
+        if ($mailerConfiguration instanceof MailerConfigurationInterface && $mailerConfiguration->hasParam('to')) {
+            $recipient = $mailerConfiguration->getParam('to');
             // ask the user for the recipient address to send the debug report to
             $recipientQuestion = new Question(
                 "<question>Please enter the email address of the debug report recipient (Configured: " . $recipient . "):\n</question>",
@@ -80,26 +84,21 @@ class DebugSendPlugin extends AbstractConsolePlugin
 
         // abort the operation if the user does not confirm with 'y' or enter
         if (!$questionHelper->ask($this->getInput(), $this->getOutput(), $confirmationQuestion)) {
-            $this->getOutput()->writeln('<warning>Aborting operation - debug report has NOT been sent.</warning>');
+            $this->getOutput()->writeln('<comment>Aborting operation - debug report has NOT been sent.</comment>');
             return;
         }
 
         // try to load the mailer instance
-        if ($mailer = $this->getSwiftMailer()) {
+        $mailer = $this->getMailer();
+
+        if ($mailer) {
             // initialize the message body
             $body = sprintf('<html><head></head><body>This mail contains the debug dump for import with serial "%s"</body></html>', $serial);
 
             // initialize the message template
-            /** @var \Swift_Message $message */
-            $message = $mailer->createMessage()
-                ->setSubject('Test')
-                ->setFrom($swiftMailerConfiguration->getParam('from'))
-                ->setTo($recipient)
-                ->setBody($body, 'text/html');
-
-            // initialize the archive file
-            $archiveFile = null;
-
+            $from = $mailerConfiguration->getParam('from');
+            $to = (array)$recipient;
+            $email = (new Email())->subject('Test')->from($from)->to(... $to)->html($body);
             // query whether or not the archive file is available
             if (!is_file($archiveFile = sprintf('%s/%s.zip', sys_get_temp_dir(), $serial))) {
                 $this->getOutput()->writeln(sprintf('<error>Can\'t find either a directory or ZIP artefact for serial "%s"</error>', $serial));
@@ -107,39 +106,30 @@ class DebugSendPlugin extends AbstractConsolePlugin
             }
 
             // attach the CSV files with zipped artefacts
-            $message->attach(\Swift_Attachment::fromPath($archiveFile));
+            $email->attachFromPath($archiveFile);
 
-            // initialize the array with the failed recipients
-            $failedRecipients = array();
+            try {
+                // send the mail
+                $mailer->send($email);
 
-            // send the mail
-            $recipientsAccepted = $mailer->send($message, $failedRecipients);
-
-            // query whether or not all recipients have been accepted
-            if (sizeof($failedRecipients) > 0) {
-                $this->getSystemLogger()->error(sprintf('Can\'t send mail to %s', implode(', ', $failedRecipients)));
-            }
-
-            // if at least one recipient has been accepted
-            if ($recipientsAccepted > 0) {
                 // cast 'to' into an array if not already
-                is_array($recipient) ?: $recipient = (array)$recipient;
+                is_array($recipient) ?: $recipient = $to;
 
-                // remove the NOT accepted recipients
-                $acceptedRecipients = array_diff($recipient, $failedRecipients);
-
-                // log a message with the accepted receivers
+                // log a message with the receivers
                 $this->getSystemLogger()->info(
                     sprintf(
-                        'Mail successfully sent to %d recipient(s) (%s)',
-                        $recipientsAccepted,
-                        implode(', ', $acceptedRecipients)
+                        'Mail successfully sent to recipient(s) (%s)',
+                        implode(', ', $recipient)
                     )
                 );
+            } catch (TransportExceptionInterface $e) {
+                $this->getSystemLogger()->error(sprintf('Can\'t send mail: %s', $e->getMessage()));
             }
         } else {
             // write a message to the console, that the mailer configuration has not been available
-            $this->getOutput()->writeln('<warning>The mailer configuration is not available or mailer can not be loaded</warning>');
+            $this->getOutput()->writeln(
+                '<comment>The mailer configuration is not available or mailer can not be loaded</comment>'
+            );
         }
     }
 }

@@ -129,6 +129,14 @@ class DebugCreatePlugin extends AbstractConsolePlugin
         // finally create the array with the available serials to render on the console
         $availableSerials = array_slice(array_keys($availableSerials), 0, $this->getInput()->getOption(InputOptionKeysInterface::RENDER_DEBUG_SERIALS));
 
+        // if no serials are available, abort gracefully instead of asking an empty \Symfony\Component\Console\Question\ChoiceQuestion
+        if (empty($availableSerials)) {
+            $this->getOutput()->writeln(
+                '<comment>No debug artefacts or import directories found to create a debug dump for. Aborting.</comment>'
+            );
+            return;
+        }
+
         // this is, when the import:debug send command has been invoked
         // WITHOUT the --serial=<UUID> parameter or an invalid serial
         if (!in_array($serial = $this->getSerial(), $availableSerials, true)) {

@@ -1,3 +1,13 @@
+# Version 13.1.0
+
+## Features
+
+### PHP 8.4 Compatibility
+
+* Update dependencies
+* Add PHP 8.4 support
+* Replace abandoned `swiftmailer/swiftmailer` with `symfony/mailer`
+
 # Version 13.0.0
 
 ## Features

@@ -61,13 +61,13 @@ class ImportConvertValueCommand extends AbstractSimpleImportCommand
      * @param \Symfony\Component\Console\Input\InputInterface           $input         An InputInterface instance
      * @param \Symfony\Component\Console\Output\OutputInterface         $output        An OutputInterface instance
      *
-     * @return void
+     * @return int
      */
     protected function executeSimpleCommand(
         ConfigurationInterface $configuration,
         InputInterface $input,
         OutputInterface $output
-    ) {
+    ): int {
 
         // initialize the default CSV serializer
         $serializer = new ValueCsvSerializer();
@@ -117,5 +117,6 @@ class ImportConvertValueCommand extends AbstractSimpleImportCommand
 
         // second serialization that simulates the framework parsing the CSV file
         $output->write($serializer->serialize($serialize));
+        return 0;
     }
 }
