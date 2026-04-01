@@ -17,7 +17,7 @@ namespace TechDivision\Import\Cli\Configuration;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use TechDivision\Import\DependencyInjection\Loader\XmlFileLoader;
 use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Cli\Utils\DependencyInjectionKeys;
 
