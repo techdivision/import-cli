@@ -86,6 +86,54 @@ CliCommand::configure(): void
 - **Configuration-Kompatibilität**: Beachte Konfiguration-Format
 - **Backward Compatibility**: Alte CLI-Commands sollten noch funktionieren
 
+## Häufige Use Cases
+
+### CLI-Command-Beispiele
+```bash
+# Standard Import-Command
+php bin/pacemaker import:product --config=config.xml
+
+# Mit Custom Options
+php bin/pacemaker import:product --config=config.xml --batch-size=500
+
+# Configuration Loading
+php bin/pacemaker import:customer --config=customer-config.xml
+```
+
+### Szenarien
+1. **CLI-Integration**: Commands nutzen SimpleConfigurationLoader für Config-Laden
+2. **Cron-Jobs**: Automatisierte Imports via Cron
+3. **Manual Triggers**: Ad-hoc Imports über CLI
+
+## Performance-Überlegungen
+
+- **CLI-Startup**: ~200-300ms für Framework-Init
+- **Configuration-Load**: ~50-100ms für Standard Config
+- **Total-Overhead**: ~300-400ms vorher der Import startet
+- **Configuration-Caching**: Config wird gecacht - schneller bei wiederholten Imports
+- **Optimal für**: > 5000 Records (Overhead relativiert sich)
+
+## Verwandte Module
+
+- **import-app-simple**: Application-Layer für CLI
+- **import-configuration-jms**: JMS Configuration für CLI
+- **import-cli-simple**: Master CLI nutzt dieses Modul
+- **import-cli** ← **diese Datei** (CLI Framework!)
+
+## Troubleshooting & FAQ
+
+**Q: "Configuration file not found"**
+- A: Config-Pfad prüfen! Relative oder absolute Pfade möglich: `--config=/path/config.xml` oder `--config=config.xml` (relativ zu cwd)
+
+**Q: CLI-Commands werden nicht erkannt**
+- A: Composer autoload problem. Führe aus: `composer dump-autoload`
+
+**Q: Symfony Console Command nicht geladen**
+- A: Command-Klasse nicht in DI registriert. Prüfe DI-Konfiguration.
+
+**Q: Environment-Variablen funktionieren nicht**
+- A: `.env` wird nicht automatisch geladen! Setze Variablen: `export BATCH_SIZE=1000 && php bin/pacemaker import:product`
+
 ## Bekannte Einschränkungen
 
 - **Symfony-abhängig**: Erfordert Symfony Components
