@@ -99,11 +99,11 @@ abstract class AbstractImportCommand extends Command
      * @param \Symfony\Component\Console\Input\InputInterface   $input  An InputInterface instance
      * @param \Symfony\Component\Console\Output\OutputInterface $output An OutputInterface instance
      *
-     * @return null|int null or 0 if everything went fine, or an error code
+     * @return int 0 if everything went fine, or an error code
      * @throws \LogicException When this abstract method is not implemented
      * @see \Symfony\Component\Console\Command\Command::execute()
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
         // initialize the configuration instance
